@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PipelineAI — 10 clients potentiels pour 79 €</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0e0e;
+    --ink-2: #3a3a3a;
+    --ink-3: #7a7a7a;
+    --paper: #f5f2ec;
+    --paper-2: #edeae2;
+    --accent: #1a4fff;
+    --accent-light: #e8eeff;
+    --green: #0f6e3f;
+    --green-light: #e0f5eb;
+    --red-light: #fff0ed;
+    --red: #c0392b;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background: rgba(245, 242, 236, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 1.1rem; letter-spacing: -0.02em;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-cta {
+    background: var(--ink); color: var(--paper);
+    border: none; border-radius: 100px;
+    padding: 0.55rem 1.4rem; font-size: 0.875rem;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer; transition: transform 0.15s, background 0.15s;
+  }
+  .nav-cta:hover { background: var(--accent); transform: scale(1.03); }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 7rem 2rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 20% 80%, rgba(26,79,255,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 50% at 80% 20%, rgba(15,110,63,0.06) 0%, transparent 70%);
+  }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent-light); border: 1px solid rgba(26,79,255,0.2);
+    border-radius: 100px; padding: 0.4rem 1rem;
+    font-size: 0.8rem; font-weight: 500; color: var(--accent);
+    margin-bottom: 2rem; position: relative; z-index: 1;
+    animation: fadeUp 0.6s ease both;
+  }
+  .eyebrow-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+    animation: pulse 2s ease infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.4rem, 6vw, 4.8rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    max-width: 820px;
+    position: relative; z-index: 1;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+  .hero h1 em {
+    font-style: normal;
+    position: relative;
+    color: var(--accent);
+  }
+  .hero h1 em::after {
+    content: '';
+    position: absolute; left: 0; bottom: -4px; right: 0;
+    height: 3px; background: var(--accent); border-radius: 2px;
+    transform: scaleX(0); transform-origin: left;
+    animation: underline 0.5s 0.9s ease forwards;
+  }
+  @keyframes underline { to { transform: scaleX(1); } }
+
+  .hero-sub {
+    margin-top: 1.5rem;
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: var(--ink-2);
+    max-width: 560px;
+    line-height: 1.65;
+    font-weight: 300;
+    position: relative; z-index: 1;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-actions {
+    display: flex; gap: 12px; align-items: center; justify-content: center;
+    margin-top: 2.5rem; flex-wrap: wrap;
+    position: relative; z-index: 1;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--ink); color: var(--paper);
+    border: none; border-radius: 100px;
+    padding: 0.9rem 2rem; font-size: 1rem;
+    font-family: 'DM Sans', sans-serif; font-weight: 500;
+    cursor: pointer; transition: transform 0.15s, background 0.15s;
+    text-decoration: none;
+  }
+  .btn-primary:hover { background: var(--accent); transform: translateY(-2px); }
+  .btn-primary .price-tag {
+    background: rgba(255,255,255,0.2); border-radius: 100px;
+    padding: 2px 10px; font-size: 0.85rem; font-weight: 600;
+  }
+
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--ink-2); font-size: 0.9rem; cursor: pointer;
+    border: none; background: none; font-family: 'DM Sans', sans-serif;
+    text-decoration: underline; text-underline-offset: 3px;
+  }
+
+  .hero-proof {
+    display: flex; align-items: center; gap: 1.5rem;
+    margin-top: 3rem; flex-wrap: wrap; justify-content: center;
+    position: relative; z-index: 1;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+  .proof-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.85rem; color: var(--ink-3);
+  }
+  .proof-icon { font-size: 1rem; }
+  .proof-sep { color: var(--paper-2); font-size: 1.2rem; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── OFFER CARD ─── */
+  .section { padding: 5rem 2rem; }
+  .container { max-width: 980px; margin: 0 auto; }
+
+  .offer-section { background: var(--ink); color: var(--paper); }
+  .offer-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+  }
+  .offer-label {
+    font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(245,242,236,0.5); margin-bottom: 1rem;
+    font-family: 'Syne', sans-serif;
+  }
+  .offer-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700; line-height: 1.15; letter-spacing: -0.02em;
+  }
+  .offer-title span { color: #6b9bff; }
+  .offer-desc {
+    margin-top: 1.25rem; color: rgba(245,242,236,0.65);
+    font-size: 1rem; line-height: 1.7; font-weight: 300;
+  }
+  .offer-features { margin-top: 2rem; display: flex; flex-direction: column; gap: 12px; }
+  .offer-feature {
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 0.95rem; color: rgba(245,242,236,0.85);
+  }
+  .feat-check {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: rgba(26,79,255,0.25); border: 1px solid rgba(26,79,255,0.4);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px; font-size: 0.7rem; color: #6b9bff;
+  }
+
+  /* Price card */
+  .price-card {
+    background: var(--paper); color: var(--ink);
+    border-radius: 24px; padding: 2.5rem;
+    position: relative; overflow: hidden;
+  }
+  .price-card::before {
+    content: 'OFFRE DE LANCEMENT';
+    position: absolute; top: 20px; right: -32px;
+    background: var(--accent); color: #fff;
+    font-size: 0.65rem; letter-spacing: 0.1em;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    padding: 5px 40px; transform: rotate(45deg);
+  }
+  .card-eyebrow {
+    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--ink-3); font-family: 'Syne', sans-serif;
+    margin-bottom: 1.5rem;
+  }
+  .price-display { display: flex; align-items: baseline; gap: 6px; margin-bottom: 0.5rem; }
+  .price-amount {
+    font-family: 'Syne', sans-serif;
+    font-size: 4.5rem; font-weight: 800; line-height: 1;
+    letter-spacing: -0.04em; color: var(--accent);
+  }
+  .price-currency { font-size: 1.8rem; font-weight: 600; color: var(--accent); align-self: flex-start; margin-top: 0.8rem; }
+  .price-type { font-size: 0.85rem; color: var(--ink-3); margin-bottom: 1.5rem; }
+  .price-cta {
+    width: 100%; padding: 1rem; border-radius: 100px;
+    background: var(--accent); color: #fff; border: none;
+    font-size: 1rem; font-family: 'DM Sans', sans-serif; font-weight: 500;
+    cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+    margin-bottom: 1rem;
+  }
+  .price-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,79,255,0.3); }
+  .price-guarantee {
+    font-size: 0.8rem; color: var(--ink-3); text-align: center; line-height: 1.5;
+  }
+  .price-divider { border: none; border-top: 1px solid var(--paper-2); margin: 1.5rem 0; }
+  .price-limit {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.85rem;
+  }
+  .limit-bar-wrap { flex: 1; margin: 0 12px; height: 4px; background: var(--paper-2); border-radius: 2px; overflow: hidden; }
+  .limit-bar { height: 100%; width: 73%; background: var(--accent); border-radius: 2px;
+    animation: fillBar 1.5s 0.5s ease both; }
+  @keyframes fillBar { from { width: 0; } to { width: 73%; } }
+  .limit-count { font-weight: 600; color: var(--accent); white-space: nowrap; }
+
+  /* ─── ROI SECTION ─── */
+  .roi-section { background: var(--paper-2); }
+  .section-header { text-align: center; margin-bottom: 3.5rem; }
+  .section-eyebrow {
+    font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--accent); font-family: 'Syne', sans-serif; font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: 700; letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  .roi-calc {
+    background: var(--paper); border-radius: 24px;
+    padding: 2.5rem; max-width: 640px; margin: 0 auto;
+    border: 1px solid rgba(0,0,0,0.07);
+  }
+  .calc-title { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 1.1rem; margin-bottom: 2rem; }
+  .calc-row {
+    display: flex; align-items: center; gap: 16px; margin-bottom: 1.25rem;
+  }
+  .calc-label { font-size: 0.9rem; color: var(--ink-2); min-width: 200px; }
+  .calc-input {
+    flex: 1; -webkit-appearance: none; appearance: none;
+    height: 4px; background: var(--paper-2); border-radius: 2px; outline: none; cursor: pointer;
+  }
+  .calc-input::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 18px; height: 18px;
+    border-radius: 50%; background: var(--accent); cursor: pointer;
+    box-shadow: 0 0 0 4px rgba(26,79,255,0.15);
+  }
+  .calc-val {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 1rem; color: var(--accent); min-width: 70px; text-align: right;
+  }
+
+  .calc-results {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+    margin-top: 2rem; padding-top: 2rem;
+    border-top: 1px solid var(--paper-2);
+  }
+  .calc-result {
+    background: var(--paper-2); border-radius: 14px; padding: 1.25rem;
+    text-align: center;
+  }
+  .result-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); margin-bottom: 8px; }
+  .result-value { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.6rem; color: var(--ink); }
+  .result-value.good { color: var(--green); }
+
+  /* ─── HOW IT WORKS ─── */
+  .steps-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
+    counter-reset: steps;
+  }
+  .step {
+    counter-increment: steps;
+    position: relative; padding: 2rem;
+    background: var(--paper); border-radius: 20px;
+    border: 1px solid rgba(0,0,0,0.06);
+    transition: transform 0.2s;
+  }
+  .step:hover { transform: translateY(-4px); }
+  .step-num {
+    font-family: 'Syne', sans-serif; font-size: 3rem; font-weight: 800;
+    color: var(--paper-2); line-height: 1; margin-bottom: 1rem;
+  }
+  .step h3 {
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+  .step p { font-size: 0.9rem; color: var(--ink-2); line-height: 1.65; font-weight: 300; }
+  .step-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--accent-light); display: flex; align-items: center;
+    justify-content: center; font-size: 1.25rem; margin-bottom: 1.25rem;
+  }
+
+  /* ─── TESTIMONIALS ─── */
+  .testimonials-section { background: var(--ink); }
+  .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .testimonial {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px; padding: 1.75rem;
+    transition: background 0.2s;
+  }
+  .testimonial:hover { background: rgba(255,255,255,0.08); }
+  .testimonial-text {
+    font-size: 0.95rem; color: rgba(245,242,236,0.8);
+    line-height: 1.7; font-weight: 300; font-style: italic;
+    margin-bottom: 1.5rem;
+  }
+  .testimonial-text strong { color: #fff; font-style: normal; font-weight: 500; }
+  .testimonial-author { display: flex; align-items: center; gap: 12px; }
+  .author-avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--accent); display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.8rem; color: #fff;
+    flex-shrink: 0;
+  }
+  .author-name { font-weight: 500; font-size: 0.9rem; color: rgba(245,242,236,0.9); }
+  .author-role { font-size: 0.78rem; color: rgba(245,242,236,0.45); }
+
+  /* ─── FINAL CTA ─── */
+  .final-cta-section { text-align: center; }
+  .final-cta-section .section-title { margin-bottom: 1rem; }
+  .final-sub { font-size: 1rem; color: var(--ink-2); margin-bottom: 2.5rem; font-weight: 300; max-width: 480px; margin-left: auto; margin-right: auto; }
+  .final-price-tag {
+    display: inline-flex; align-items: baseline; gap: 6px;
+    background: var(--accent-light); border: 1px solid rgba(26,79,255,0.2);
+    border-radius: 100px; padding: 0.5rem 1.25rem; margin-bottom: 2rem;
+    font-family: 'Syne', sans-serif;
+  }
+  .final-price-big { font-size: 2rem; font-weight: 800; color: var(--accent); }
+  .final-price-small { font-size: 0.85rem; color: var(--ink-3); }
+
+  .guarantee-badges {
+    display: flex; gap: 2rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap;
+  }
+  .badge {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.82rem; color: var(--ink-3);
+  }
+  .badge-icon { font-size: 1rem; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--ink); color: rgba(245,242,236,0.4);
+    text-align: center; padding: 2rem;
+    font-size: 0.82rem;
+  }
+  footer strong { color: rgba(245,242,236,0.7); font-weight: 500; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.25rem; }
+    .offer-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .steps-grid { grid-template-columns: 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .calc-results { grid-template-columns: 1fr; }
+    .calc-row { flex-wrap: wrap; }
+    .calc-label { min-width: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Pipeline<span>AI</span></div>
+  <button class="nav-cta" onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})">Démarrer pour 79 €</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-eyebrow">
+    <span class="eyebrow-dot"></span>
+    Offre early adopter — 50 premières places à prix réduit
+  </div>
+  <h1>Vos 10 prochains clients<br>potentiels pour <em>79 €</em></h1>
+  <p class="hero-sub">
+    PipelineAI détecte les PME qui ont besoin de vous, rédige les messages, 
+    et suit les relances. Vous n'avez plus qu'à décrocher.
+  </p>
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})">
+      Tester maintenant
+      <span class="price-tag">79 €</span>
+    </button>
+    <button class="btn-secondary" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">
+      Voir comment ça marche ↓
+    </button>
+  </div>
+  <div class="hero-proof">
+    <div class="proof-item"><span class="proof-icon">✓</span> Sans abonnement</div>
+    <span class="proof-sep">·</span>
+    <div class="proof-item"><span class="proof-icon">✓</span> Résultats en 48h</div>
+    <span class="proof-sep">·</span>
+    <div class="proof-item"><span class="proof-icon">✓</span> Remboursé si aucun prospect qualifié</div>
+  </div>
+</section>
+
+<!-- OFFER -->
+<section class="section offer-section" id="offer">
+  <div class="container">
+    <div class="offer-grid">
+      <div>
+        <div class="offer-label">Ce que vous obtenez</div>
+        <h2 class="offer-title">Un commercial IA qui travaille<br><span>pendant que vous dormez</span></h2>
+        <p class="offer-desc">
+          Pour 79 €, nous identifions 10 prospects PME/TPE qui ont un signal d'intention clair — 
+          recrutement, nouveau site, ouverture, levée de fonds. Chaque prospect est livré avec 
+          un message personnalisé prêt à envoyer et une séquence de relance automatique.
+        </p>
+        <div class="offer-features">
+          <div class="offer-feature">
+            <div class="feat-check">✓</div>
+            <span>10 prospects qualifiés, ciblés sur votre secteur et zone géographique</span>
+          </div>
+          <div class="offer-feature">
+            <div class="feat-check">✓</div>
+            <span>1 message IA ultra-personnalisé par prospect, basé sur ses signaux d'activité</span>
+          </div>
+          <div class="offer-feature">
+            <div class="feat-check">✓</div>
+            <span>Séquence de 3 relances automatiques espacées intelligemment</span>
+          </div>
+          <div class="offer-feature">
+            <div class="feat-check">✓</div>
+            <span>Dashboard de suivi pendant 30 jours inclus</span>
+          </div>
+          <div class="offer-feature">
+            <div class="feat-check">✓</div>
+            <span>Migration vers un plan mensuel avec −20 % la première année</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="price-card">
+        <div class="card-eyebrow">Offre early adopter</div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:0.25rem">
+          <div class="price-display" style="margin-bottom:0">
+            <span class="price-currency">€</span>
+            <span class="price-amount">79</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <span style="font-size:1.1rem;color:#7a7a7a;text-decoration:line-through;font-family:'Syne',sans-serif;font-weight:600">49 €</span>
+            <span style="font-size:0.72rem;color:#7a7a7a">prix de lancement terminé</span>
+          </div>
+        </div>
+        <div class="price-type">Paiement unique — sans engagement</div>
+
+        <!-- Stripe checkout form -->
+        <div id="checkout-form" style="margin-bottom:1rem">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <div>
+              <label style="font-size:0.72rem;color:#7a7a7a;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em">Prénom</label>
+              <input id="f-prenom" type="text" placeholder="Marie" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:10px;font-size:0.9rem;font-family:'DM Sans',sans-serif;outline:none;background:#fff;color:#0e0e0e">
+            </div>
+            <div>
+              <label style="font-size:0.72rem;color:#7a7a7a;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em">Nom</label>
+              <input id="f-nom" type="text" placeholder="Dupont" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:10px;font-size:0.9rem;font-family:'DM Sans',sans-serif;outline:none;background:#fff;color:#0e0e0e">
+            </div>
+          </div>
+          <div style="margin-bottom:8px">
+            <label style="font-size:0.72rem;color:#7a7a7a;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em">Email professionnel</label>
+            <input id="f-email" type="email" placeholder="marie@monentreprise.fr" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:10px;font-size:0.9rem;font-family:'DM Sans',sans-serif;outline:none;background:#fff;color:#0e0e0e">
+          </div>
+          <div style="margin-bottom:8px">
+            <label style="font-size:0.72rem;color:#7a7a7a;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em">Secteur d'activité</label>
+            <select id="f-secteur" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:10px;font-size:0.9rem;font-family:'DM Sans',sans-serif;outline:none;background:#fff;color:#0e0e0e;appearance:none">
+              <option value="">Choisissez votre secteur…</option>
+              <option>Artisanat / BTP</option>
+              <option>Commerce / Retail</option>
+              <option>Conseil / Consulting</option>
+              <option>Restauration / Hôtellerie</option>
+              <option>Services aux entreprises</option>
+              <option>Santé / Bien-être</option>
+              <option>Tech / Digital</option>
+              <option>Autre</option>
+            </select>
+          </div>
+          <div id="form-error" style="display:none;color:#c0392b;font-size:0.8rem;margin-bottom:8px;padding:8px 12px;background:#fff0ed;border-radius:8px"></div>
+          <button class="price-cta" id="stripe-btn" onclick="handleStripeCheckout()">
+            <span id="btn-label">Payer 79 € et démarrer →</span>
+            <span id="btn-loading" style="display:none">Redirection vers le paiement…</span>
+          </button>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:0.75rem">
+          <svg width="38" height="16" viewBox="0 0 38 16" fill="none"><rect width="38" height="16" rx="3" fill="#635BFF"/><text x="5" y="12" font-size="9" fill="white" font-family="sans-serif" font-weight="bold">stripe</text></svg>
+          <span style="font-size:0.75rem;color:#7a7a7a">Paiement sécurisé · SSL · Visa · Mastercard</span>
+        </div>
+
+        <div class="price-guarantee">
+          🛡 Satisfait ou remboursé si les 10 prospects ne sont pas qualifiés
+        </div>
+        <hr class="price-divider">
+        <div style="background:rgba(26,79,255,0.06);border-radius:10px;padding:10px 12px;margin-bottom:1rem;font-size:0.8rem;color:#1a4fff;line-height:1.5;">
+          ✦ Les 50 premiers clients passent au plan Pro à <strong>−20 %</strong> s'ils s'abonnent dans les 30 jours
+        </div>
+        <div class="price-limit">
+          <span style="font-size:0.82rem;color:#7a7a7a">Places early adopter</span>
+          <div class="limit-bar-wrap"><div class="limit-bar"></div></div>
+          <span class="limit-count">23 / 50</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROI -->
+<section class="section roi-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Calculateur ROI</div>
+      <h2 class="section-title">Combien rapportent<br>vos 10 prospects ?</h2>
+    </div>
+    <div class="roi-calc">
+      <div class="calc-title">Adaptez à votre activité</div>
+      <div class="calc-row">
+        <span class="calc-label">Valeur d'un client (€)</span>
+        <input type="range" class="calc-input" id="val" min="200" max="15000" step="100" value="2000" oninput="calc()">
+        <span class="calc-val" id="val-out">2 000 €</span>
+      </div>
+      <div class="calc-row">
+        <span class="calc-label">Taux de conversion (%)</span>
+        <input type="range" class="calc-input" id="taux" min="1" max="30" step="1" value="10" oninput="calc()">
+        <span class="calc-val" id="taux-out">10 %</span>
+      </div>
+      <div class="calc-results">
+        <div class="calc-result">
+          <div class="result-label">Clients générés</div>
+          <div class="result-value" id="r-clients">1</div>
+        </div>
+        <div class="calc-result">
+          <div class="result-label">Revenus estimés</div>
+          <div class="result-value good" id="r-rev">2 000 €</div>
+        </div>
+        <div class="calc-result">
+          <div class="result-label">ROI net</div>
+          <div class="result-value good" id="r-roi">+3 982 %</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Comment ça marche</div>
+      <h2 class="section-title">De zéro à 10 prospects<br>en 48 heures</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-icon">🎯</div>
+        <h3>Vous définissez votre cible</h3>
+        <p>Secteur, zone géographique, taille d'entreprise. 5 minutes pour paramétrer votre profil idéal. L'IA s'occupe du reste.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-icon">🔍</div>
+        <h3>On détecte les signaux</h3>
+        <p>PipelineAI scanne LinkedIn, les sites web et les actualités business pour repérer les PME en phase de développement actif.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-icon">✉️</div>
+        <h3>Les messages arrivent, prêts</h3>
+        <p>Chaque prospect est livré avec un message personnalisé basé sur son actualité réelle. Vous validez, vous envoyez. C'est tout.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section testimonials-section">
+  <div class="container">
+    <div class="section-header" style="margin-bottom:3rem">
+      <div class="section-eyebrow" style="color:#6b9bff">Ils ont testé l'offre à 49 €</div>
+      <h2 class="section-title" style="color:#f5f2ec">Ce qu'ils en disent</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial">
+        <div class="testimonial-text">
+          "En 3 jours j'avais <strong>2 rendez-vous</strong> confirmés. L'un d'eux a signé un contrat à 4 200 €. 
+          Pour 49 € c'est le meilleur investissement marketing que j'aie fait cette année."
+        </div>
+        <div class="testimonial-author">
+          <div class="author-avatar">MB</div>
+          <div>
+            <div class="author-name">Marc Beaulieu</div>
+            <div class="author-role">Consultant RH indépendant, Lyon</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <div class="testimonial-text">
+          "Je passais 2h par semaine sur LinkedIn à chercher des clients. Maintenant 
+          <strong>j'ouvre l'app le matin</strong> et tout est là. La différence est hallucinante."
+        </div>
+        <div class="testimonial-author">
+          <div class="author-avatar">SL</div>
+          <div>
+            <div class="author-name">Sophie Leclerc</div>
+            <div class="author-role">Agence communication, Bordeaux</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <div class="testimonial-text">
+          "Les messages sont <strong>vraiment personnalisés</strong> — un prospect m'a répondu en croyant 
+          que je l'avais suivi depuis des mois. J'ai converti 3 prospects sur 10."
+        </div>
+        <div class="testimonial-author">
+          <div class="author-avatar">RT</div>
+          <div>
+            <div class="author-name">Romain Teixeira</div>
+            <div class="author-role">Menuiserie artisanale, Nantes</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="section final-cta-section">
+  <div class="container">
+    <div class="section-eyebrow">Prêt à commencer ?</div>
+    <h2 class="section-title">Un seul client suffit<br>à rentabiliser l'investissement</h2>
+    <p class="final-sub">
+      Pas d'abonnement. Pas de carte enregistrée. 
+      Juste 10 prospects qualifiés et les messages pour les approcher.
+    </p>
+    <div class="final-price-tag">
+      <span class="final-price-big">79 €</span>
+      <span class="final-price-small">— paiement unique, garanti</span>
+    </div>
+    <br><br>
+    <button class="btn-primary" style="font-size:1.05rem;padding:1rem 2.5rem">
+      Démarrer ma prospection
+      <span class="price-tag">79 €</span>
+    </button>
+    <div class="guarantee-badges">
+      <div class="badge"><span class="badge-icon">🛡</span> Satisfait ou remboursé</div>
+      <div class="badge"><span class="badge-icon">⚡</span> Résultats en 48h</div>
+      <div class="badge"><span class="badge-icon">🔒</span> Sans engagement</div>
+      <div class="badge"><span class="badge-icon">📊</span> Dashboard inclus 30 jours</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- PRICING SECTION -->
+<section style="padding:5rem 1.5rem;background:#f5f2ec;">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:3rem;">
+      <div style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:#7a7a7a;margin-bottom:0.75rem;font-family:monospace">Tarifs</div>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:2.8rem;letter-spacing:0.05em;color:#0e0e0e;margin-bottom:0.75rem">CHOISISSEZ VOTRE PLAN</h2>
+      <p style="color:#7a7a7a;font-size:1rem;max-width:500px;margin:0 auto">Commencez avec l'offre découverte, passez au plan mensuel quand vous êtes prêt.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;">
+
+      <!-- STARTER -->
+      <div style="background:#fff;border-radius:16px;padding:2rem;border:1px solid #e8e4dc;">
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:#7a7a7a;font-family:monospace;margin-bottom:0.5rem">Starter</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:0.03em;color:#0e0e0e;line-height:1">29€</div>
+        <div style="font-size:0.8rem;color:#7a7a7a;margin-bottom:1.5rem">/ mois · sans engagement</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;padding:0">
+          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem"><span style="color:#1a4fff">✓</span> 20 prospects qualifiés/mois</li>
+          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem"><span style="color:#1a4fff">✓</span> Messages IA personnalisés</li>
+          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem"><span style="color:#1a4fff">✓</span> 1 séquence de relance</li>
+          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem"><span style="color:#1a4fff">✓</span> Dashboard de suivi</li>
+        </ul>
+        <button onclick="handlePlanCheckout('starter')" style="width:100%;padding:0.875rem;border-radius:10px;background:#f5f2ec;border:1.5px solid #0e0e0e;color:#0e0e0e;font-size:0.9rem;font-weight:500;cursor:pointer;transition:all 0.15s" onmouseover="this.style.background='#0e0e0e';this.style.color='#fff'" onmouseout="this.style.background='#f5f2ec';this.style.color='#0e0e0e'">
+          Commencer →
+        </button>
+      </div>
+
+      <!-- PRO -->
+      <div style="background:#0e0e0e;border-radius:16px;padding:2rem;border:1px solid #0e0e0e;position:relative;transform:scale(1.03)">
+        <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#1a4fff;color:#fff;font-size:0.65rem;padding:3px 12px;border-radius:20px;font-family:monospace;text-transform:uppercase;letter-spacing:0.1em;white-space:nowrap">⭐ Le plus populaire</div>
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.4);font-family:monospace;margin-bottom:0.5rem">Pro</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:0.03em;color:#fff;line-height:1">79€</div>
+        <div style="font-size:0.8rem;color:rgba(255,255,255,0.4);margin-bottom:1.5rem">/ mois · sans engagement</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;padding:0">
+          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#fff"><span style="color:#1a4fff">✓</span> 100 prospects qualifiés/mois</li>
+          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#fff"><span style="color:#1a4fff">✓</span> Messages IA ultra-personnalisés</li>
+          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#fff"><span style="color:#1a4fff">✓</span> 3 séquences de relance</li>
+          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#fff"><span style="color:#1a4fff">✓</span> Pipeline commercial complet</li>
+          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#fff"><span style="color:#1a4fff">✓</span> Accès prioritaire nouveautés</li>
+        </ul>
+        <button onclick="handlePlanCheckout('pro')" style="width:100%;padding:0.875rem;border-radius:10px;background:#1a4fff;border:none;color:#fff;font-size:0.9rem;font-weight:500;cursor:pointer;transition:all 0.15s" onmouseover="this.style.background='#3d6ae0'" onmouseout="this.style.background='#1a4fff'">
+          Commencer →
+        </button>
+      </div>
+
+      <!-- AGENCE -->
+      <div style="background:#fff;border-radius:16px;padding:2rem;border:1px solid #e8e4dc;">
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:#7a7a7a;font-family:monospace;margin-bottom:0.5rem">Agence</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:0.03em;color:#0e0e0e;line-height:1">199€</div>
+        <div style="font-size:0.8rem;color:#7a7a7a;margin-bottom:1.5rem">/ mois · sans engagement</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;padding:0">
+          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem"><span style="color:#1a4fff">✓</span> Prospects illimités</li>
+          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem"><span style="color:#1a4fff">✓</span> Messages IA multi-profils</li>
+          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem"><span style="color:#1a4fff">✓</span> Séquences illimitées</li>
+          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem"><span style="color:#1a4fff">✓</span> 3 comptes utilisateurs</li>
+          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem"><span style="color:#1a4fff">✓</span> Support prioritaire</li>
+        </ul>
+        <button onclick="handlePlanCheckout('agence')" style="width:100%;padding:0.875rem;border-radius:10px;background:#f5f2ec;border:1.5px solid #0e0e0e;color:#0e0e0e;font-size:0.9rem;font-weight:500;cursor:pointer;transition:all 0.15s" onmouseover="this.style.background='#0e0e0e';this.style.color='#fff'" onmouseout="this.style.background='#f5f2ec';this.style.color='#0e0e0e'">
+          Commencer →
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Decouverte note -->
+    <div style="text-align:center;margin-top:2rem;padding:1.25rem;background:#fff;border-radius:12px;border:1px solid #e8e4dc;">
+      <span style="font-size:0.85rem;color:#7a7a7a">Vous voulez tester d'abord ? </span>
+      <strong style="font-size:0.85rem;color:#0e0e0e">L'offre découverte à 79 € (paiement unique)</strong>
+      <span style="font-size:0.85rem;color:#7a7a7a"> vous donne 10 prospects qualifiés sans engagement.</span>
+      <a href="#form" style="display:inline-block;margin-left:8px;font-size:0.85rem;color:#1a4fff;text-decoration:none;font-weight:500">Démarrer →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <strong>PipelineAI</strong> — Votre commercial IA pour PME &amp; TPE<br>
+  <span style="margin-top:0.5rem;display:block">© 2026 · Mentions légales · Contact</span>
+</footer>
+
+<script>
+function calc() {
+  const val = parseInt(document.getElementById('val').value);
+  const taux = parseInt(document.getElementById('taux').value);
+  document.getElementById('val-out').textContent = val.toLocaleString('fr-FR') + ' €';
+  document.getElementById('taux-out').textContent = taux + ' %';
+  const clients = Math.max(1, Math.round(10 * taux / 100));
+  const rev = clients * val;
+  const roi = Math.round(((rev - 79) / 79) * 100);
+  document.getElementById('r-clients').textContent = clients;
+  document.getElementById('r-rev').textContent = rev.toLocaleString('fr-FR') + ' €';
+  document.getElementById('r-roi').textContent = '+' + roi.toLocaleString('fr-FR') + ' %';
+}
+</script>
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+/* ─── CONFIG — remplacer par vos vraies clés ─── */
+const API_BASE = 'https://pipelineai-backend-production.up.railway.app';
+const STRIPE_PUBLISHABLE_KEY = 'pk_test_51TVtVNPdRoQBFwMnqvARm92OSx7DjHRm4MLHekzXIAiCZSoPwbuYVx6V8jqqLjMeSLVYaLh3IXFjOuxHSHtPPvUL00PkiD9Rz0';
+const STRIPE_PRICE_ID        = 'price_1TVtefPdRoQBFwMnE2NrcZah'; // produit 79€ créé dans le dashboard Stripe
+
+/* ─── Checkout ─── */
+async function handlePlanCheckout(plan) {
+  const email = document.getElementById('f-email') ? document.getElementById('f-email').value.trim() : '';
+  const prenom = document.getElementById('f-prenom') ? document.getElementById('f-prenom').value.trim() : '';
+  
+  if (!email || !email.includes('@')) {
+    // Scroll to form and highlight email field
+    document.getElementById('form-section') && document.getElementById('form-section').scrollIntoView({behavior:'smooth'});
+    showToast && showToast('Renseignez votre email en haut pour continuer');
+    // Store plan for after form fill
+    window._pendingPlan = plan;
+    return;
+  }
+  
+  try {
+    const res = await fetch(API_BASE + '/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, prenom: prenom || 'Client', secteur: '', plan }),
+    });
+    if (!res.ok) throw new Error('Erreur');
+    const data = await res.json();
+    window.location.href = data.url;
+  } catch(e) {
+    alert('Une erreur est survenue. Veuillez réessayer.');
+  }
+}
+
+async function handleStripeCheckout() {
+  const prenom  = document.getElementById('f-prenom').value.trim();
+  const nom     = document.getElementById('f-nom').value.trim();
+  const email   = document.getElementById('f-email').value.trim();
+  const secteur = document.getElementById('f-secteur').value;
+  const errEl   = document.getElementById('form-error');
+
+  errEl.style.display = 'none';
+
+  if (!prenom || !nom) return showError('Merci de renseigner votre prénom et nom.');
+  if (!email || !email.includes('@')) return showError('Merci de renseigner un email valide.');
+  if (!secteur) return showError('Merci de sélectionner votre secteur d\'activité.');
+
+  setLoading(true);
+
+  try {
+    const res = await fetch(API_BASE + '/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, prenom, secteur }),
+    });
+    if (!res.ok) throw new Error('Erreur serveur');
+    const data = await res.json();
+    window.location.href = data.url;
+  } catch (e) {
+    setLoading(false);
+    showError('Une erreur est survenue. Veuillez réessayer.');
+  }
+}
+
+function showError(msg) {
+  const el = document.getElementById('form-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function setLoading(on) {
+  document.getElementById('btn-label').style.display   = on ? 'none'  : 'inline';
+  document.getElementById('btn-loading').style.display = on ? 'inline': 'none';
+  document.getElementById('stripe-btn').disabled = on;
+}
+
+/* ─── Page succès ─── */
+function simulateSuccess(prenom, email) {
+  showSuccessPage(prenom || 'là', email || '');
+}
+
+function showSuccessPage(prenom, email) {
+  document.body.innerHTML = `
+  <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:#f5f2ec;font-family:'DM Sans',sans-serif;padding:2rem;text-align:center">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <div style="max-width:520px;width:100%">
+      <div style="width:64px;height:64px;background:#e0f5eb;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:1.8rem">✓</div>
+      <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#1a4fff;font-family:'Syne',sans-serif;font-weight:600;margin-bottom:0.75rem">Paiement confirmé</div>
+      <h1 style="font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem">
+        Bienvenue, ${prenom} 👋
+      </h1>
+      <p style="color:#3a3a3a;font-size:1rem;line-height:1.7;font-weight:300;margin-bottom:2rem">
+        Votre commande est confirmée. Nous analysons votre secteur et vos critères de ciblage.<br>
+        <strong style="font-weight:500">Vos 10 premiers prospects arrivent dans 48h maximum.</strong>
+      </p>
+
+      <div style="background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:20px;padding:1.75rem;margin-bottom:2rem;text-align:left">
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;margin-bottom:1.25rem;color:#0e0e0e">Ce qui se passe maintenant</div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;gap:14px;align-items:flex-start">
+            <div style="width:28px;height:28px;border-radius:50%;background:#e8eeff;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600;color:#1a4fff;flex-shrink:0">1</div>
+            <div>
+              <div style="font-weight:500;font-size:0.9rem;margin-bottom:2px">Email de confirmation envoyé</div>
+              <div style="font-size:0.82rem;color:#7a7a7a">${email ? 'À ' + email : 'Vérifiez votre boîte mail'} — pensez à vérifier vos spams</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start">
+            <div style="width:28px;height:28px;border-radius:50%;background:#e8eeff;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600;color:#1a4fff;flex-shrink:0">2</div>
+            <div>
+              <div style="font-weight:500;font-size:0.9rem;margin-bottom:2px">Paramétrage de votre profil</div>
+              <div style="font-size:0.82rem;color:#7a7a7a">Notre IA analyse votre secteur et zone géographique</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start">
+            <div style="width:28px;height:28px;border-radius:50%;background:#e0f5eb;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600;color:#0f6e3f;flex-shrink:0">3</div>
+            <div>
+              <div style="font-weight:500;font-size:0.9rem;margin-bottom:2px">Vos 10 prospects arrivent</div>
+              <div style="font-size:0.82rem;color:#7a7a7a">Avec messages personnalisés et séquences de relance prêts</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#0e0e0e;color:#f5f2ec;border-radius:20px;padding:1.5rem;margin-bottom:1.5rem">
+        <div style="font-size:0.8rem;color:rgba(245,242,236,0.5);margin-bottom:4px">Rappel de votre investissement</div>
+        <div style="font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:#6b9bff;margin-bottom:4px">79 €</div>
+        <div style="font-size:0.82rem;color:rgba(245,242,236,0.6)">Un seul client signé = investissement rentabilisé ×10 minimum</div>
+      </div>
+
+      <div style="font-size:0.82rem;color:#7a7a7a">
+        Une question ? <a href="mailto:julien@pipelineai.fr" style="color:#1a4fff">julien@pipelineai.fr</a>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ─── Gestion URL ?status=success (retour Stripe réel) ─── */
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('status') === 'success') {
+    showSuccessPage(
+      decodeURIComponent(params.get('prenom') || ''),
+      decodeURIComponent(params.get('email') || '')
+    );
+  }
+});
+</script>
+</body>
+</html>
