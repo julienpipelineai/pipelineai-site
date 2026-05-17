@@ -614,6 +614,127 @@ body {
 }
 .ob-step.active .ob-dot { background: var(--accent); border-color: var(--accent); animation: blink 1s ease infinite; }
 .ob-step.done .ob-dot { background: var(--green); border-color: var(--green); animation: none; }
+
+/* ── DARK/LIGHT MODE ── */
+body.light-mode {
+  --bg: #f5f2ec; --bg-2: #ffffff; --bg-3: #edeae2; --bg-4: #e0ddd6;
+  --border: rgba(0,0,0,0.08); --border-2: rgba(0,0,0,0.14);
+  --text: #0e0e0e; --text-2: #5a5855; --text-3: #aaa8a4;
+  --accent: #1a4fff; --accent-dim: rgba(26,79,255,0.08);
+}
+body.light-mode .sidebar { background: #fff; }
+body.light-mode .topbar  { background: #f5f2ec; }
+body.light-mode .prospect-row:hover { background: #f0ede6; }
+body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
+
+/* ── UPSELL BANNER ── */
+#upsell-banner {
+  display:none; margin-bottom:1rem;
+  background: linear-gradient(135deg, rgba(79,124,255,0.12) 0%, rgba(46,204,113,0.08) 100%);
+  border: 1px solid rgba(79,124,255,0.3); border-radius: 12px;
+  padding: 1rem 1.25rem; align-items: center; gap: 1rem;
+  animation: fadeSlideUp 0.4s ease both;
+}
+#upsell-banner.show { display: flex; }
+.upsell-icon { font-size: 1.5rem; flex-shrink: 0; }
+.upsell-text { flex: 1; }
+.upsell-title { font-size: 0.88rem; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+.upsell-sub { font-size: 0.75rem; color: var(--text-2); }
+.upsell-cta {
+  padding: 0.5rem 1.1rem; background: var(--accent); color: #fff;
+  border: none; border-radius: 8px; font-size: 0.78rem;
+  font-family: var(--sans); cursor: pointer; white-space: nowrap;
+  transition: all 0.15s; flex-shrink: 0;
+}
+.upsell-cta:hover { background: #3d6ae0; transform: translateY(-1px); }
+.upsell-close { background: none; border: none; color: var(--text-3); cursor: pointer; font-size: 1rem; padding: 4px; flex-shrink: 0; }
+
+/* ── PROGRESS BAR ── */
+#progress-wrap {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem;
+  animation: fadeSlideUp 0.4s 0.1s ease both;
+}
+.progress-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+.progress-title { font-size: 0.82rem; color: var(--text); font-weight: 500; }
+.progress-count { font-family: var(--mono); font-size: 0.75rem; color: var(--accent); }
+.progress-bar-track { height: 6px; background: var(--bg-4); border-radius: 3px; overflow: hidden; }
+.progress-bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease;
+  background: linear-gradient(90deg, var(--accent), var(--green)); }
+.progress-steps { display: flex; gap: 8px; margin-top: 0.75rem; flex-wrap: wrap; }
+.progress-step {
+  font-size: 0.7rem; padding: 3px 10px; border-radius: 20px;
+  background: var(--bg-4); color: var(--text-3); border: 1px solid var(--border);
+  transition: all 0.3s;
+}
+.progress-step.done { background: rgba(46,204,113,0.12); color: var(--green); border-color: rgba(46,204,113,0.3); }
+.progress-step.current { background: var(--accent-dim); color: var(--accent); border-color: rgba(79,124,255,0.3); }
+
+/* ── RELANCE NOTIFICATIONS ── */
+#notif-wrap { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1rem; }
+.notif-card {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(245,166,35,0.08); border: 1px solid rgba(245,166,35,0.25);
+  border-radius: 10px; padding: 0.75rem 1rem; cursor: pointer;
+  transition: all 0.15s; animation: fadeSlideUp 0.3s ease both;
+}
+.notif-card:hover { background: rgba(245,166,35,0.14); }
+.notif-icon { font-size: 1rem; flex-shrink: 0; }
+.notif-text { flex: 1; font-size: 0.82rem; color: var(--text); }
+.notif-sub { font-size: 0.72rem; color: var(--text-2); margin-top: 1px; }
+.notif-action { font-size: 0.75rem; color: var(--warm); font-family: var(--mono); white-space: nowrap; }
+.notif-dismiss { background: none; border: none; color: var(--text-3); cursor: pointer; font-size: 0.9rem; padding: 2px; }
+
+/* ── HISTORIQUE ── */
+#history-panel {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1rem 1.25rem; margin-top: 1rem;
+}
+.history-title { font-size: 0.75rem; font-family: var(--mono); text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--text-3); margin-bottom: 0.75rem; }
+.history-list { display: flex; flex-direction: column; gap: 6px; max-height: 180px; overflow-y: auto; }
+.history-item { display: flex; align-items: flex-start; gap: 10px; font-size: 0.78rem; color: var(--text-2); }
+.history-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 5px; }
+.history-time { font-family: var(--mono); font-size: 0.68rem; color: var(--text-3); white-space: nowrap; }
+
+/* ── STATS PERF ── */
+.perf-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 1rem; }
+.perf-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; padding: 0.875rem; }
+.perf-label { font-size: 0.65rem; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3); margin-bottom: 4px; }
+.perf-val { font-family: var(--mono); font-size: 1.3rem; color: var(--text); font-weight: 500; }
+.perf-val.good { color: var(--green); }
+.perf-val.warn { color: var(--warm); }
+.perf-hint { font-size: 0.68rem; color: var(--text-3); margin-top: 2px; }
+
+/* ── CHECKLIST ONBOARDING ── */
+#checklist-wrap {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem;
+}
+.checklist-title { font-size: 0.82rem; font-weight: 500; color: var(--text); margin-bottom: 0.75rem;
+  display: flex; align-items: center; gap: 8px; }
+.checklist-items { display: flex; flex-direction: column; gap: 7px; }
+.check-item { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: var(--text-2);
+  cursor: pointer; padding: 4px 0; transition: color 0.2s; }
+.check-item.done { color: var(--green); text-decoration: line-through; opacity: 0.7; }
+.check-box { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid var(--border-2);
+  display: flex; align-items: center; justify-content: center; font-size: 0.65rem;
+  flex-shrink: 0; transition: all 0.2s; }
+.check-item.done .check-box { background: var(--green); border-color: var(--green); color: #fff; }
+
+/* ── THEME TOGGLE ── */
+.theme-toggle {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--bg-3); border: 1px solid var(--border-2);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 0.9rem; transition: all 0.15s;
+}
+.theme-toggle:hover { background: var(--bg-4); }
+
+/* ── EXPORT PDF BTN ── */
+.btn-pdf { background: rgba(46,204,113,0.1); border-color: rgba(46,204,113,0.3); color: var(--green); }
+.btn-pdf:hover { background: rgba(46,204,113,0.2); color: var(--green); }
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -675,7 +796,9 @@ body {
       </div>
     </div>
     <div class="topbar-right">
-      <button class="btn" onclick="showToast('Export CSV en préparation…', '📥')">↓ Exporter</button>
+      <div class="theme-toggle" onclick="toggleTheme()" title="Mode clair/sombre">🌙</div>
+      <button class="btn" onclick="exportCSV()">↓ CSV</button>
+      <button class="btn btn-pdf" onclick="exportPDF()">↓ PDF</button>
       <button class="btn" onclick="openSettings()" style="gap:6px">⊙ Paramètres</button>
       <button class="btn btn-accent" onclick="showToast('Génération en cours…', '⚡')">+ Nouvelle campagne</button>
     </div>
@@ -683,6 +806,82 @@ body {
 
   <!-- CONTENT -->
   <div class="content">
+
+    <!-- Upsell Banner -->
+    <div id="upsell-banner">
+      <span class="upsell-icon">🚀</span>
+      <div class="upsell-text">
+        <div class="upsell-title" id="upsell-title">Vous progressez bien !</div>
+        <div class="upsell-sub" id="upsell-sub">Passez au plan Starter pour recevoir 20 prospects/mois et ne jamais manquer d'opportunités.</div>
+      </div>
+      <button class="upsell-cta" onclick="handleUpgrade()">Passer au Pro −20 % →</button>
+      <button class="upsell-close" onclick="dismissUpsell()">✕</button>
+    </div>
+
+    <!-- Checklist -->
+    <div id="checklist-wrap">
+      <div class="checklist-title">
+        🎯 Guide de démarrage
+        <span style="font-size:0.7rem;color:var(--text-3);font-family:var(--mono);" id="check-progress">0/4 complétés</span>
+      </div>
+      <div class="checklist-items">
+        <div class="check-item" id="chk-1" onclick="toggleCheck(1)">
+          <div class="check-box" id="chk-box-1"></div>
+          Parcourez vos 10 prospects et identifiez les plus chauds
+        </div>
+        <div class="check-item" id="chk-2" onclick="toggleCheck(2)">
+          <div class="check-box" id="chk-box-2"></div>
+          Envoyez votre premier message à un prospect chaud
+        </div>
+        <div class="check-item" id="chk-3" onclick="toggleCheck(3)">
+          <div class="check-box" id="chk-box-3"></div>
+          Planifiez vos relances J+5, J+12, J+20
+        </div>
+        <div class="check-item" id="chk-4" onclick="toggleCheck(4)">
+          <div class="check-box" id="chk-box-4"></div>
+          Marquez votre premier prospect "Converti ✓" après signature
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div id="progress-wrap">
+      <div class="progress-header">
+        <div class="progress-title">📊 Progression de votre pipeline</div>
+        <div class="progress-count"><span id="prog-sent">0</span>/10 prospects contactés</div>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="prog-bar" style="width:0%"></div>
+      </div>
+      <div class="progress-steps">
+        <span class="progress-step current" id="pstep-1">① Démarré</span>
+        <span class="progress-step" id="pstep-2">② 3 contactés</span>
+        <span class="progress-step" id="pstep-3">③ 6 contactés</span>
+        <span class="progress-step" id="pstep-4">④ Pipeline complet</span>
+      </div>
+    </div>
+
+    <!-- Relance Notifications -->
+    <div id="notif-wrap"></div>
+
+    <!-- Stats Perf -->
+    <div class="perf-grid">
+      <div class="perf-card">
+        <div class="perf-label">Taux de contact</div>
+        <div class="perf-val" id="perf-contact">0%</div>
+        <div class="perf-hint">Moyenne secteur : 42%</div>
+      </div>
+      <div class="perf-card">
+        <div class="perf-label">Meilleur jour</div>
+        <div class="perf-val warn" id="perf-day">Mardi</div>
+        <div class="perf-hint">Pour envoyer vos messages</div>
+      </div>
+      <div class="perf-card">
+        <div class="perf-label">Taux conversion</div>
+        <div class="perf-val good" id="perf-conv">0%</div>
+        <div class="perf-hint">Objectif : 10%</div>
+      </div>
+    </div>
 
     <!-- Metrics -->
     <div class="metrics">
@@ -738,6 +937,13 @@ body {
         </div>
       </div>
 
+    </div>
+    <!-- Historique -->
+    <div id="history-panel">
+      <div class="history-title">Historique des actions</div>
+      <div class="history-list" id="history-list">
+        <div style="font-size:0.78rem;color:var(--text-3);font-style:italic;">Aucune action pour l'instant — commencez à contacter vos prospects !</div>
+      </div>
     </div>
   </div>
 </main>
@@ -1270,6 +1476,7 @@ function renderList() {
       ? PROSPECTS.filter(p => p.score === activeFilter)
       : PROSPECTS.filter(p => prospectStatuses[p.id] === activeFilter);
   updateFilterCounts();
+  updateProgress();
 
   list.innerHTML = filtered.map(p => {
     const av = p.company.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
@@ -1474,11 +1681,20 @@ function copyMessage(id) {
 }
 
 function updateStatus(id, status) {
+  const p = PROSPECTS.find(x => x.id === id);
   prospectStatuses[id] = status;
   renderList();
   renderDetail();
   updateFilterCounts();
+  updateProgress();
+  // Historique
+  const labels = {detected:'Détecté',messaged:'Message envoyé',relance_1:'Relance 1 envoyée',relance_2:'Relance 2 envoyée',responded:'A répondu',converted:'Converti ✓'};
+  if (p) addHistory(labels[status] || status, p.company);
   showToast(`Statut mis à jour : ${status}`, '◈');
+  // Auto-check checklist
+  if (status === 'messaged' && !checkState[2]) toggleCheck(2);
+  if (status === 'relance_1' && !checkState[3]) toggleCheck(3);
+  if (status === 'converted' && !checkState[4]) toggleCheck(4);
 }
 
 function filterProspects(filter, el) {
@@ -1551,6 +1767,8 @@ function openLinkedin(id) {
   if (activeMsg === 'initial' && prospectStatuses[id] === 'detected') {
     updateStatus(id, 'messaged');
   }
+  const _lp = PROSPECTS.find(x => x.id === id);
+  if (_lp) addHistory('LinkedIn ouvert', _lp.company);
   showSendStatus(id, '✓ Message copié · Profil LinkedIn ouvert — collez dans InMail');
   return false;
 }
@@ -2189,6 +2407,260 @@ if (_mlink) {
   setTimeout(() => selectProspect(1), 600);
 }
 
+
+// ══════════════════════════════════════════════════════════════
+// NOUVELLES FONCTIONNALITÉS DASHBOARD
+// ══════════════════════════════════════════════════════════════
+
+// ── HISTORIQUE ───────────────────────────────────────────────
+const actionHistory = [];
+
+function addHistory(action, company) {
+  const now = new Date();
+  const time = now.toLocaleDateString('fr-FR', {weekday:'short', day:'numeric', month:'short'})
+    + ' · ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+  actionHistory.unshift({ action, company, time });
+  renderHistory();
+}
+
+function renderHistory() {
+  const el = document.getElementById('history-list');
+  if (!el) return;
+  if (actionHistory.length === 0) {
+    el.innerHTML = '<div style="font-size:0.78rem;color:var(--text-3);font-style:italic;">Aucune action pour l'instant.</div>';
+    return;
+  }
+  el.innerHTML = actionHistory.slice(0, 20).map(h => `
+    <div class="history-item">
+      <div class="history-dot"></div>
+      <div style="flex:1">${h.action} — <strong>${h.company}</strong></div>
+      <div class="history-time">${h.time}</div>
+    </div>`).join('');
+}
+
+// ── PROGRESS BAR ─────────────────────────────────────────────
+function updateProgress() {
+  const total = PROSPECTS.length;
+  const contacted = PROSPECTS.filter(p => prospectStatuses[p.id] && prospectStatuses[p.id] !== 'detected').length;
+  const converted = PROSPECTS.filter(p => prospectStatuses[p.id] === 'converted').length;
+  const pct = total > 0 ? Math.round(contacted / total * 100) : 0;
+
+  const bar = document.getElementById('prog-bar');
+  const sent = document.getElementById('prog-sent');
+  if (bar) bar.style.width = pct + '%';
+  if (sent) sent.textContent = contacted;
+
+  // Steps
+  const steps = [
+    { id: 'pstep-1', done: contacted >= 1 },
+    { id: 'pstep-2', done: contacted >= 3 },
+    { id: 'pstep-3', done: contacted >= 6 },
+    { id: 'pstep-4', done: contacted >= 10 },
+  ];
+  steps.forEach((s, i) => {
+    const el = document.getElementById(s.id);
+    if (!el) return;
+    el.className = 'progress-step';
+    if (s.done) el.classList.add('done');
+    else if (i === steps.findIndex(x => !x.done)) el.classList.add('current');
+  });
+
+  // Perf stats
+  const rate = total > 0 ? Math.round(contacted/total*100) : 0;
+  const convRate = contacted > 0 ? Math.round(converted/contacted*100) : 0;
+  const perfContact = document.getElementById('perf-contact');
+  const perfConv = document.getElementById('perf-conv');
+  if (perfContact) { perfContact.textContent = rate + '%'; perfContact.className = 'perf-val' + (rate >= 42 ? ' good' : rate >= 20 ? ' warn' : ''); }
+  if (perfConv) { perfConv.textContent = convRate + '%'; perfConv.className = 'perf-val' + (convRate >= 10 ? ' good' : ''); }
+
+  // Meilleur jour (basé sur le jour actuel)
+  const days = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+  const bestDays = ['Mardi','Mercredi','Jeudi'];
+  const today = new Date().getDay();
+  const perfDay = document.getElementById('perf-day');
+  if (perfDay) perfDay.textContent = bestDays[today % 3];
+
+  // Upsell trigger
+  checkUpsell(contacted, converted);
+
+  // Relance notifications
+  renderNotifications();
+}
+
+// ── UPSELL ───────────────────────────────────────────────────
+let upsellDismissed = false;
+
+function checkUpsell(contacted, converted) {
+  if (upsellDismissed) return;
+  const banner = document.getElementById('upsell-banner');
+  const title = document.getElementById('upsell-title');
+  const sub = document.getElementById('upsell-sub');
+  if (!banner) return;
+
+  if (converted >= 1) {
+    title.textContent = '🎉 Félicitations — vous avez converti un prospect !';
+    sub.textContent = 'Passez au plan Pro pour recevoir 100 prospects/mois et maximiser vos revenus.';
+    banner.classList.add('show');
+  } else if (contacted >= 5) {
+    title.textContent = '⚡ Vous êtes actif — passez à la vitesse supérieure';
+    sub.textContent = 'Vous avez contacté ' + contacted + ' prospects. Le plan Starter vous donne 20 prospects/mois pour 29 €.';
+    banner.classList.add('show');
+  } else if (contacted >= 3) {
+    title.textContent = '👍 Bon démarrage — encore 7 prospects à contacter';
+    sub.textContent = 'Continuez votre élan ! Le plan Starter vous permet de recevoir de nouveaux prospects chaque mois.';
+    banner.classList.add('show');
+  } else {
+    banner.classList.remove('show');
+  }
+}
+
+function dismissUpsell() {
+  upsellDismissed = true;
+  document.getElementById('upsell-banner').classList.remove('show');
+}
+
+function handleUpgrade() {
+  const API_BASE_LOCAL = 'https://pipelineai-backend-production.up.railway.app';
+  // Redirect to Stripe checkout for Pro plan
+  window.location.href = 'https://pipelineai.fr/#offer';
+}
+
+// ── RELANCE NOTIFICATIONS ─────────────────────────────────────
+let dismissedNotifs = new Set();
+
+function renderNotifications() {
+  const wrap = document.getElementById('notif-wrap');
+  if (!wrap) return;
+
+  const notifs = PROSPECTS.filter(p => {
+    const st = prospectStatuses[p.id];
+    return st === 'messaged' || st === 'relance_1' || st === 'relance_2';
+  }).filter(p => !dismissedNotifs.has(p.id));
+
+  if (notifs.length === 0) { wrap.innerHTML = ''; return; }
+
+  const labels = { messaged: 'J+5 — première relance recommandée', relance_1: 'J+12 — deuxième relance recommandée', relance_2: 'J+20 — dernière relance recommandée' };
+
+  wrap.innerHTML = notifs.slice(0, 3).map(p => `
+    <div class="notif-card" onclick="selectProspect(${p.id})">
+      <span class="notif-icon">⏰</span>
+      <div class="notif-text">
+        <div><strong>${p.company}</strong> — ${p.contact}</div>
+        <div class="notif-sub">${labels[prospectStatuses[p.id]] || 'Relance recommandée'}</div>
+      </div>
+      <span class="notif-action">Relancer →</span>
+      <button class="notif-dismiss" onclick="event.stopPropagation();dismissNotif(${p.id})">✕</button>
+    </div>`).join('');
+}
+
+function dismissNotif(id) {
+  dismissedNotifs.add(id);
+  renderNotifications();
+}
+
+// ── CHECKLIST ─────────────────────────────────────────────────
+const checkState = { 1: false, 2: false, 3: false, 4: false };
+
+function toggleCheck(n) {
+  checkState[n] = !checkState[n];
+  const item = document.getElementById('chk-' + n);
+  const box = document.getElementById('chk-box-' + n);
+  if (item) item.classList.toggle('done', checkState[n]);
+  if (box) box.textContent = checkState[n] ? '✓' : '';
+  const done = Object.values(checkState).filter(Boolean).length;
+  const prog = document.getElementById('check-progress');
+  if (prog) prog.textContent = done + '/4 complétés';
+  if (done === 4) {
+    showToast('🎉 Guide de démarrage complété — vous êtes prêt !', '🎉');
+    setTimeout(() => { const cw = document.getElementById('checklist-wrap'); if (cw) cw.style.display='none'; }, 3000);
+  }
+}
+
+// ── THEME TOGGLE ─────────────────────────────────────────────
+function toggleTheme() {
+  const body = document.body;
+  const btn = document.querySelector('.theme-toggle');
+  body.classList.toggle('light-mode');
+  const isLight = body.classList.contains('light-mode');
+  if (btn) btn.textContent = isLight ? '☀️' : '🌙';
+  localStorage.setItem('pai_theme', isLight ? 'light' : 'dark');
+}
+
+// Init theme
+(function() {
+  const saved = localStorage.getItem('pai_theme');
+  if (saved === 'light') {
+    document.body.classList.add('light-mode');
+    const btn = document.querySelector('.theme-toggle');
+    if (btn) btn.textContent = '☀️';
+  }
+})();
+
+// ── EXPORT CSV ────────────────────────────────────────────────
+function exportCSV() {
+  const headers = ['Entreprise','Contact','Rôle','Localisation','Email','Secteur','Score','Signal','Statut'];
+  const rows = PROSPECTS.map(p => [
+    p.company, p.contact, p.role, p.location, p.email||'',
+    p.sector||'', p.score, p.signal, prospectStatuses[p.id]||'detected'
+  ]);
+  const csv = [headers, ...rows].map(r => r.map(c => '"' + String(c).replace(/"/g,'""') + '"').join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='pipelineai-prospects.csv'; a.click();
+  showToast('Export CSV téléchargé', '↓');
+  addHistory('Export CSV', 'Tous les prospects');
+}
+
+// ── EXPORT PDF ────────────────────────────────────────────────
+function exportPDF() {
+  const contacted = PROSPECTS.filter(p => prospectStatuses[p.id] && prospectStatuses[p.id] !== 'detected').length;
+  const converted = PROSPECTS.filter(p => prospectStatuses[p.id] === 'converted').length;
+  const date = new Date().toLocaleDateString('fr-FR', {day:'numeric', month:'long', year:'numeric'});
+
+  const rows = PROSPECTS.map(p => {
+    const st = prospectStatuses[p.id] || 'detected';
+    const stLabel = {detected:'Détecté',messaged:'Contacté',relance_1:'Relance 1',relance_2:'Relance 2',responded:'A répondu',converted:'Converti ✓'}[st]||st;
+    const scoreColor = p.score==='hot'?'#ff5c3a':p.score==='warm'?'#f5a623':'#4f7cff';
+    return `<tr style="border-bottom:1px solid #eee">
+      <td style="padding:8px 12px;font-weight:500">${p.company}</td>
+      <td style="padding:8px 12px;color:#555">${p.contact}</td>
+      <td style="padding:8px 12px;color:#555">${p.role}</td>
+      <td style="padding:8px 12px;color:#555">${p.location}</td>
+      <td style="padding:8px 12px"><span style="color:${scoreColor};font-weight:600">${p.score.toUpperCase()}</span></td>
+      <td style="padding:8px 12px;color:#333">${stLabel}</td>
+    </tr>`;
+  }).join('');
+
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <title>PipelineAI — Rapport prospects</title>
+  <style>body{font-family:'DM Sans',Arial,sans-serif;color:#0e0e0e;padding:40px;max-width:900px;margin:0 auto}
+  h1{font-size:2rem;font-weight:800;margin-bottom:4px} .sub{color:#888;font-size:0.9rem;margin-bottom:2rem}
+  .stats{display:flex;gap:20px;margin-bottom:2rem} .stat{background:#f5f5f5;border-radius:10px;padding:16px 20px;min-width:120px}
+  .stat-val{font-size:2rem;font-weight:800;color:#1a4fff} .stat-label{font-size:0.75rem;color:#888;text-transform:uppercase;letter-spacing:0.05em}
+  table{width:100%;border-collapse:collapse;font-size:0.85rem} th{background:#0e0e0e;color:#fff;padding:10px 12px;text-align:left;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em}
+  tr:nth-child(even){background:#f9f9f9} footer{margin-top:2rem;font-size:0.75rem;color:#aaa;text-align:center}</style>
+  </head><body>
+  <h1>Pipeline<span style="color:#1a4fff">AI</span> — Rapport prospects</h1>
+  <div class="sub">Généré le ${date}</div>
+  <div class="stats">
+    <div class="stat"><div class="stat-val">${PROSPECTS.length}</div><div class="stat-label">Prospects</div></div>
+    <div class="stat"><div class="stat-val">${contacted}</div><div class="stat-label">Contactés</div></div>
+    <div class="stat"><div class="stat-val">${converted}</div><div class="stat-label">Convertis</div></div>
+    <div class="stat"><div class="stat-val">${contacted>0?Math.round(converted/contacted*100):0}%</div><div class="stat-label">Taux conv.</div></div>
+  </div>
+  <table><thead><tr><th>Entreprise</th><th>Contact</th><th>Rôle</th><th>Localisation</th><th>Score</th><th>Statut</th></tr></thead>
+  <tbody>${rows}</tbody></table>
+  <footer>PipelineAI — pipelineai.fr · Rapport confidentiel</footer>
+  </body></html>`;
+
+  const blob = new Blob([html], {type:'text/html;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='pipelineai-rapport-' + new Date().toISOString().slice(0,10) + '.html'; a.click();
+  showToast('Rapport PDF exporté', '↓');
+  addHistory('Export rapport', 'Tous les prospects');
+}
+
+// ══════════════════════════════════════════════════════════════
 // ── MODAL CHOIX CLIENT MAIL ────────────────────────────────────────────────────
 const MAIL_CLIENTS = [
   { id:'zimbra',  label:'Zimbra',       icon:'🔵', url:'https://mail.pipelineai.fr', custom: true },
