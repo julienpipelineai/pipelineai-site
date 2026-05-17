@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PipelineAI — Dashboard</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -767,6 +768,10 @@ body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
     </div>
     <div class="nav-item" onclick="setPage('settings', this)">
       <span class="nav-icon">⊙</span> Paramètres
+    </div>
+    <div style="margin-top:auto;padding:1rem 0.5rem 0.5rem;border-top:1px solid var(--border);margin-top:2rem;">
+      <a href="/mentions.html" style="font-size:0.68rem;color:var(--text-3);text-decoration:none;display:block;margin-bottom:4px;">Mentions légales & CGV</a>
+      <div style="font-size:0.65rem;color:var(--text-3);">© 2026 PipelineAI</div>
     </div>
   </nav>
   <div class="sidebar-footer">
@@ -1911,6 +1916,7 @@ async function launchOnboarding() {
   // Update sidebar user name
   const userEl = document.querySelector('.user-row div:last-child div:first-child');
   if (userEl && prenom) userEl.textContent = prenom;
+  document.title = prenom + ' — PipelineAI Dashboard';
 
   showToast('Vos 10 premiers prospects sont prêts !', '⚡');
   if (PROSPECTS.length > 0) setTimeout(() => selectProspect(PROSPECTS[0].id), 400);
