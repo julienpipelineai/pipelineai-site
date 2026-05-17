@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PipelineAI — Dashboard Julien</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080808; --bg2: #0f0f0f; --bg3: #161616; --bg4: #1e1e1e;
+  --border: rgba(255,255,255,0.06); --border2: rgba(255,255,255,0.1);
+  --text: #f0ede6; --text2: #6b6864; --text3: #333;
+  --accent: #e8ff47; --accent2: rgba(232,255,71,0.08);
+  --hot: #ff4444; --warm: #ff8c00; --cold: #4488ff; --green: #00e676;
+  --mono: 'IBM Plex Mono', monospace;
+  --display: 'Bebas Neue', sans-serif;
+  --sans: 'DM Sans', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* NOISE TEXTURE */
+body::before{content:'';position:fixed;inset:0;opacity:0.03;pointer-events:none;z-index:1000;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");}
+
+/* SIDEBAR */
+.sidebar{width:220px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:50;}
+.logo{padding:1.25rem 1rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.logo-mark{width:30px;height:30px;background:var(--accent);border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:0.65rem;font-weight:600;color:#000;flex-shrink:0;}
+.logo-text{font-family:var(--mono);font-size:0.8rem;font-weight:500;color:var(--text);}
+.logo-badge{font-family:var(--mono);font-size:0.6rem;color:var(--accent);background:var(--accent2);
+  border:1px solid rgba(232,255,71,0.2);border-radius:3px;padding:1px 5px;margin-left:auto;}
+.nav{padding:0.75rem 0;flex:1;}
+.nav-label{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;
+  color:var(--text3);padding:0.5rem 1rem;font-family:var(--mono);}
+.nav-item{display:flex;align-items:center;gap:9px;padding:0.55rem 1rem;
+  font-size:0.8rem;color:var(--text2);cursor:pointer;transition:all 0.12s;
+  border-left:2px solid transparent;user-select:none;}
+.nav-item:hover{color:var(--text);background:var(--bg3);}
+.nav-item.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent2);}
+.nav-count{margin-left:auto;font-family:var(--mono);font-size:0.65rem;
+  background:var(--bg4);color:var(--text2);padding:1px 6px;border-radius:3px;
+  border:1px solid var(--border);}
+.nav-item.active .nav-count{background:rgba(232,255,71,0.15);color:var(--accent);border-color:rgba(232,255,71,0.3);}
+.sidebar-footer{padding:1rem;border-top:1px solid var(--border);}
+.user-info{display:flex;align-items:center;gap:8px;margin-bottom:0.75rem;}
+.user-avatar{width:28px;height:28px;background:var(--accent);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:0.65rem;font-weight:600;color:#000;flex-shrink:0;}
+.user-name{font-size:0.78rem;color:var(--text);font-weight:500;}
+.user-role{font-size:0.65rem;color:var(--text2);font-family:var(--mono);}
+.gen-btn{width:100%;padding:0.6rem;background:var(--accent);border:none;border-radius:5px;
+  color:#000;font-size:0.78rem;font-family:var(--mono);font-weight:600;
+  cursor:pointer;transition:all 0.15s;letter-spacing:0.05em;
+  display:flex;align-items:center;justify-content:center;gap:6px;}
+.gen-btn:hover{background:#d4eb3a;transform:translateY(-1px);}
+.gen-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+
+/* MAIN */
+.main{margin-left:220px;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{padding:0.875rem 1.5rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--bg);position:sticky;top:0;z-index:40;}
+.topbar-left{display:flex;align-items:center;gap:1rem;}
+.topbar-title{font-family:var(--display);font-size:1.6rem;letter-spacing:0.05em;color:var(--text);line-height:1;}
+.topbar-stats{display:flex;gap:1rem;}
+.tstat{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:0.7rem;color:var(--text2);}
+.tstat-val{color:var(--accent);font-weight:500;}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 2s ease infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.topbar-right{display:flex;gap:8px;}
+.tbtn{display:inline-flex;align-items:center;gap:6px;padding:0.4rem 0.875rem;
+  border-radius:5px;font-size:0.75rem;font-family:var(--mono);cursor:pointer;
+  transition:all 0.12s;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);}
+.tbtn:hover{background:var(--bg4);color:var(--text);}
+.tbtn-accent{background:var(--accent2);border-color:rgba(232,255,71,0.3);color:var(--accent);}
+.tbtn-accent:hover{background:rgba(232,255,71,0.15);}
+
+/* CONTENT */
+.content{padding:1.25rem 1.5rem;flex:1;}
+
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:1.25rem;}
+.metric{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;
+  animation:fadeUp 0.4s ease both;}
+.metric:nth-child(1){animation-delay:0.05s;} .metric:nth-child(2){animation-delay:0.1s;}
+.metric:nth-child(3){animation-delay:0.15s;} .metric:nth-child(4){animation-delay:0.2s;}
+.metric:nth-child(5){animation-delay:0.25s;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.metric-label{font-family:var(--mono);font-size:0.6rem;color:var(--text2);
+  text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;}
+.metric-val{font-family:var(--display);font-size:2rem;letter-spacing:0.05em;
+  color:var(--text);line-height:1;margin-bottom:3px;}
+.metric-val.green{color:var(--green);}
+.metric-val.yellow{color:var(--accent);}
+.metric-sub{font-size:0.65rem;color:var(--text2);font-family:var(--mono);}
+
+/* GRID */
+.dashboard-grid{display:grid;grid-template-columns:1fr 360px;gap:14px;}
+
+/* PROSPECT LIST */
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.panel-header{padding:0.875rem 1.25rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;}
+.panel-title{font-family:var(--mono);font-size:0.7rem;color:var(--text2);
+  text-transform:uppercase;letter-spacing:0.08em;}
+.filter-row{display:flex;gap:4px;padding:0.75rem 1.25rem;border-bottom:1px solid var(--border);
+  flex-wrap:wrap;}
+.ftab{padding:0.3rem 0.7rem;border-radius:4px;font-size:0.72rem;font-family:var(--mono);
+  cursor:pointer;color:var(--text2);transition:all 0.12s;border:1px solid transparent;user-select:none;}
+.ftab:hover{color:var(--text);background:var(--bg3);}
+.ftab.active{color:var(--accent);background:var(--accent2);border-color:rgba(232,255,71,0.2);}
+
+/* PROSPECT ROW */
+.prospect-list{display:flex;flex-direction:column;max-height:calc(100vh - 260px);overflow-y:auto;}
+.prospect-row{display:grid;grid-template-columns:32px 1fr auto;gap:10px;align-items:center;
+  padding:0.75rem 1.25rem;border-bottom:1px solid var(--border);
+  cursor:pointer;transition:background 0.1s;animation:fadeUp 0.3s ease both;}
+.prospect-row:last-child{border-bottom:none;}
+.prospect-row:hover{background:var(--bg3);}
+.prospect-row.selected{background:var(--accent2);border-left:2px solid var(--accent);}
+.pav{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:0.65rem;font-weight:500;flex-shrink:0;}
+.pav-hot{background:rgba(255,68,68,0.1);color:var(--hot);}
+.pav-warm{background:rgba(255,140,0,0.1);color:var(--warm);}
+.pav-cold{background:rgba(68,136,255,0.1);color:var(--cold);}
+.pinfo{min-width:0;}
+.pcompany{font-size:0.85rem;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pmeta{font-size:0.72rem;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.psignal{font-size:0.65rem;color:var(--text3);margin-top:2px;display:flex;align-items:center;gap:4px;}
+.sdot{width:4px;height:4px;border-radius:50%;flex-shrink:0;}
+.sdot-hot{background:var(--hot);} .sdot-warm{background:var(--warm);} .sdot-cold{background:var(--cold);}
+.pright{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
+.sbadge{font-size:0.62rem;font-family:var(--mono);padding:2px 7px;border-radius:3px;}
+.sb-hot{background:rgba(255,68,68,0.1);color:var(--hot);}
+.sb-warm{background:rgba(255,140,0,0.1);color:var(--warm);}
+.sb-cold{background:rgba(68,136,255,0.1);color:var(--cold);}
+.sb-conv{background:rgba(0,230,118,0.1);color:var(--green);}
+.pstep{font-size:0.62rem;color:var(--text3);font-family:var(--mono);}
+
+/* LOAD MORE */
+.load-more{padding:1rem;text-align:center;border-top:1px solid var(--border);}
+.load-btn{background:var(--bg3);border:1px solid var(--border2);border-radius:6px;
+  color:var(--text2);font-family:var(--mono);font-size:0.75rem;
+  padding:0.5rem 1.5rem;cursor:pointer;transition:all 0.15s;}
+.load-btn:hover{background:var(--bg4);color:var(--text);}
+.load-btn:disabled{opacity:0.4;cursor:not-allowed;}
+.load-progress{font-family:var(--mono);font-size:0.7rem;color:var(--text2);margin-top:6px;}
+
+/* DETAIL PANEL */
+.detail-panel{display:flex;flex-direction:column;position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;}
+.detail-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:100%;color:var(--text3);font-family:var(--mono);font-size:0.75rem;text-align:center;gap:8px;}
+.detail-header{padding:1.25rem;border-bottom:1px solid var(--border);}
+.d-company{font-family:var(--display);font-size:1.3rem;letter-spacing:0.05em;color:var(--text);margin-bottom:4px;}
+.d-contact{font-size:0.8rem;color:var(--text2);margin-bottom:10px;}
+.d-tags{display:flex;flex-wrap:wrap;gap:5px;}
+.d-tag{font-size:0.65rem;font-family:var(--mono);padding:2px 8px;border-radius:3px;
+  background:var(--bg4);color:var(--text2);border:1px solid var(--border);}
+.d-section{padding:0.875rem 1.25rem;border-bottom:1px solid var(--border);}
+.d-section-title{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.1em;
+  color:var(--text3);font-family:var(--mono);margin-bottom:8px;}
+.signal-block{background:var(--bg3);border-radius:6px;padding:0.75rem;border-left:2px solid var(--warm);}
+.signal-text{font-size:0.8rem;color:var(--text);line-height:1.5;}
+.signal-src{font-size:0.65rem;color:var(--text2);margin-top:3px;font-family:var(--mono);}
+.msg-tabs{display:flex;gap:3px;margin-bottom:8px;flex-wrap:wrap;}
+.mtab{padding:0.28rem 0.6rem;border-radius:4px;font-size:0.68rem;cursor:pointer;
+  color:var(--text3);transition:all 0.12s;border:1px solid transparent;font-family:var(--mono);user-select:none;}
+.mtab:hover{color:var(--text2);background:var(--bg4);}
+.mtab.active{color:var(--accent);background:var(--accent2);border-color:rgba(232,255,71,0.2);}
+.msg-box{background:var(--bg3);border-radius:6px;padding:0.875rem;font-size:0.78rem;
+  color:var(--text2);line-height:1.7;border:1px solid var(--border);
+  white-space:pre-wrap;max-height:200px;overflow-y:auto;}
+.msg-objet{color:var(--text);font-weight:500;font-size:0.75rem;margin-bottom:8px;
+  padding-bottom:8px;border-bottom:1px solid var(--border);}
+.send-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px;}
+.send-btn{display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:0.55rem;border-radius:5px;font-size:0.75rem;font-family:var(--mono);
+  cursor:pointer;transition:all 0.15s;border:1px solid var(--border2);text-decoration:none;}
+.send-email{background:var(--bg4);color:var(--text2);}
+.send-email:hover{background:var(--bg3);color:var(--text);}
+.send-li{background:rgba(10,102,194,0.1);color:#5ba4f5;border-color:rgba(10,102,194,0.25);}
+.send-li:hover{background:rgba(10,102,194,0.2);}
+.copy-btn{margin-top:6px;width:100%;padding:0.45rem;border-radius:5px;
+  background:var(--bg4);border:1px solid var(--border2);color:var(--text2);
+  font-size:0.72rem;font-family:var(--mono);cursor:pointer;transition:all 0.15s;text-align:center;}
+.copy-btn:hover{background:var(--bg3);color:var(--text);}
+.copy-btn.copied{color:var(--green);border-color:rgba(0,230,118,0.3);background:rgba(0,230,118,0.05);}
+.status-grid{display:flex;flex-wrap:wrap;gap:5px;}
+.sopt{padding:0.28rem 0.6rem;border-radius:4px;font-size:0.68rem;
+  cursor:pointer;transition:all 0.12s;font-family:var(--mono);
+  border:1px solid var(--border);color:var(--text3);user-select:none;}
+.sopt:hover{color:var(--text2);border-color:var(--border2);}
+.sopt.active-s{color:var(--accent);border-color:rgba(232,255,71,0.3);background:var(--accent2);}
+.send-status{margin-top:7px;padding:6px 10px;border-radius:5px;font-size:0.7rem;
+  font-family:var(--mono);display:none;
+  background:rgba(0,230,118,0.05);color:var(--green);border:1px solid rgba(0,230,118,0.15);}
+
+/* GEN OVERLAY */
+.gen-overlay{position:fixed;inset:0;z-index:200;background:rgba(8,8,8,0.9);
+  display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.gen-overlay.open{opacity:1;pointer-events:all;}
+.gen-modal{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;
+  padding:2rem;width:100%;max-width:400px;text-align:center;}
+.gen-title{font-family:var(--display);font-size:1.8rem;letter-spacing:0.05em;
+  color:var(--accent);margin-bottom:0.5rem;}
+.gen-sub{font-size:0.82rem;color:var(--text2);margin-bottom:1.5rem;line-height:1.6;}
+.gen-steps{display:flex;flex-direction:column;gap:10px;text-align:left;}
+.gstep{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:0.75rem;color:var(--text3);}
+.gstep.active{color:var(--text);}
+.gstep.done{color:var(--green);}
+.gdot{width:6px;height:6px;border-radius:50%;background:var(--bg4);border:1px solid var(--border2);flex-shrink:0;transition:all 0.3s;}
+.gstep.active .gdot{background:var(--accent);border-color:var(--accent);animation:blink 1s ease infinite;}
+.gstep.done .gdot{background:var(--green);border-color:var(--green);animation:none;}
+
+/* TOAST */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--bg3);
+  border:1px solid var(--border2);border-radius:8px;padding:0.65rem 1rem;
+  font-size:0.78rem;font-family:var(--mono);color:var(--text);
+  display:flex;align-items:center;gap:8px;
+  transform:translateY(60px);opacity:0;transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  z-index:300;max-width:280px;}
+.toast.show{transform:translateY(0);opacity:1;}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:3px;height:3px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">PA</div>
+    <div class="logo-text">PipelineAI</div>
+    <span class="logo-badge">PRO</span>
+  </div>
+  <nav class="nav">
+    <div class="nav-label">Prospection</div>
+    <div class="nav-item active"><span>◈</span> Prospects <span class="nav-count" id="nav-count">0</span></div>
+    <div class="nav-item"><span>⇢</span> Séquences</div>
+    <div class="nav-item"><span>▦</span> Pipeline</div>
+    <div class="nav-label">Analyse</div>
+    <div class="nav-item"><span>◉</span> Stats</div>
+    <div class="nav-item"><span>⊙</span> Paramètres</div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-info">
+      <div class="user-avatar">J</div>
+      <div>
+        <div class="user-name">Julien Cambin</div>
+        <div class="user-role">Admin · Illimité</div>
+      </div>
+    </div>
+    <button class="gen-btn" id="gen-btn" onclick="generateBatch()">
+      ⚡ GÉNÉRER +10
+    </button>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-title">MES PROSPECTS</div>
+      <div class="topbar-stats">
+        <div class="tstat"><span class="live-dot"></span><span class="tstat-val" id="stat-total">0</span>&nbsp;total</div>
+        <div class="tstat">🔴&nbsp;<span class="tstat-val" id="stat-hot">0</span>&nbsp;chauds</div>
+        <div class="tstat">✓&nbsp;<span class="tstat-val" id="stat-conv">0</span>&nbsp;convertis</div>
+        <div class="tstat">✉&nbsp;<span class="tstat-val" id="stat-sent">0</span>&nbsp;contactés</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="tbtn" onclick="exportCSV()">↓ CSV</button>
+      <button class="tbtn tbtn-accent" onclick="generateBatch()">⚡ +10 prospects</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">Total prospects</div>
+        <div class="metric-val yellow" id="m-total">0</div>
+        <div class="metric-sub">générés</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Chauds</div>
+        <div class="metric-val" id="m-hot" style="color:var(--hot)">0</div>
+        <div class="metric-sub">signal fort</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Contactés</div>
+        <div class="metric-val green" id="m-sent">0</div>
+        <div class="metric-sub">messages envoyés</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Convertis</div>
+        <div class="metric-val green" id="m-conv">0</div>
+        <div class="metric-sub">clients signés</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Taux conv.</div>
+        <div class="metric-val yellow" id="m-rate">0%</div>
+        <div class="metric-sub">sur contactés</div>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Flux de prospection</span>
+          <div style="display:flex;gap:6px;">
+            <button class="tbtn" style="font-size:0.68rem;padding:0.28rem 0.6rem" onclick="sortProspects()">↕ Score</button>
+            <button class="tbtn" style="font-size:0.68rem;padding:0.28rem 0.6rem" onclick="resetAll()">↺ Reset</button>
+          </div>
+        </div>
+        <div class="filter-row">
+          <div class="ftab active" onclick="filterP('all',this)">Tous <span id="fc-all" style="opacity:0.5">0</span></div>
+          <div class="ftab" onclick="filterP('hot',this)">🔴 Chauds <span id="fc-hot" style="opacity:0.5">0</span></div>
+          <div class="ftab" onclick="filterP('warm',this)">🟠 Tièdes <span id="fc-warm" style="opacity:0.5">0</span></div>
+          <div class="ftab" onclick="filterP('cold',this)">🔵 Froids <span id="fc-cold" style="opacity:0.5">0</span></div>
+          <div class="ftab" onclick="filterP('messaged',this)">✉ Contactés <span id="fc-msg" style="opacity:0.5">0</span></div>
+          <div class="ftab" onclick="filterP('converted',this)">✓ Convertis <span id="fc-conv" style="opacity:0.5">0</span></div>
+        </div>
+        <div class="prospect-list" id="prospect-list"></div>
+        <div class="load-more">
+          <button class="load-btn" id="load-btn" onclick="generateBatch()">⚡ Générer 10 nouveaux prospects</button>
+          <div class="load-progress" id="load-progress" style="display:none">Génération en cours…</div>
+        </div>
+      </div>
+
+      <div class="panel detail-panel" id="detail-panel">
+        <div class="detail-empty">
+          <div style="font-size:1.5rem;opacity:0.3">◈</div>
+          <div>Sélectionnez un prospect</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Gen overlay -->
+<div class="gen-overlay" id="gen-overlay">
+  <div class="gen-modal">
+    <div class="gen-title">GÉNÉRATION</div>
+    <div class="gen-sub" id="gen-overlay-sub">Détection des signaux business en cours…</div>
+    <div class="gen-steps">
+      <div class="gstep" id="gs1"><span class="gdot"></span>Scan des signaux business</div>
+      <div class="gstep" id="gs2"><span class="gdot"></span>Scoring et sélection</div>
+      <div class="gstep" id="gs3"><span class="gdot"></span>Génération des messages IA</div>
+      <div class="gstep" id="gs4"><span class="gdot"></span>Ajout au dashboard</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toast-icon">✓</span><span id="toast-msg">OK</span></div>
+
+<script>
+// ── DATA POOLS ────────────────────────────────────────────────────────────────
+const COMPANIES = [
+  ['Batipro Construction','Frédéric Aumont','DG','Lyon (69)','f.aumont@batipro.fr','BTP','hot','recrutement 2 chefs de chantier'],
+  ['Clinique Vétérinaire du Parc','Dr Sophie Millet','Directrice','Bordeaux (33)','s.millet@cvparc.fr','Santé','hot','ouverture 2e cabinet annoncée'],
+  ['Imprimerie Colbert','Marc Colbert','PDG','Paris (75)','m.colbert@imprimerie-colbert.fr','Tech','hot','investissement presse numérique'],
+  ['Groupe Sécurité Nexus','Thierry Blanc','Dir. Commercial','Nantes (44)','t.blanc@nexus-sec.fr','Services','hot','certification ISO 9001 obtenue'],
+  ['Cabinet Ledoux','Isabelle Ledoux','Associée','Toulouse (31)','i.ledoux@cabinet-ledoux.fr','Services','warm','recrutement 2 collaborateurs'],
+  ['Agence Web Pixel & Co','Julien Moreau','Directeur','Strasbourg (67)','j.moreau@pixel-co.fr','Tech','warm','pivot marketing digital annoncé'],
+  ['Transport Girard','Patrick Girard','Gérant','Marseille (13)','p.girard@transport-girard.fr','Transport','warm','achat 4 nouveaux véhicules'],
+  ['ProSkills Formation','Claire Aubert','Directrice','Lille (59)','c.aubert@proskills.fr','Formation','warm','Qualiopi étendue 3 domaines'],
+  ['Menuiserie Faure','Laurent Faure','Directeur','Rennes (35)','l.faure@menuiserie-faure.fr','BTP','cold','profil LinkedIn mis à jour'],
+  ['Cosmétic Lab','Émilie Roussel','Dir. R&D','Nice (06)','e.roussel@cosmeticlab.fr','Commerce','cold','gamme B2B en préparation'],
+  ['Réseau Optique Vision+','Sylvie Morel','Dir. Réseau','Paris (75)','s.morel@visionplus.fr','Commerce','hot','ouverture 4e magasin'],
+  ['Logistique Express Sud','Éric Castel','Dir. Opérations','Montpellier (34)','e.castel@les-transport.fr','Transport','hot','recrutement 5 chauffeurs'],
+  ['Centre Médical Pluridisciplinaire','Dr Anne Blanc','Dir. Médicale','Toulouse (31)','a.blanc@cmptoulouse.fr','Santé','hot','ouverture 2e antenne'],
+  ['Éditeur ERP MadeInFrance','Thomas Garnier','CEO','Paris (75)','t.garnier@erp-mif.fr','Tech','hot','levée 800K€ annoncée'],
+  ['Renovation Pro Services','Marc Bertrand','Gérant','Lyon (69)','m.bertrand@rps.fr','BTP','hot','recrutement chef de projet'],
+  ['Cabinet RH Partners','Lucie Verne','Associée','Bordeaux (33)','l.verne@rh-partners.fr','Services','hot','recrutement 3 consultants'],
+  ['Brasseries du Sud','Michel Arnaud','PDG','Nice (06)','m.arnaud@brasseries-sud.fr','Restauration','hot','ouverture 5e brasserie'],
+  ['Pharmacie des Halles','François Renaud','Titulaire','Strasbourg (67)','f.renaud@pharma-halles.fr','Santé','warm','investissement automate délivrance'],
+  ['Fiduciaire Atlantique','Pierre Gauthier','Expert-comptable','Nantes (44)','p.gauthier@fidatl.fr','Services','warm','nouveau site B2B lancé'],
+  ['Messagerie Bretagne','Yann Kerven','Gérant','Rennes (35)','y.kerven@mb-transport.fr','Transport','warm','achat 6 véhicules électriques'],
+  ['Conseil Stratégie PME','Bruno Lemaire','Associé','Lyon (69)','b.lemaire@cs-pme.fr','Services','warm','interview Les Échos'],
+  ['Agence Digitale Créative','Emma Roux','Directrice','Nantes (44)','e.roux@adc.fr','Tech','warm','3 offres emploi actives'],
+  ['Hôtel Logis des Pins','Sandrine Petit','Directrice','Bordeaux (33)','s.petit@logis-pins.fr','Restauration','warm','rénovation 4 étoiles visée'],
+  ['Auto-École Moderne','Bruno Gilles','Directeur','Rennes (35)','b.gilles@aem.fr','Services','cold','nouveaux simulateurs installés'],
+  ['Fleuriste Bouquet dOr','Sophie Marin','Gérante','Marseille (13)','s.marin@bouquetdor.fr','Commerce','cold','page Facebook créée'],
+  ['Garage Fontaine','David Fontaine','Gérant','Nice (06)','d.fontaine@garage-fontaine.fr','Services','cold','inscription PagesJaunes récente'],
+  ['Institut Formation IFC','Marine Dubois','Directrice','Paris (75)','m.dubois@ifc.fr','Formation','hot','partenariat OPCO signé'],
+  ['Plomberie Vasseur','Éric Vasseur','Gérant','Lille (59)','e.vasseur@plomberie-vasseur.fr','BTP','hot','recrutement apprenti'],
+  ['SCI Immobilier Plus','Jean-Paul Morin','PDG','Toulouse (31)','jp.morin@immo-plus.fr','Services','warm','nouveau programme immobilier'],
+  ['Resto Traditionnel LeVieux Four','Stéphane Collet','Gérant','Strasbourg (67)','s.collet@vieuxfour.fr','Restauration','warm','développe events entreprise'],
+];
+
+const SIGNALS_SOURCES = {
+  'recrutement': 'LinkedIn / Indeed',
+  'ouverture': 'LinkedIn',
+  'investissement': 'Site web',
+  'levée': 'Maddyness',
+  'certification': 'Site web',
+  'pivot': 'LinkedIn',
+  'achat': 'Facebook',
+  'interview': 'Presse',
+  'partenariat': 'Site web',
+  'développe': 'Site web',
+  'nouveau': 'Web',
+  'profil': 'LinkedIn',
+  'page': 'Facebook',
+  'inscription': 'PagesJaunes',
+  'gamme': 'Web',
+};
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let ALL_PROSPECTS = [];
+let statusMap = {};
+let selectedId = null;
+let activeFilter = 'all';
+let activeMsgTab = 'initial';
+let nextId = 1;
+let usedCompanies = new Set();
+
+// ── GENERATE PROSPECTS ────────────────────────────────────────────────────────
+function pickCompanies(n) {
+  const available = COMPANIES.filter(c => !usedCompanies.has(c[0]));
+  if (available.length < n) {
+    usedCompanies.clear();
+    return pickCompanies(n);
+  }
+  const shuffled = [...available].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, n);
+}
+
+function buildMsg(company, contact, role, location, sector, signal, prenom = 'Julien') {
+  const nom = contact.split(' ').slice(-1)[0];
+  const accroche = {
+    hot: `J'ai repéré que ${company} est en pleine dynamique — ${signal.toLowerCase()}.`,
+    warm: `J'ai remarqué que ${company} évolue en ce moment — ${signal.toLowerCase()}.`,
+    cold: `J'ai vu que ${company} commence à développer sa présence en ligne.`
+  };
+  
+  return {
+    initial: {
+      objet: `${company} — une question rapide`,
+      corps: `Bonjour,
+
+${accroche[signal.includes('recruit') || signal.includes('ouverture') || signal.includes('levée') ? 'hot' : 'warm']}
+
+La question que je pose à tous les dirigeants de PME en ce moment : est-ce que votre pipeline commercial suit le rythme de votre activité ?
+
+PipelineAI identifie les 10 meilleures opportunités commerciales pour votre profil, rédige les messages personnalisés, et suit les relances — en 48h pour 79 €. Si un seul client signé vaut plus de 79 €, c'est rentable.
+
+Tout est là : pipelineai.fr
+
+${prenom}`
+    },
+    relance1: {
+      objet: `Suite — ${company}`,
+      corps: `Bonjour,
+
+Je reviens vers vous — combien vous rapporte un nouveau client en moyenne ?
+
+Si c'est plus de 79 €, PipelineAI se rembourse dès le premier prospect converti. Sans risque — satisfait ou remboursé.
+
+pipelineai.fr
+
+${prenom}`
+    },
+    relance2: {
+      objet: `Un exemple concret pour ${company}`,
+      corps: `Bonjour,
+
+Une PME similaire à la vôtre a reçu ses 10 prospects lundi, envoyé les messages mercredi, rendez-vous confirmé vendredi.
+
+79 € investis. Un RDV décroché en 4 jours.
+
+pipelineai.fr
+
+${prenom}`
+    },
+    relance3: {
+      objet: `Dernier message`,
+      corps: `Bonjour,
+
+Ce sera mon dernier message.
+
+Si la prospection devient un sujet, PipelineAI sera là : pipelineai.fr
+
+Bonne continuation,
+${prenom}`
+    }
+  };
+}
+
+function generateProspects(n = 10) {
+  const companies = pickCompanies(n);
+  return companies.map(([company, contact, role, location, sector, score, signal]) => {
+    usedCompanies.add(company);
+    const id = nextId++;
+    const src = Object.entries(SIGNALS_SOURCES).find(([k]) => signal.toLowerCase().includes(k))?.[1] || 'Web';
+    return {
+      id, score, company, contact, role, location,
+      email: company.toLowerCase().replace(/[^a-z]/g,'').slice(0,8) + '@' + company.toLowerCase().replace(/[^a-z]/g,'').slice(0,6) + '.fr',
+      linkedin: 'https://linkedin.com/search/results/people/?keywords=' + encodeURIComponent(contact + ' ' + company),
+      sector, signal, signal_source: src,
+      msgs: buildMsg(company, contact, role, location, sector, signal),
+      status: 'detected',
+    };
+  });
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function getFiltered() {
+  if (activeFilter === 'all') return ALL_PROSPECTS;
+  if (['hot','warm','cold'].includes(activeFilter)) return ALL_PROSPECTS.filter(p => p.score === activeFilter);
+  if (activeFilter === 'messaged') return ALL_PROSPECTS.filter(p => ['messaged','relance_1','relance_2','responded'].includes(statusMap[p.id]));
+  if (activeFilter === 'converted') return ALL_PROSPECTS.filter(p => statusMap[p.id] === 'converted');
+  return ALL_PROSPECTS;
+}
+
+function renderList() {
+  const list = document.getElementById('prospect-list');
+  const filtered = getFiltered();
+
+  list.innerHTML = filtered.map((p, i) => {
+    const av = p.company.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
+    const sel = selectedId === p.id ? ' selected' : '';
+    const st = statusMap[p.id] || 'detected';
+    const stLabels = {detected:'détecté',messaged:'contacté',relance_1:'relance 1',relance_2:'relance 2',responded:'répondu',converted:'converti ✓'};
+    const badgeCls = st === 'converted' ? 'sb-conv' : `sb-${p.score}`;
+    return `<div class="prospect-row${sel}" onclick="selectProspect(${p.id})" style="animation-delay:${Math.min(i*0.03,0.3)}s">
+      <div class="pav pav-${p.score}">${av}</div>
+      <div class="pinfo">
+        <div class="pcompany">${p.company}</div>
+        <div class="pmeta">${p.contact} · ${p.role} · ${p.location}</div>
+        <div class="psignal"><span class="sdot sdot-${p.score}"></span>${p.signal}</div>
+      </div>
+      <div class="pright">
+        <span class="sbadge ${badgeCls}">${p.score === 'hot' ? '🔴' : p.score === 'warm' ? '🟠' : '🔵'} ${p.score}</span>
+        <span class="pstep">${stLabels[st] || st}</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  updateStats();
+  updateFilterCounts();
+}
+
+function updateStats() {
+  const total = ALL_PROSPECTS.length;
+  const hot = ALL_PROSPECTS.filter(p => p.score === 'hot').length;
+  const sent = ALL_PROSPECTS.filter(p => ['messaged','relance_1','relance_2','responded','converted'].includes(statusMap[p.id])).length;
+  const conv = ALL_PROSPECTS.filter(p => statusMap[p.id] === 'converted').length;
+  const rate = sent > 0 ? Math.round(conv/sent*100) : 0;
+
+  ['total','hot','sent','conv'].forEach(k => {
+    document.getElementById('stat-'+k).textContent = {total,hot,sent,conv}[k];
+    document.getElementById('m-'+k).textContent = {total,hot,sent,conv}[k];
+  });
+  document.getElementById('m-rate').textContent = rate + '%';
+  document.getElementById('nav-count').textContent = total;
+  document.getElementById('fc-all').textContent = ALL_PROSPECTS.length;
+}
+
+function updateFilterCounts() {
+  document.getElementById('fc-hot').textContent = ALL_PROSPECTS.filter(p=>p.score==='hot').length;
+  document.getElementById('fc-warm').textContent = ALL_PROSPECTS.filter(p=>p.score==='warm').length;
+  document.getElementById('fc-cold').textContent = ALL_PROSPECTS.filter(p=>p.score==='cold').length;
+  document.getElementById('fc-msg').textContent = ALL_PROSPECTS.filter(p=>['messaged','relance_1','relance_2','responded'].includes(statusMap[p.id])).length;
+  document.getElementById('fc-conv').textContent = ALL_PROSPECTS.filter(p=>statusMap[p.id]==='converted').length;
+}
+
+// ── SELECT PROSPECT ───────────────────────────────────────────────────────────
+function selectProspect(id) {
+  selectedId = id;
+  activeMsgTab = 'initial';
+  renderList();
+  renderDetail();
+}
+
+function renderDetail() {
+  const panel = document.getElementById('detail-panel');
+  const p = ALL_PROSPECTS.find(x => x.id === selectedId);
+  if (!p) return;
+
+  const msgKey = {initial:'initial',r1:'relance1',r2:'relance2',r3:'relance3'}[activeMsgTab] || 'initial';
+  const msg = p.msgs[msgKey];
+
+  const tabs = [{k:'initial',l:'1. Initial'},{k:'r1',l:'2. J+5'},{k:'r2',l:'3. J+12'},{k:'r3',l:'4. J+20'}];
+  const statuses = [{v:'detected',l:'Détecté'},{v:'messaged',l:'Contacté'},{v:'relance_1',l:'Relance 1'},{v:'relance_2',l:'Relance 2'},{v:'responded',l:'A répondu'},{v:'converted',l:'Converti ✓'}];
+
+  panel.innerHTML = `
+    <div class="detail-header">
+      <div class="d-company">${p.company}</div>
+      <div class="d-contact">${p.contact} · ${p.role}</div>
+      <div class="d-tags">
+        <span class="d-tag">📍 ${p.location}</span>
+        <span class="d-tag">🏭 ${p.sector}</span>
+        ${p.email ? `<span class="d-tag">✉ ${p.email}</span>` : ''}
+      </div>
+    </div>
+    <div class="d-section">
+      <div class="d-section-title">Signal</div>
+      <div class="signal-block">
+        <div class="signal-text">${p.signal}</div>
+        <div class="signal-src">Source : ${p.signal_source}</div>
+      </div>
+    </div>
+    <div class="d-section">
+      <div class="d-section-title">Messages IA</div>
+      <div class="msg-tabs">
+        ${tabs.map(t => `<div class="mtab ${activeMsgTab===t.k?'active':''}" onclick="setMsgTab('${t.k}')">${t.l}</div>`).join('')}
+      </div>
+      <div class="msg-box">
+        <div class="msg-objet">Objet : ${msg.objet}</div>${msg.corps}
+      </div>
+      <div class="send-actions">
+        <button class="send-btn send-email" onclick="sendEmail(${p.id})">✉ Email</button>
+        <a class="send-btn send-li" href="#" onclick="return openLinkedin(${p.id})">in LinkedIn</a>
+      </div>
+      <button class="copy-btn" id="cb-${p.id}" onclick="copyMsg(${p.id})">⎘ Copier</button>
+      <div class="send-status" id="ss-${p.id}"></div>
+    </div>
+    <div class="d-section">
+      <div class="d-section-title">Statut</div>
+      <div class="status-grid">
+        ${statuses.map(s => `<div class="sopt ${statusMap[p.id]===s.v?'active-s':''}" onclick="setStatus(${p.id},'${s.v}')">${s.l}</div>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// ── ACTIONS ───────────────────────────────────────────────────────────────────
+function setMsgTab(k) {
+  activeMsgTab = k;
+  const p = ALL_PROSPECTS.find(x => x.id === selectedId);
+  if (!p) { renderDetail(); return; }
+
+  const relanceMap = { r1: 1, r2: 2, r3: 3 };
+  const msgKeyMap = { initial:'initial', r1:'relance1', r2:'relance2', r3:'relance3' };
+  const relanceNum = relanceMap[k];
+  const msgKey = msgKeyMap[k] || 'initial';
+
+  // Si relance pas encore générée → appel Claude
+  if (relanceNum && (!p.msgs[msgKey] || p.msgs[msgKey] === null)) {
+    generateRelanceIA(p, relanceNum, msgKey);
+  } else {
+    renderDetail();
+  }
+}
+
+function sendEmail(id) {
+  const p = ALL_PROSPECTS.find(x=>x.id===id); if (!p || !p.email) { showToast('Email non disponible','⚠'); return; }
+  const mk = {initial:'initial',r1:'relance1',r2:'relance2',r3:'relance3'}[activeMsgTab]||'initial';
+  const msg = p.msgs[mk];
+  window.location.href = `mailto:${p.email}?subject=${encodeURIComponent(msg.objet)}&body=${encodeURIComponent(msg.corps)}`;
+  if (activeMsgTab==='initial' && (!statusMap[id]||statusMap[id]==='detected')) setStatus(id,'messaged');
+  showSendStatus(id, '✓ Client mail ouvert');
+}
+
+function openLinkedin(id) {
+  const p = ALL_PROSPECTS.find(x=>x.id===id); if (!p) return false;
+  const mk = {initial:'initial',r1:'relance1',r2:'relance2',r3:'relance3'}[activeMsgTab]||'initial';
+  navigator.clipboard.writeText(p.msgs[mk].corps).catch(()=>{});
+  window.open(p.linkedin, '_blank');
+  if (activeMsgTab==='initial' && (!statusMap[id]||statusMap[id]==='detected')) setStatus(id,'messaged');
+  showSendStatus(id, '✓ Message copié · LinkedIn ouvert');
+  return false;
+}
+
+function copyMsg(id) {
+  const p = ALL_PROSPECTS.find(x=>x.id===id); if (!p) return;
+  const mk = {initial:'initial',r1:'relance1',r2:'relance2',r3:'relance3'}[activeMsgTab]||'initial';
+  navigator.clipboard.writeText(`Objet : ${p.msgs[mk].objet}\n\n${p.msgs[mk].corps}`).catch(()=>{});
+  const btn = document.getElementById('cb-'+id);
+  if (btn) { btn.textContent='✓ Copié'; btn.classList.add('copied'); setTimeout(()=>{btn.textContent='⎘ Copier';btn.classList.remove('copied');},2000); }
+  showToast('Message copié','✓');
+}
+
+function showSendStatus(id, msg) {
+  const el = document.getElementById('ss-'+id);
+  if (el) { el.textContent=msg; el.style.display='block'; setTimeout(()=>el.style.display='none',3500); }
+  showToast(msg,'✓');
+}
+
+function setStatus(id, status) {
+  statusMap[id] = status;
+  renderList();
+  renderDetail();
+  showToast('Statut : '+status,'◈');
+}
+
+function filterP(f, el) {
+  activeFilter = f;
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderList();
+}
+
+function sortProspects() {
+  ALL_PROSPECTS.sort((a,b) => {
+    const w = {hot:3,warm:2,cold:1};
+    return w[b.score] - w[a.score];
+  });
+  renderList();
+  showToast('Triés par score','↕');
+}
+
+function resetAll() {
+  if (!confirm('Réinitialiser tous les statuts ?')) return;
+  statusMap = {};
+  ALL_PROSPECTS.forEach(p => statusMap[p.id] = 'detected');
+  renderList();
+  showToast('Statuts réinitialisés','↺');
+}
+
+function exportCSV() {
+  const headers = ['Entreprise','Contact','Rôle','Localisation','Email','Secteur','Score','Signal','Statut'];
+  const rows = ALL_PROSPECTS.map(p => [
+    p.company, p.contact, p.role, p.location, p.email||'',
+    p.sector, p.score, p.signal, statusMap[p.id]||'detected'
+  ]);
+  const csv = [headers, ...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='pipelineai-prospects.csv'; a.click();
+  showToast('Export CSV téléchargé','↓');
+}
+
+// ── CONFIG API ────────────────────────────────────────────────────────────────
+const API_BASE = 'https://pipelineai-backend-production.up.railway.app';
+
+// Paramètres de prospection Julien — modifiables ici
+const JULIEN_CONFIG = {
+  prenom: 'Julien',
+  activite: 'PipelineAI aide les PME à trouver leurs prochains clients grâce à l\'IA — 10 prospects qualifiés + messages personnalisés livrés en 48h pour 79 €',
+  secteurs: ['BTP', 'Commerce', 'Services', 'Restauration', 'Transport', 'Santé', 'Formation', 'Tech'],
+  tailles: ['TPE', 'PME'],
+  zones: ['France entière'],
+  signaux: ['recrutement', 'nouveau site', 'expansion', 'levée de fonds'],
+};
+
+// ── BATCH GENERATION VIA CLAUDE API ───────────────────────────────────────────
+async function generateBatch() {
+  const overlay = document.getElementById('gen-overlay');
+  const btn = document.getElementById('gen-btn');
+  const loadBtn = document.getElementById('load-btn');
+  const loadProg = document.getElementById('load-progress');
+
+  overlay.classList.add('open');
+  btn.disabled = true;
+  if (loadBtn) { loadBtn.disabled = true; loadProg.style.display = 'block'; }
+
+  // Reset steps
+  [1,2,3,4].forEach(i => {
+    const el = document.getElementById('gs'+i);
+    if (el) el.className = 'gstep';
+  });
+
+  async function animStep(i, delay) {
+    await new Promise(r => setTimeout(r, delay));
+    const el = document.getElementById('gs'+i);
+    if (el) { el.classList.add('active'); }
+    await new Promise(r => setTimeout(r, 800));
+    if (el) { el.classList.remove('active'); el.classList.add('done'); }
+  }
+
+  await animStep(1, 300);
+  await animStep(2, 600);
+  await animStep(3, 700);
+
+  let newProspects = [];
+
+  try {
+    // Appel Claude API via le backend Railway
+    const res = await fetch(API_BASE + '/generate-prospects', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(JULIEN_CONFIG),
+    });
+
+    if (!res.ok) throw new Error('Erreur API ' + res.status);
+    const data = await res.json();
+
+    const PS = "\n\nP.S.\u00a0: Si vous cherchez encore vos prochains clients \u00e0 la main, j\u2019ai une mauvaise nouvelle... et une bonne\u00a0: pipelineai.fr";
+
+    newProspects = (data.prospects || []).map((p, i) => {
+      const id = nextId++;
+      usedCompanies.add(p.company);
+      const src = Object.entries(SIGNALS_SOURCES).find(([k]) => (p.signal||'').toLowerCase().includes(k))?.[1] || 'Web';
+      return {
+        id,
+        score: i < 9 ? 'hot' : 'warm', // 90% chauds
+        company: p.company,
+        contact: p.contact,
+        role: p.role,
+        location: p.location,
+        email: p.email || (p.company.toLowerCase().replace(/[^a-z]/g,'').slice(0,8) + '@' + p.company.toLowerCase().replace(/[^a-z]/g,'').slice(0,6) + '.fr'),
+        linkedin: 'https://linkedin.com/search/results/people/?keywords=' + encodeURIComponent(p.contact + ' ' + p.company),
+        sector: p.sector,
+        signal: p.signal,
+        signal_source: p.signal_source || src,
+        msgs: {
+          initial: p.msgs?.initial ? {
+            objet: p.msgs.initial.objet,
+            corps: p.msgs.initial.corps + PS,
+          } : buildMsg(p.company, p.contact, p.role, p.location, p.sector, p.signal || ''),
+          relance1: null,
+          relance2: null,
+          relance3: null,
+        },
+        status: 'detected',
+      };
+    });
+
+    showToast(`+${newProspects.length} prospects générés par Claude ⚡`, '⚡');
+
+  } catch(e) {
+    console.error('Erreur API Claude:', e);
+    // Fallback local si l'API échoue
+    newProspects = generateProspects(10);
+    showToast('Mode local — API indisponible', '⚠');
+  }
+
+  newProspects.forEach(p => { ALL_PROSPECTS.push(p); statusMap[p.id] = 'detected'; });
+
+  await animStep(4, 200);
+  await new Promise(r => setTimeout(r, 300));
+
+  overlay.classList.remove('open');
+  btn.disabled = false;
+  if (loadBtn) { loadBtn.disabled = false; loadProg.style.display = 'none'; }
+
+  renderList();
+  showToast(`Total : ${ALL_PROSPECTS.length} prospects dans le pipeline`, '◈');
+
+  // Auto-select first new
+  setTimeout(() => selectProspect(newProspects[0].id), 300);
+}
+
+// ── RELANCES VIA CLAUDE API ───────────────────────────────────────────────────
+async function generateRelanceIA(p, relanceNum, msgKey) {
+  const joursMap = { 1: 5, 2: 12, 3: 20 };
+  const panel = document.getElementById('detail-panel');
+  const msgBox = panel?.querySelector('.msg-box');
+  if (msgBox) {
+    msgBox.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text2)"><div style="width:18px;height:18px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 0.75rem"></div>Claude génère la relance…</div>';
+  }
+
+  try {
+    const res = await fetch(API_BASE + '/generate-relance', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prenom: JULIEN_CONFIG.prenom,
+        activite: JULIEN_CONFIG.activite,
+        company: p.company,
+        contact: p.contact,
+        role: p.role,
+        signal: p.signal,
+        message_initial: p.msgs.initial?.corps || '',
+        numero_relance: relanceNum,
+        jours_sans_reponse: joursMap[relanceNum] || 5,
+      }),
+    });
+
+    if (!res.ok) throw new Error('Erreur ' + res.status);
+    const data = await res.json();
+
+    const PS = "\n\nP.S.\u00a0: Si vous cherchez encore vos prochains clients \u00e0 la main, j\u2019ai une mauvaise nouvelle... et une bonne\u00a0: pipelineai.fr";
+    p.msgs[msgKey] = {
+      objet: data.objet,
+      corps: data.corps + PS,
+    };
+    showToast('Relance générée par Claude ✓', '⚡');
+
+  } catch(e) {
+    console.error('Erreur relance:', e);
+    // Fallback local
+    const fallbacks = {
+      relance1: { objet: `Suite — ${p.company}`, corps: `Bonjour ${p.contact.split(' ')[0]},\n\nJe reviens vers vous — combien vous rapporte un nouveau client en moyenne ?\n\nSi c'est plus de 79 €, PipelineAI se rembourse dès le premier prospect converti.\n\npipelineai.fr\n\nJulien` },
+      relance2: { objet: `Un exemple concret pour ${p.company}`, corps: `Bonjour ${p.contact.split(' ')[0]},\n\nUne PME similaire a reçu ses 10 prospects lundi, envoyé les messages mercredi, RDV confirmé vendredi.\n\n79 € investis. Un RDV en 4 jours.\n\npipelineai.fr\n\nJulien` },
+      relance3: { objet: `Dernier message`, corps: `Bonjour ${p.contact.split(' ')[0]},\n\nCe sera mon dernier message.\n\nSi la prospection devient un sujet : pipelineai.fr\n\nBonne continuation,\nJulien` },
+    };
+    p.msgs[msgKey] = fallbacks[msgKey] || fallbacks.relance1;
+    showToast('Relance locale (API indisponible)', '⚠');
+  }
+
+  renderDetail();
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg, icon='✓') {
+  const el = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  document.getElementById('toast-icon').textContent = icon;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.classList.remove('show'), 2500);
+}
+
+// ── PROTECTION MOT DE PASSE ───────────────────────────────────────────────────
+(function() {
+  const HASH = '1d1decdf65fbd0bc16cc77e1d6f9be71baddd7dd365bd32b34a09ea51083936b';
+  async function sha256(str) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+  async function checkPassword() {
+    const stored = sessionStorage.getItem('pai_julien_auth');
+    if (stored === 'ok') return;
+
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:#080808;z-index:99999;display:flex;align-items:center;justify-content:center;font-family:IBM Plex Mono,monospace;';
+    overlay.innerHTML = `
+      <div style="text-align:center;max-width:320px;width:100%;padding:2rem;">
+        <div style="width:36px;height:36px;background:#e8ff47;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:600;color:#000;margin:0 auto 1.5rem;">PA</div>
+        <div style="font-size:0.7rem;letter-spacing:0.12em;color:#6b6864;margin-bottom:0.5rem;">PIPELINEAI — ACCÈS PRIVÉ</div>
+        <div style="font-size:1.1rem;color:#f0ede6;margin-bottom:1.5rem;font-family:'Bebas Neue',sans-serif;letter-spacing:0.05em;">Dashboard Julien</div>
+        <input id="pw-input" type="password" placeholder="Mot de passe…"
+          style="width:100%;padding:0.75rem 1rem;background:#161616;border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f0ede6;font-family:IBM Plex Mono,monospace;font-size:0.85rem;outline:none;margin-bottom:0.75rem;text-align:center;"
+          onkeydown="if(event.key==='Enter')document.getElementById('pw-btn').click()">
+        <button id="pw-btn" style="width:100%;padding:0.75rem;background:#e8ff47;border:none;border-radius:6px;color:#000;font-family:IBM Plex Mono,monospace;font-size:0.8rem;font-weight:600;cursor:pointer;letter-spacing:0.05em;">
+          ACCÉDER →
+        </button>
+        <div id="pw-err" style="display:none;margin-top:0.75rem;font-size:0.75rem;color:#ff4444;">Mot de passe incorrect</div>
+      </div>`;
+    document.body.appendChild(overlay);
+    document.getElementById('pw-input').focus();
+
+    document.getElementById('pw-btn').addEventListener('click', async () => {
+      const val = document.getElementById('pw-input').value;
+      const hash = await sha256(val);
+      if (hash === HASH) {
+        sessionStorage.setItem('pai_julien_auth', 'ok');
+        overlay.remove();
+      } else {
+        document.getElementById('pw-err').style.display = 'block';
+        document.getElementById('pw-input').value = '';
+        document.getElementById('pw-input').focus();
+      }
+    });
+  }
+  checkPassword();
+})();
+(async () => {
+  // Génère les 10 premiers prospects via Claude API au chargement
+  await generateBatch();
+})();
+</script>
+</body>
+</html>
