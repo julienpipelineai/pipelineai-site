@@ -652,12 +652,10 @@ function setMsgTab(k) {
 }
 
 function sendEmail(id) {
-  const p = ALL_PROSPECTS.find(x=>x.id===id); if (!p || !p.email) { showToast('Email non disponible','⚠'); return; }
-  const mk = {initial:'initial',r1:'relance1',r2:'relance2',r3:'relance3'}[activeMsgTab]||'initial';
-  const msg = p.msgs[mk];
-  window.location.href = `mailto:${p.email}?subject=${encodeURIComponent(msg.objet)}&body=${encodeURIComponent(msg.corps)}`;
-  if (activeMsgTab==='initial' && (!statusMap[id]||statusMap[id]==='detected')) setStatus(id,'messaged');
-  showSendStatus(id, '✓ Client mail ouvert');
+  const p = ALL_PROSPECTS.find(x=>x.id===id);
+  if (!p || !p.email) { showToast('Email non disponible','⚠'); return; }
+  openMailModal(id);
+  showSendStatus(id, '✓ Choisissez votre client mail');
 }
 
 function openLinkedin(id) {
@@ -950,6 +948,127 @@ function showToast(msg, icon='✓') {
   // Génère les 10 premiers prospects via Claude API au chargement
   await generateBatch();
 })();
+
+// ── MODAL CHOIX CLIENT MAIL ────────────────────────────────────────────────────
+const MAIL_CLIENTS = [
+  { id:'zimbra',  label:'Zimbra',       icon:'🔵', url:'https://mail.pipelineai.fr', custom: true },
+  { id:'gmail',   label:'Gmail',        icon:'📧', url:'https://mail.google.com/mail/?view=cm&su={subject}&body={body}&to={email}' },
+  { id:'outlook', label:'Outlook Web',  icon:'📘', url:'https://outlook.live.com/mail/0/deeplink/compose?to={email}&subject={subject}&body={body}' },
+  { id:'yahoo',   label:'Yahoo Mail',   icon:'💜', url:'https://compose.mail.yahoo.com/?to={email}&subject={subject}&body={body}' },
+  { id:'mailto',  label:'Client local', icon:'💻', url:'mailto:{email}?subject={subject}&body={body}' },
+];
+
+let _mailPending = null; // { email, subject, body }
+
+function openMailModal(id) {
+  _mailPending = id;
+  const modal = document.getElementById('mail-modal');
+  const optionsEl = document.getElementById('mail-options');
+
+  // Charger préférence sauvegardée
+  const saved = localStorage.getItem('pai_mail_client') || '';
+  const savedCustom = localStorage.getItem('pai_mail_custom_url') || '';
+  if (savedCustom) document.getElementById('custom-mail-url').value = savedCustom;
+
+  optionsEl.innerHTML = MAIL_CLIENTS.map(c => `
+    <button onclick="chooseMail('${c.id}')" style="
+      display:flex;align-items:center;gap:12px;
+      padding:0.75rem 1rem;border-radius:9px;
+      background:${saved===c.id ? 'rgba(232,255,71,0.1)' : 'rgba(255,255,255,0.04)'};
+      border:1px solid ${saved===c.id ? 'rgba(232,255,71,0.3)' : 'rgba(255,255,255,0.07)'};
+      color:${saved===c.id ? '#e8ff47' : '#f0ede6'};
+      font-size:0.85rem;font-family:'DM Sans',sans-serif;
+      cursor:pointer;text-align:left;width:100%;
+      transition:all 0.12s;">
+      <span style="font-size:1.1rem;">${c.icon}</span>
+      <span style="flex:1;">${c.label}</span>
+      ${saved===c.id ? '<span style="font-size:0.65rem;font-family:monospace;color:#e8ff47;">✓ par défaut</span>' : ''}
+    </button>`).join('');
+
+  modal.style.display = 'flex';
+  setTimeout(() => document.getElementById('custom-mail-url').focus && null, 100);
+}
+
+function closeMailModal() {
+  document.getElementById('mail-modal').style.display = 'none';
+  _mailPending = null;
+}
+
+function chooseMail(clientId) {
+  localStorage.setItem('pai_mail_client', clientId);
+  sendViaClient(clientId, null);
+  closeMailModal();
+}
+
+function useCustomMail() {
+  const url = document.getElementById('custom-mail-url').value.trim();
+  if (!url) return;
+  localStorage.setItem('pai_mail_custom_url', url);
+  localStorage.setItem('pai_mail_client', 'custom');
+  sendViaClient('custom', url);
+  closeMailModal();
+}
+
+function sendViaClient(clientId, customUrl) {
+  // Récupérer prospect + message courant
+  const p = (typeof ALL_PROSPECTS !== 'undefined' ? ALL_PROSPECTS : PROSPECTS).find(x => x.id === _mailPending);
+  if (!p) return;
+
+  const activeMsgKey = (typeof activeMsgTab !== 'undefined' ? activeMsgTab : activeMsg);
+  const msgKey = {initial:'initial',r1:'relance1',r2:'relance2',r3:'relance3'}[activeMsgKey] || 'initial';
+  const msg = p.msgs[msgKey];
+  if (!msg) return;
+
+  const email   = encodeURIComponent(p.email || '');
+  const subject = encodeURIComponent(msg.objet);
+  const body    = encodeURIComponent(msg.corps);
+
+  let finalUrl = '';
+
+  if (clientId === 'custom') {
+    finalUrl = customUrl || localStorage.getItem('pai_mail_custom_url') || '';
+  } else {
+    const client = MAIL_CLIENTS.find(c => c.id === clientId);
+    if (!client) return;
+    finalUrl = client.url
+      .replace('{email}', email)
+      .replace('{subject}', subject)
+      .replace('{body}', body);
+  }
+
+  if (clientId === 'mailto') {
+    window.location.href = finalUrl;
+  } else {
+    window.open(finalUrl, '_blank');
+  }
+
+  // Update statut
+  const statuses = typeof prospectStatuses !== 'undefined' ? prospectStatuses : statusMap;
+  if (activeMsgKey === 'initial' && (!statuses[_mailPending] || statuses[_mailPending] === 'detected')) {
+    if (typeof updateStatus !== 'undefined') updateStatus(_mailPending, 'messaged');
+    else if (typeof setStatus !== 'undefined') setStatus(_mailPending, 'messaged');
+  }
+}
+// ── FIN MODAL MAIL ────────────────────────────────────────────────────────────
+
 </script>
+
+<!-- MODAL CHOIX CLIENT MAIL -->
+<div id="mail-modal" style="display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);" onclick="if(event.target===this)closeMailModal()">
+  <div style="background:#161616;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:1.75rem;width:360px;max-width:92vw;position:relative;animation:fadeUp 0.2s ease both;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;color:#6b6864;margin-bottom:0.4rem;">Envoyer via</div>
+    <div style="font-size:1rem;font-weight:500;color:#f0ede6;margin-bottom:1.25rem;">Choisissez votre client mail</div>
+    <div id="mail-options" style="display:flex;flex-direction:column;gap:7px;margin-bottom:1.25rem;"></div>
+    <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:1.1rem;">
+      <div style="font-size:0.72rem;color:#6b6864;margin-bottom:7px;font-family:'IBM Plex Mono',monospace;">Autre / URL webmail personnalisée</div>
+      <div style="display:flex;gap:8px;">
+        <input id="custom-mail-url" type="text" placeholder="https://mail.mondomaine.fr" style="flex:1;padding:0.6rem 0.75rem;background:#0f0f0f;border:1px solid rgba(255,255,255,0.08);border-radius:7px;color:#f0ede6;font-size:0.82rem;font-family:'DM Sans',sans-serif;outline:none;" onkeydown="if(event.key==='Enter')useCustomMail()">
+        <button onclick="useCustomMail()" style="padding:0.6rem 1rem;background:#e8ff47;border:none;border-radius:7px;color:#000;font-size:0.75rem;font-family:'IBM Plex Mono',monospace;font-weight:600;cursor:pointer;white-space:nowrap;">OK →</button>
+      </div>
+      <div style="font-size:0.68rem;color:#4a4845;margin-top:6px;">Votre URL sera mémorisée pour les prochaines fois</div>
+    </div>
+    <button onclick="closeMailModal()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:#6b6864;cursor:pointer;font-size:1rem;line-height:1;padding:4px;">✕</button>
+  </div>
+</div>
 </body>
 </html>
