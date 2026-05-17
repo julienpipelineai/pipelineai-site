@@ -951,7 +951,7 @@ function showToast(msg, icon='✓') {
 
 // ── MODAL CHOIX CLIENT MAIL ────────────────────────────────────────────────────
 const MAIL_CLIENTS = [
-  { id:'zimbra',  label:'Zimbra',       icon:'🔵', url:'https://mail.pipelineai.fr', custom: true },
+  { id:'zimbra',  label:'Zimbra (OVH)',  icon:'🔵', url:'https://zimbra1.mail.ovh.net/modern/', custom: true },
   { id:'gmail',   label:'Gmail',        icon:'📧', url:'https://mail.google.com/mail/?view=cm&su={subject}&body={body}&to={email}' },
   { id:'outlook', label:'Outlook Web',  icon:'📘', url:'https://outlook.live.com/mail/0/deeplink/compose?to={email}&subject={subject}&body={body}' },
   { id:'yahoo',   label:'Yahoo Mail',   icon:'💜', url:'https://compose.mail.yahoo.com/?to={email}&subject={subject}&body={body}' },
@@ -1038,6 +1038,13 @@ function sendViaClient(clientId, customUrl) {
 
   if (clientId === 'mailto') {
     window.location.href = finalUrl;
+  } else if (clientId === 'zimbra') {
+    // Zimbra ne supporte pas le pré-remplissage via URL
+    // On copie le message et on ouvre Zimbra
+    const rawMsg = 'Objet : ' + msg.objet + '\n\n' + msg.corps;
+    navigator.clipboard.writeText(rawMsg).catch(() => {});
+    window.open('https://zimbra1.mail.ovh.net/modern/', '_blank');
+    showToast('Message copié — collez dans Zimbra (Ctrl+V)', '✓');
   } else {
     window.open(finalUrl, '_blank');
   }
