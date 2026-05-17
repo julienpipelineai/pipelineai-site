@@ -1116,7 +1116,7 @@ function addHistory(action, company) {
 function renderHistory() {
   const el = document.getElementById('history-list');
   if (!el) return;
-  if (!actionHistory.length) { el.innerHTML='<div style="font-size:0.72rem;color:var(--text3);font-style:italic;">Aucune action pour l'instant.</div>'; return; }
+  if (!actionHistory.length) { el.innerHTML='<div style="font-size:0.72rem;color:var(--text3);font-style:italic;">Aucune action pour l\'instant.</div>'; return; }
   el.innerHTML = actionHistory.slice(0,30).map(h=>`
     <div class="history-item">
       <div class="history-dot"></div>
