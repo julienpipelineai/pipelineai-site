@@ -740,6 +740,147 @@ body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--bg-4); border-radius: 2px; }
+
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE MOBILE — Dashboard client
+══════════════════════════════════════════════════════ */
+
+/* ── HAMBURGER MENU ── */
+.hamburger {
+  display: none;
+  flex-direction: column; gap: 5px;
+  cursor: pointer; padding: 4px; background: none; border: none;
+}
+.hamburger span {
+  display: block; width: 20px; height: 2px;
+  background: var(--text-2); border-radius: 2px; transition: all 0.25s;
+}
+.sidebar-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6); z-index: 49; backdrop-filter: blur(2px);
+}
+.sidebar-overlay.open { display: block; }
+
+/* ── MOBILE BOTTOM NAV ── */
+.bottom-nav {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 60;
+  background: var(--bg-2); border-top: 1px solid var(--border);
+  padding: 8px 0 env(safe-area-inset-bottom, 8px);
+  grid-template-columns: repeat(4, 1fr);
+}
+.bottom-nav-item {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  cursor: pointer; padding: 4px 8px;
+  font-size: 0.6rem; color: var(--text-3); transition: color 0.15s;
+}
+.bottom-nav-item.active { color: var(--accent); }
+.bottom-nav-item .bni-icon { font-size: 1.1rem; }
+
+/* ── MOBILE DETAIL DRAWER ── */
+.mobile-detail-overlay {
+  display: none; position: fixed; inset: 0; z-index: 70;
+  background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+}
+.mobile-detail-overlay.open { display: block; }
+.mobile-detail-drawer {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 71;
+  background: var(--bg-2); border-radius: 20px 20px 0 0;
+  max-height: 85vh; overflow-y: auto;
+  transform: translateY(100%); transition: transform 0.3s ease;
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
+.mobile-detail-drawer.open { transform: translateY(0); }
+.drawer-handle {
+  width: 40px; height: 4px; background: var(--border-2);
+  border-radius: 2px; margin: 12px auto 0;
+}
+
+@media (max-width: 768px) {
+  /* Sidebar becomes a slide-over */
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 50; width: 260px;
+  }
+  .sidebar.open { transform: translateX(0); }
+
+  /* Main takes full width */
+  .main { margin-left: 0; }
+
+  /* Topbar adjustments */
+  .topbar { padding: 0.75rem 1rem; }
+  .topbar-title { font-size: 1rem; }
+  .topbar-sub { font-size: 0.7rem; }
+  .topbar-right { gap: 6px; }
+  .topbar-right .btn:not(.btn-accent) { display: none; }
+  .topbar-right .theme-toggle { display: flex; }
+  .hamburger { display: flex; }
+
+  /* Content padding */
+  .content { padding: 1rem; }
+
+  /* Metrics: 2x2 grid */
+  .metrics { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 1rem; }
+  .metric { padding: 0.875rem 1rem; }
+  .metric-value { font-size: 1.4rem; }
+
+  /* Perf grid: stack */
+  .perf-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Progress bar */
+  .progress-steps { display: none; }
+
+  /* Dashboard grid: single column */
+  .dashboard-grid { grid-template-columns: 1fr; gap: 12px; }
+
+  /* Detail panel: hidden on mobile (shown as drawer) */
+  .detail-panel { display: none; }
+
+  /* Filter tabs: horizontal scroll */
+  .filter-tabs {
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; flex-wrap: nowrap;
+    padding: 0.6rem 1rem;
+  }
+  .filter-tabs::-webkit-scrollbar { display: none; }
+  .filter-tab { white-space: nowrap; flex-shrink: 0; }
+
+  /* Prospect rows: slightly more compact */
+  .prospect-row { padding: 0.75rem 1rem; }
+  .prospect-company { font-size: 0.85rem; }
+
+  /* Checklist: condensed */
+  #checklist-wrap { padding: 0.875rem 1rem; }
+
+  /* Upsell banner */
+  #upsell-banner { flex-wrap: wrap; gap: 8px; }
+  .upsell-cta { width: 100%; text-align: center; }
+
+  /* Bottom nav visible */
+  .bottom-nav { display: grid; }
+
+  /* Add padding for bottom nav */
+  .content { padding-bottom: 80px; }
+
+  /* History panel */
+  #history-panel { margin-bottom: 80px; }
+
+  /* Onboarding modal */
+  .onboarding-modal { padding: 1.5rem 1.25rem; margin: 1rem; border-radius: 16px; }
+  .onboarding-step { padding: 1.25rem; }
+
+  /* Mail modal */
+  #mail-modal > div { width: 92vw; padding: 1.25rem; }
+}
+
+@media (max-width: 400px) {
+  .metrics { grid-template-columns: 1fr 1fr; }
+  .metric-value { font-size: 1.2rem; }
+  .perf-grid { grid-template-columns: 1fr; }
+  .topbar-title { font-size: 0.9rem; }
+}
+
 </style>
 </head>
 <body>
@@ -793,12 +934,17 @@ body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
 
   <!-- TOPBAR -->
   <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
     <div class="topbar-left">
       <div class="topbar-title">Mes prospects</div>
       <div class="topbar-sub">
         <span class="live-dot"></span>
         secteur : Tech / SaaS / Digital · zone : France entière · TPE
       </div>
+    </div>
     </div>
     <div class="topbar-right">
       <div class="theme-toggle" onclick="toggleTheme()" title="Mode clair/sombre">🌙</div>
@@ -2643,7 +2789,35 @@ function exportPDF() {
   <table><thead><tr><th>Entreprise</th><th>Contact</th><th>Rôle</th><th>Localisation</th><th>Score</th><th>Statut</th></tr></thead>
   <tbody>${rows}</tbody></table>
   <footer>PipelineAI — pipelineai.fr · Rapport confidentiel</footer>
-  </body></html>`;
+  
+<!-- Mobile detail drawer -->
+<div class="mobile-detail-overlay" id="mobile-overlay" onclick="closeMobileDetail()"></div>
+<div class="mobile-detail-drawer" id="mobile-drawer">
+  <div class="drawer-handle"></div>
+  <div id="mobile-detail-content" style="padding:1rem;"></div>
+</div>
+
+<!-- Bottom navigation -->
+<div class="bottom-nav">
+  <div class="bottom-nav-item active" onclick="setPage('prospects', this)">
+    <span class="bni-icon">◈</span>
+    <span>Prospects</span>
+  </div>
+  <div class="bottom-nav-item" onclick="setPage('stats', this)">
+    <span class="bni-icon">◉</span>
+    <span>Stats</span>
+  </div>
+  <div class="bottom-nav-item" onclick="exportCSV()">
+    <span class="bni-icon">↓</span>
+    <span>Export</span>
+  </div>
+  <div class="bottom-nav-item" onclick="setPage('settings', this)">
+    <span class="bni-icon">⊙</span>
+    <span>Paramètres</span>
+  </div>
+</div>
+
+</body></html>`;
 
   const blob = new Blob([html], {type:'text/html;charset=utf-8;'});
   const url = URL.createObjectURL(blob);
@@ -2755,6 +2929,77 @@ function sendViaClient(clientId, customUrl) {
 }
 // ── FIN MODAL MAIL ────────────────────────────────────────────────────────────
 
+
+// ── MOBILE SIDEBAR ────────────────────────────────────────────
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('open');
+}
+
+// ── MOBILE DETAIL DRAWER ──────────────────────────────────────
+function openMobileDetail(id) {
+  if (window.innerWidth > 768) return;
+  const p = PROSPECTS.find(x => x.id === id);
+  if (!p) return;
+  const overlay = document.getElementById('mobile-overlay');
+  const drawer = document.getElementById('mobile-drawer');
+  const content = document.getElementById('mobile-detail-content');
+  const status = prospectStatuses[id] || 'detected';
+  const msg = p.msgs[{initial:'initial',r1:'relance1',r2:'relance2',r3:'relance3'}['initial']] || p.msgs.initial;
+
+  content.innerHTML = `
+    <div style="margin-bottom:1rem;">
+      <div style="font-family:var(--serif);font-size:1.1rem;font-style:italic;color:var(--text);margin-bottom:4px;">${p.company}</div>
+      <div style="font-size:0.8rem;color:var(--text-2);margin-bottom:10px;">${p.contact} · ${p.role}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem;">
+        <span style="font-size:0.68rem;padding:3px 8px;border-radius:20px;background:var(--bg-4);color:var(--text-2);font-family:var(--mono);">${p.location}</span>
+        <span style="font-size:0.68rem;padding:3px 8px;border-radius:20px;background:var(--bg-4);color:var(--text-2);font-family:var(--mono);">${p.sector}</span>
+      </div>
+    </div>
+    <div style="background:var(--bg-3);border-radius:8px;padding:0.75rem;border-left:2px solid var(--warm);margin-bottom:1rem;">
+      <div style="font-size:0.78rem;color:var(--text);line-height:1.5;">${p.signal}</div>
+      <div style="font-size:0.68rem;color:var(--text-3);margin-top:4px;font-family:var(--mono);">${p.signal_source || ''}</div>
+    </div>
+    ${msg ? `
+    <div style="margin-bottom:1rem;">
+      <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-3);font-family:var(--mono);margin-bottom:0.5rem;">Message initial</div>
+      <div style="font-size:0.78rem;font-weight:500;color:var(--text);margin-bottom:4px;">${msg.objet}</div>
+      <div style="font-size:0.8rem;color:var(--text-2);line-height:1.6;white-space:pre-wrap;background:var(--bg-3);border-radius:8px;padding:0.75rem;">${msg.corps}</div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:1rem;">
+      <button onclick="sendByEmail(${id})" style="flex:1;padding:0.75rem;background:var(--bg-3);border:1px solid var(--border-2);border-radius:8px;color:var(--text-2);font-size:0.82rem;cursor:pointer;">✉ Email</button>
+      <a onclick="return openLinkedin(${id})" href="#" style="flex:1;padding:0.75rem;background:rgba(10,102,194,0.1);border:1px solid rgba(10,102,194,0.3);border-radius:8px;color:#0a66c2;font-size:0.82rem;cursor:pointer;text-decoration:none;text-align:center;display:flex;align-items:center;justify-content:center;">in LinkedIn</a>
+    </div>` : ''}
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+      ${['detected','messaged','relance_1','relance_2','responded','converted'].map(s => `
+        <button onclick="updateStatus(${id},'${s}');closeMobileDetail();" style="padding:0.4rem 0.75rem;border-radius:6px;font-size:0.72rem;cursor:pointer;
+          background:${status===s?'var(--accent)':'var(--bg-3)'};
+          border:1px solid ${status===s?'var(--accent)':'var(--border-2)'};
+          color:${status===s?'#fff':'var(--text-2)'};">
+          ${{ detected:'Détecté', messaged:'Contacté', relance_1:'Relance 1', relance_2:'Relance 2', responded:'A répondu', converted:'Converti ✓' }[s]}
+        </button>`).join('')}
+    </div>
+  `;
+
+  overlay.classList.add('open');
+  setTimeout(() => drawer.classList.add('open'), 10);
+}
+
+function closeMobileDetail() {
+  document.getElementById('mobile-overlay').classList.remove('open');
+  document.getElementById('mobile-drawer').classList.remove('open');
+}
+
+// Hook prospect row click to open drawer on mobile
+const _origSelectProspect = selectProspect;
+selectProspect = function(id) {
+  _origSelectProspect(id);
+  if (window.innerWidth <= 768) openMobileDetail(id);
+};
+// ── FIN MOBILE ─────────────────────────────────────────────────
+
 </script>
 
 <!-- MODAL CHOIX CLIENT MAIL -->
@@ -2774,5 +3019,33 @@ function sendViaClient(clientId, customUrl) {
     <button onclick="closeMailModal()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:#6b6864;cursor:pointer;font-size:1rem;line-height:1;padding:4px;">✕</button>
   </div>
 </div>
+
+<!-- Mobile detail drawer -->
+<div class="mobile-detail-overlay" id="mobile-overlay" onclick="closeMobileDetail()"></div>
+<div class="mobile-detail-drawer" id="mobile-drawer">
+  <div class="drawer-handle"></div>
+  <div id="mobile-detail-content" style="padding:1rem;"></div>
+</div>
+
+<!-- Bottom navigation -->
+<div class="bottom-nav">
+  <div class="bottom-nav-item active" onclick="setPage('prospects', this)">
+    <span class="bni-icon">◈</span>
+    <span>Prospects</span>
+  </div>
+  <div class="bottom-nav-item" onclick="setPage('stats', this)">
+    <span class="bni-icon">◉</span>
+    <span>Stats</span>
+  </div>
+  <div class="bottom-nav-item" onclick="exportCSV()">
+    <span class="bni-icon">↓</span>
+    <span>Export</span>
+  </div>
+  <div class="bottom-nav-item" onclick="setPage('settings', this)">
+    <span class="bni-icon">⊙</span>
+    <span>Paramètres</span>
+  </div>
+</div>
+
 </body>
 </html>
