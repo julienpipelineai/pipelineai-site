@@ -2251,13 +2251,21 @@ async function handleMagicLink(token) {
     saveSession({access_token: data.access_token});
     window.history.replaceState({}, '', window.location.pathname);
     hideOverlay();
-    showToast('Connecté !', '✓');
+    showToast('Connecté ! Bienvenue sur PipelineAI 👋', '✓');
     renderList();
     return true;
   } catch(e) {
     hideOverlay();
-    showToast('Lien expiré — veuillez refaire un paiement test', '⚠');
     renderList();
+    // Même si token expiré, si onboarding jamais fait → nouveau client → afficher onboarding
+    const done = (() => { try { return localStorage.getItem(OB_KEY); } catch { return null; } })();
+    if (!done) {
+      setTimeout(showOnboarding, 400);
+      showToast('Bienvenue ! Configurez vos premiers prospects.', '👋');
+    } else {
+      showToast('Session expirée — mode démo activé', '⚠');
+      setTimeout(() => selectProspect(1), 400);
+    }
     return false;
   }
 }
