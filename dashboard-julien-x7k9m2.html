@@ -1040,11 +1040,11 @@ function sendViaClient(clientId, customUrl) {
     window.location.href = finalUrl;
   } else if (clientId === 'zimbra') {
     // Zimbra ne supporte pas le pré-remplissage via URL
-    // On copie le message et on ouvre Zimbra
-    const rawMsg = 'Objet : ' + msg.objet + '\n\n' + msg.corps;
+    // On copie destinataire + objet + corps et on ouvre Zimbra
+    const rawMsg = 'À : ' + (p.email || '') + '\nObjet : ' + msg.objet + '\n\n' + msg.corps;
     navigator.clipboard.writeText(rawMsg).catch(() => {});
     window.open('https://zimbra1.mail.ovh.net/modern/', '_blank');
-    showToast('Message copié — collez dans Zimbra (Ctrl+V)', '✓');
+    showToast('✓ Copié — À: ' + (p.email || 'email manquant') + ' · Collez dans Zimbra', '✓');
   } else {
     window.open(finalUrl, '_blank');
   }
