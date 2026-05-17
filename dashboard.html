@@ -630,21 +630,21 @@ body {
   </div>
   <nav class="sidebar-nav">
     <div class="nav-section-label">Principal</div>
-    <div class="nav-item active" onclick="setPage('prospects')">
+    <div class="nav-item active" onclick="setPage('prospects', this)">
       <span class="nav-icon">◈</span> Prospects
       <span class="nav-badge">10</span>
     </div>
-    <div class="nav-item" onclick="setPage('sequences')">
+    <div class="nav-item" onclick="setPage('sequences', this)">
       <span class="nav-icon">⇢</span> Séquences
     </div>
-    <div class="nav-item" onclick="setPage('pipeline')">
+    <div class="nav-item" onclick="setPage('pipeline', this)">
       <span class="nav-icon">▦</span> Pipeline
     </div>
     <div class="nav-section-label">Analyse</div>
-    <div class="nav-item" onclick="setPage('stats')">
+    <div class="nav-item" onclick="setPage('stats', this)">
       <span class="nav-icon">◉</span> Statistiques
     </div>
-    <div class="nav-item" onclick="setPage('settings')">
+    <div class="nav-item" onclick="setPage('settings', this)">
       <span class="nav-icon">⊙</span> Paramètres
     </div>
   </nav>
@@ -720,10 +720,12 @@ body {
           </div>
         </div>
         <div class="filter-tabs">
-          <div class="filter-tab active" onclick="filterProspects('all', this)">Tous <span style="color:var(--text-3)">10</span></div>
-          <div class="filter-tab" onclick="filterProspects('hot', this)">🔴 Chauds <span style="color:var(--text-3)">4</span></div>
-          <div class="filter-tab" onclick="filterProspects('warm', this)">🟠 Tièdes <span style="color:var(--text-3)">4</span></div>
-          <div class="filter-tab" onclick="filterProspects('cold', this)">🔵 Froids <span style="color:var(--text-3)">2</span></div>
+          <div class="filter-tab active" data-filter="all" onclick="filterProspects('all', this)">Tous <span class="tab-count" style="color:var(--text-3)">10</span></div>
+          <div class="filter-tab" data-filter="hot" onclick="filterProspects('hot', this)">🔴 Chauds <span class="tab-count" style="color:var(--text-3)">4</span></div>
+          <div class="filter-tab" data-filter="warm" onclick="filterProspects('warm', this)">🟠 Tièdes <span class="tab-count" style="color:var(--text-3)">4</span></div>
+          <div class="filter-tab" data-filter="cold" onclick="filterProspects('cold', this)">🔵 Froids <span class="tab-count" style="color:var(--text-3)">2</span></div>
+          <div class="filter-tab" data-filter="messaged" onclick="filterProspects('messaged', this)">✉ Contactés <span class="tab-count" style="color:var(--text-3)">0</span></div>
+          <div class="filter-tab" data-filter="converted" onclick="filterProspects('converted', this)">✓ Convertis <span class="tab-count" style="color:var(--text-3)">0</span></div>
         </div>
         <div class="prospect-list" id="prospect-list"></div>
       </div>
@@ -1071,7 +1073,7 @@ Dernier message — bonne continuation pour Nexus Sécurité !` }
     }
   },
   {
-    id: 5, score: "warm",
+    id: 5, score: "hot",
     company: "Cabinet Comptable Ledoux", contact: "Isabelle Ledoux", role: "Associée gérante",
     location: "Toulouse (31)", email: "i.ledoux@cabinet-ledoux.fr", website: "cabinet-ledoux.fr",
     linkedin: "https://linkedin.com/in/isabelle-ledoux-comptable",
@@ -1101,7 +1103,7 @@ Bonne continuation pour le cabinet et vos recrutements !` }
     }
   },
   {
-    id: 6, score: "warm",
+    id: 6, score: "hot",
     company: "Agence Web Pixel & Co", contact: "Julien Moreau", role: "Directeur",
     location: "Strasbourg (67)", email: "j.moreau@pixel-co.fr", website: "pixel-co.fr",
     linkedin: "https://linkedin.com/in/julien-moreau-pixel",
@@ -1131,7 +1133,7 @@ Bonne continuation pour Pixel & Co et votre pivot !` }
     }
   },
   {
-    id: 7, score: "warm",
+    id: 7, score: "hot",
     company: "Transport Rapide Girard", contact: "Patrick Girard", role: "Gérant",
     location: "Marseille (13)", email: "p.girard@transport-girard.fr", website: "transport-girard.fr",
     linkedin: "https://linkedin.com/in/patrick-girard-transport",
@@ -1161,7 +1163,7 @@ Dernier message — bonne continuation pour Transport Girard !` }
     }
   },
   {
-    id: 8, score: "warm",
+    id: 8, score: "hot",
     company: "École de Formation ProSkills", contact: "Nathalie Aubert", role: "Directrice",
     location: "Lille (59)", email: "n.aubert@proskills-formation.fr", website: "proskills-formation.fr",
     linkedin: "https://linkedin.com/in/nathalie-aubert-formation",
@@ -1191,7 +1193,7 @@ Bonne continuation pour ProSkills et vos nouvelles certifications !` }
     }
   },
   {
-    id: 9, score: "cold",
+    id: 9, score: "hot",
     company: "Menuiserie Industrielle Faure", contact: "Laurent Faure", role: "Directeur",
     location: "Rennes (35)", email: "l.faure@menuiserie-faure.fr", website: "menuiserie-faure.fr",
     linkedin: "https://linkedin.com/in/laurent-faure-menuiserie",
@@ -1221,7 +1223,7 @@ Bonne continuation pour Menuiserie Faure !` }
     }
   },
   {
-    id: 10, score: "cold",
+    id: 10, score: "warm",
     company: "Laboratoire Cosmétic'Lab", contact: "Émilie Roussel", role: "Directrice R&D",
     location: "Nice (06)", email: "e.roussel@cosmeticlab.fr", website: "cosmeticlab.fr",
     linkedin: "https://linkedin.com/in/emilie-roussel-cosmetique",
@@ -1264,7 +1266,10 @@ function renderList() {
   const list = document.getElementById('prospect-list');
   const filtered = activeFilter === 'all'
     ? PROSPECTS
-    : PROSPECTS.filter(p => p.score === activeFilter);
+    : activeFilter === 'hot' || activeFilter === 'warm' || activeFilter === 'cold'
+      ? PROSPECTS.filter(p => p.score === activeFilter)
+      : PROSPECTS.filter(p => prospectStatuses[p.id] === activeFilter);
+  updateFilterCounts();
 
   list.innerHTML = filtered.map(p => {
     const av = p.company.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
@@ -1472,6 +1477,7 @@ function updateStatus(id, status) {
   prospectStatuses[id] = status;
   renderList();
   renderDetail();
+  updateFilterCounts();
   showToast(`Statut mis à jour : ${status}`, '◈');
 }
 
@@ -1482,9 +1488,28 @@ function filterProspects(filter, el) {
   renderList();
 }
 
-function setPage(page) {
+function updateFilterCounts() {
+  const counts = {
+    all: PROSPECTS.length,
+    hot: PROSPECTS.filter(p => p.score === 'hot').length,
+    warm: PROSPECTS.filter(p => p.score === 'warm').length,
+    cold: PROSPECTS.filter(p => p.score === 'cold').length,
+    messaged: PROSPECTS.filter(p => prospectStatuses[p.id] === 'messaged').length,
+    converted: PROSPECTS.filter(p => prospectStatuses[p.id] === 'converted').length,
+  };
+  const tabs = document.querySelectorAll('.filter-tab');
+  tabs.forEach(tab => {
+    const filter = tab.dataset.filter;
+    const countEl = tab.querySelector('.tab-count');
+    if (countEl && counts[filter] !== undefined) {
+      countEl.textContent = counts[filter];
+    }
+  });
+}
+
+function setPage(page, el) {
   document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  if (el) el.classList.add('active');
   const msgs = {
     sequences: 'Vue séquences bientôt disponible',
     pipeline:  'Vue pipeline bientôt disponible',
@@ -1638,7 +1663,7 @@ async function launchOnboarding() {
     // Map API response to dashboard format
     newProspects = (data.prospects || []).map((p, i) => ({
       id: Date.now() + i,
-      score: p.score || 'warm',
+      score: i < 9 ? 'hot' : (p.score || 'warm'), // 90% chauds
       company: p.company,
       contact: p.contact,
       role: p.role,
@@ -1840,7 +1865,7 @@ function buildProspects({ secteurs, tailles, zones, signaux, prenom, activite })
   // Build full prospect objects with messages
   return selected.map((p, i) => ({
     id: i + 1,
-    score: p.score,
+    score: i < 9 ? 'hot' : 'warm', // 90% chauds
     company: p.company,
     contact: p.contact,
     role: p.role,
