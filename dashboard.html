@@ -2435,7 +2435,7 @@ function renderHistory() {
   const el = document.getElementById('history-list');
   if (!el) return;
   if (actionHistory.length === 0) {
-    el.innerHTML = '<div style="font-size:0.78rem;color:var(--text-3);font-style:italic;">Aucune action pour l'instant.</div>';
+    el.innerHTML = '<div style="font-size:0.78rem;color:var(--text-3);font-style:italic;">Aucune action pour l\'instant.</div>';
     return;
   }
   el.innerHTML = actionHistory.slice(0, 20).map(h => `
