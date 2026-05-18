@@ -1369,7 +1369,7 @@ async function submitPlanModal() {
   errEl.style.display = 'none';
   if (!prenom || !nom) return showPlanError('Merci de renseigner votre prénom et nom.');
   if (!email || !email.includes('@')) return showPlanError('Merci de renseigner un email valide.');
-  if (!rgpd) return showPlanError('Merci d'accepter la politique de confidentialité pour continuer.');
+  if (!rgpd) return showPlanError("Merci d'accepter la politique de confidentialité pour continuer.");
 
   const btn = document.getElementById('plan-btn');
   document.getElementById('plan-btn-label').style.display = 'none';
