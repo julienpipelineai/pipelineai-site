@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PipelineAI — 10 clients potentiels pour 79 €</title>
+<title>PipelineAI — 10 prospects qualifiés pour 79 €</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
@@ -201,7 +201,7 @@
     position: relative; overflow: hidden;
   }
   .price-card::before {
-    content: 'OFFRE DE LANCEMENT';
+    content: '';
     position: absolute; top: 20px; right: -32px;
     background: var(--accent); color: #fff;
     font-size: 0.65rem; letter-spacing: 0.1em;
@@ -239,8 +239,7 @@
   @keyframes fillBar { from { width: 0; } to { width: 73%; } }
   .limit-count { font-weight: 600; color: var(--accent); white-space: nowrap; }
 
-  /* ─── ROI ─── */
-  .roi-section { background: var(--paper-2); }
+
   .section-header { text-align: center; margin-bottom: 3.5rem; }
   .section-eyebrow {
     font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
@@ -376,6 +375,10 @@
 
   /* Mobile */
   @media (max-width: 640px) {
+    /* Demo section */
+    #demo > div > div:nth-child(3) > div:last-child { grid-template-columns: 1fr !important; }
+    #demo-panel { display: none !important; }
+
     /* Nav */
     nav { padding: 0.875rem 1.25rem; }
     .nav-logo { font-size: 1rem; }
@@ -464,12 +467,11 @@
   <div class="hero-bg"></div>
   <div class="hero-eyebrow">
     <span class="eyebrow-dot"></span>
-    Offre early adopter — 50 premières places à prix réduit
+    Généré en 30 secondes — prospects qualifiés &amp; messages prêts
   </div>
-  <h1>Vos 10 prochains clients<br>potentiels pour <em>79 €</em></h1>
+  <h1>Trouvez vos 10 prochains<br>prospects qualifiés pour <em>79 €</em></h1>
   <p class="hero-sub">
-    PipelineAI détecte les PME qui ont besoin de vous, rédige les messages, 
-    et suit les relances. Vous n'avez plus qu'à décrocher.
+    Vous passez des heures à chercher des clients manuellement — LinkedIn, appels à froid, relances oubliées. PipelineAI identifie les PME qui ont besoin de vous, rédige les messages personnalisés et gère les relances. Vous n'avez plus qu'à décrocher.
   </p>
   <div class="hero-actions">
     <button class="btn-primary" onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})">
@@ -483,9 +485,9 @@
   <div class="hero-proof">
     <div class="proof-item"><span>✓</span> Sans abonnement</div>
     <span class="proof-sep">·</span>
-    <div class="proof-item"><span>✓</span> Résultats en 48h</div>
+    <div class="proof-item"><span>✓</span> Généré en 30 secondes</div>
     <span class="proof-sep">·</span>
-    <div class="proof-item"><span>✓</span> Remboursé si aucun prospect qualifié</div>
+    
   </div>
 </section>
 
@@ -505,13 +507,13 @@
           <div class="offer-feature"><div class="feat-check">✓</div><span>10 prospects qualifiés, ciblés sur votre secteur et zone géographique</span></div>
           <div class="offer-feature"><div class="feat-check">✓</div><span>1 message IA ultra-personnalisé par prospect, basé sur ses signaux d'activité</span></div>
           <div class="offer-feature"><div class="feat-check">✓</div><span>Séquence de 3 relances automatiques espacées intelligemment</span></div>
-          <div class="offer-feature"><div class="feat-check">✓</div><span>Dashboard de suivi pendant 30 jours inclus</span></div>
+          <div class="offer-feature"><div class="feat-check">✓</div><span>Dashboard de suivi inclus</span></div>
           <div class="offer-feature"><div class="feat-check">✓</div><span>Migration vers un plan mensuel avec −20 % la première année</span></div>
         </div>
       </div>
 
       <div class="price-card">
-        <div class="card-eyebrow">Offre early adopter</div>
+        <div class="card-eyebrow">Paiement unique — sans engagement</div>
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:0.25rem">
           <div class="price-display" style="margin-bottom:0">
             <span class="price-currency">€</span>
@@ -568,64 +570,21 @@
           <svg width="38" height="16" viewBox="0 0 38 16" fill="none"><rect width="38" height="16" rx="3" fill="#635BFF"/><text x="5" y="12" font-size="9" fill="white" font-family="sans-serif" font-weight="bold">stripe</text></svg>
           <span style="font-size:0.75rem;color:#7a7a7a">Paiement sécurisé · SSL · Visa · Mastercard</span>
         </div>
-        <div class="price-guarantee">🛡 Satisfait ou remboursé si les 10 prospects ne sont pas qualifiés</div>
+        
         <hr class="price-divider">
-        <div style="background:rgba(26,79,255,0.06);border-radius:10px;padding:10px 12px;margin-bottom:1rem;font-size:0.8rem;color:#1a4fff;line-height:1.5;">
-          ✦ Les 50 premiers clients passent au plan Pro à <strong>−20 %</strong> s'ils s'abonnent dans les 30 jours
-        </div>
-        <div class="price-limit">
-          <span style="font-size:0.82rem;color:#7a7a7a">Places early adopter</span>
-          <div class="limit-bar-wrap"><div class="limit-bar"></div></div>
-          <span class="limit-count">23 / 50</span>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ROI -->
-<section class="section roi-section">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-eyebrow">Calculateur ROI</div>
-      <h2 class="section-title">Combien rapportent<br>vos 10 prospects ?</h2>
-    </div>
-    <div class="roi-calc">
-      <div class="calc-title">Adaptez à votre activité</div>
-      <div class="calc-row">
-        <span class="calc-label">Valeur d'un client (€)</span>
-        <input type="range" class="calc-input" id="val" min="200" max="15000" step="100" value="2000" oninput="calc()">
-        <span class="calc-val" id="val-out">2 000 €</span>
-      </div>
-      <div class="calc-row">
-        <span class="calc-label">Taux de conversion (%)</span>
-        <input type="range" class="calc-input" id="taux" min="1" max="30" step="1" value="10" oninput="calc()">
-        <span class="calc-val" id="taux-out">10 %</span>
-      </div>
-      <div class="calc-results">
-        <div class="calc-result">
-          <div class="result-label">Clients générés</div>
-          <div class="result-value" id="r-clients">1</div>
-        </div>
-        <div class="calc-result">
-          <div class="result-label">Revenus estimés</div>
-          <div class="result-value good" id="r-rev">2 000 €</div>
-        </div>
-        <div class="calc-result">
-          <div class="result-label">ROI net</div>
-          <div class="result-value good" id="r-roi">+3 982 %</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- HOW IT WORKS -->
 <section class="section" id="how">
   <div class="container">
     <div class="section-header">
       <div class="section-eyebrow">Comment ça marche</div>
-      <h2 class="section-title">De zéro à 10 prospects<br>en 48 heures</h2>
+      <h2 class="section-title">10 prospects<br>en moins d'une minute</h2>
     </div>
     <div class="steps-grid">
       <div class="step">
@@ -638,7 +597,7 @@
         <div class="step-num">02</div>
         <div class="step-icon">🔍</div>
         <h3>On détecte les signaux</h3>
-        <p>PipelineAI scanne LinkedIn, les sites web et les actualités business pour repérer les PME en phase de développement actif.</p>
+        <p>PipelineAI analyse les actualités business, offres d'emploi et signaux de croissance pour identifier les PME en phase de développement actif.</p>
       </div>
       <div class="step">
         <div class="step-num">03</div>
@@ -650,35 +609,32 @@
   </div>
 </section>
 
-<!-- TESTIMONIALS -->
+<!-- SOCIAL PROOF -->
 <section class="section testimonials-section">
   <div class="container">
     <div class="section-header" style="margin-bottom:3rem">
-      <div class="section-eyebrow" style="color:#6b9bff">Ils ont testé l'offre à 49 €</div>
-      <h2 class="section-title" style="color:#f5f2ec">Ce qu'ils en disent</h2>
+      <div class="section-eyebrow" style="color:#6b9bff">Pourquoi PipelineAI</div>
+      <h2 class="section-title" style="color:#f5f2ec">La prospection manuelle<br>est un métier à temps plein</h2>
     </div>
-    <div class="testimonials-grid">
-      <div class="testimonial">
-        <div class="testimonial-text">"En 3 jours j'avais <strong>2 rendez-vous</strong> confirmés. L'un d'eux a signé un contrat à 4 200 €. Pour 49 € c'est le meilleur investissement marketing que j'aie fait cette année."</div>
-        <div class="testimonial-author">
-          <div class="author-avatar">MB</div>
-          <div><div class="author-name">Marc Beaulieu</div><div class="author-role">Consultant RH indépendant, Lyon</div></div>
-        </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;">
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:1.75rem;">
+        <div style="font-size:2rem;margin-bottom:1rem;">⏱</div>
+        <div style="font-size:1.1rem;font-weight:600;color:#f5f2ec;margin-bottom:0.75rem;font-family:'Syne',sans-serif;">2h par semaine</div>
+        <div style="font-size:0.9rem;color:rgba(245,242,236,0.6);line-height:1.65;font-weight:300;">C'est le temps moyen qu'un dirigeant de PME passe à chercher de nouveaux clients sur LinkedIn. Du temps qui ne génère aucun revenu direct.</div>
       </div>
-      <div class="testimonial">
-        <div class="testimonial-text">"Je passais 2h par semaine sur LinkedIn à chercher des clients. Maintenant <strong>j'ouvre l'app le matin</strong> et tout est là. La différence est hallucinante."</div>
-        <div class="testimonial-author">
-          <div class="author-avatar">SL</div>
-          <div><div class="author-name">Sophie Leclerc</div><div class="author-role">Agence communication, Bordeaux</div></div>
-        </div>
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:1.75rem;">
+        <div style="font-size:2rem;margin-bottom:1rem;">📉</div>
+        <div style="font-size:1.1rem;font-weight:600;color:#f5f2ec;margin-bottom:0.75rem;font-family:'Syne',sans-serif;">3% de taux de réponse</div>
+        <div style="font-size:0.9rem;color:rgba(245,242,236,0.6);line-height:1.65;font-weight:300;">Sur les messages de prospection génériques. Les messages personnalisés sur un signal d'intention précis atteignent 15 à 25% de réponses.</div>
       </div>
-      <div class="testimonial">
-        <div class="testimonial-text">"Les messages sont <strong>vraiment personnalisés</strong> — un prospect m'a répondu en croyant que je l'avais suivi depuis des mois. J'ai converti 3 prospects sur 10."</div>
-        <div class="testimonial-author">
-          <div class="author-avatar">RT</div>
-          <div><div class="author-name">Romain Teixeira</div><div class="author-role">Menuiserie artisanale, Nantes</div></div>
-        </div>
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:1.75rem;">
+        <div style="font-size:2rem;margin-bottom:1rem;">🎯</div>
+        <div style="font-size:1.1rem;font-weight:600;color:#f5f2ec;margin-bottom:0.75rem;font-family:'Syne',sans-serif;">Le bon moment</div>
+        <div style="font-size:0.9rem;color:rgba(245,242,236,0.6);line-height:1.65;font-weight:300;">Contacter une PME qui vient d'ouvrir un poste ou de lever des fonds multiplie vos chances de conversion par 4. C'est ce que PipelineAI détecte pour vous.</div>
       </div>
+    </div>
+    <div style="text-align:center;margin-top:2.5rem;padding:1.5rem;background:rgba(255,255,255,0.04);border-radius:14px;border:1px solid rgba(255,255,255,0.07);">
+      <p style="font-size:0.95rem;color:rgba(245,242,236,0.5);font-style:italic;margin:0;">Soyez parmi les premiers à tester PipelineAI et obtenez l'<strong style="color:#6b9bff;font-style:normal;">Accès Fondateur</strong> — toutes les fonctionnalités Pro jusqu'au 30 juin 2026.</p>
     </div>
   </div>
 </section>
@@ -688,7 +644,7 @@
   <div class="container">
     <div class="section-eyebrow">Prêt à commencer ?</div>
     <h2 class="section-title">Un seul client suffit<br>à rentabiliser l'investissement</h2>
-    <p class="final-sub">Pas d'abonnement. Pas de carte enregistrée. Juste 10 prospects qualifiés et les messages pour les approcher.</p>
+    <p class="final-sub">Pas d'abonnement. Pas de carte enregistrée. Si vos 10 prospects ne sont pas qualifiés selon vos critères, on vous rembourse.</p>
     <div class="final-price-tag">
       <span class="final-price-big">79 €</span>
       <span class="final-price-small">— paiement unique, garanti</span>
@@ -699,13 +655,223 @@
       <span class="price-tag">79 €</span>
     </button>
     <div class="guarantee-badges">
-      <div class="badge"><span>🛡</span> Satisfait ou remboursé</div>
-      <div class="badge"><span>⚡</span> Résultats en 48h</div>
+      
+      <div class="badge"><span>⚡</span> Résultats instantanés</div>
       <div class="badge"><span>🔒</span> Sans engagement</div>
-      <div class="badge"><span>📊</span> Dashboard inclus 30 jours</div>
+      <div class="badge"><span>📊</span> Dashboard de suivi inclus</div>
     </div>
   </div>
 </section>
+
+<!-- DEMO INTERACTIVE -->
+<section style="padding:5rem 1.25rem;background:#0e0e0e;" id="demo">
+  <div style="max-width:980px;margin:0 auto;">
+
+    <div style="text-align:center;margin-bottom:3rem;">
+      <div style="font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:#4f7cff;font-family:'Syne',sans-serif;font-weight:600;margin-bottom:0.75rem;">Aperçu du dashboard</div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;letter-spacing:-0.02em;line-height:1.15;color:#f5f2ec;">Voici ce que vous recevez<br>après votre achat</h2>
+      <p style="color:rgba(245,242,236,0.5);font-size:0.95rem;margin-top:0.75rem;max-width:560px;margin-left:auto;margin-right:auto;">Le dashboard est entièrement paramétré selon <strong style="color:rgba(245,242,236,0.8);">votre activité, votre zone et vos services</strong>. La démo ci-dessous est configurée pour PipelineAI — vos prospects seront générés pour votre secteur. Cliquez sur un prospect pour voir le message.</p>
+    </div>
+
+    <!-- Mini dashboard -->
+    <div style="background:#111;border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.4);">
+
+      <!-- Topbar -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0.875rem 1.25rem;background:#0a0a0a;border-bottom:1px solid rgba(255,255,255,0.06);">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:28px;height:28px;background:#1a4fff;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;color:#fff;">PA</div>
+          <span style="font-size:0.82rem;font-weight:500;color:#f0ede6;">PipelineAI</span>
+          <span style="font-size:0.68rem;padding:2px 8px;background:rgba(26,79,255,0.15);border:1px solid rgba(26,79,255,0.3);border-radius:20px;color:#4f7cff;font-family:monospace;">DÉMO — Configuré pour PipelineAI</span>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <div style="width:10px;height:10px;border-radius:50%;background:#ff5f57;"></div>
+          <div style="width:10px;height:10px;border-radius:50%;background:#febc2e;"></div>
+          <div style="width:10px;height:10px;border-radius:50%;background:#28c840;"></div>
+        </div>
+      </div>
+
+      <!-- Stats bar -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:1px solid rgba(255,255,255,0.06);">
+        <div style="padding:0.875rem 1.25rem;border-right:1px solid rgba(255,255,255,0.06);">
+          <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:rgba(245,242,236,0.3);font-family:monospace;margin-bottom:4px;">Prospects</div>
+          <div style="font-size:1.4rem;font-weight:700;color:#f0ede6;font-family:monospace;">10</div>
+        </div>
+        <div style="padding:0.875rem 1.25rem;border-right:1px solid rgba(255,255,255,0.06);">
+          <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:rgba(245,242,236,0.3);font-family:monospace;margin-bottom:4px;">Chauds</div>
+          <div style="font-size:1.4rem;font-weight:700;color:#ff5c3a;font-family:monospace;">7</div>
+        </div>
+        <div style="padding:0.875rem 1.25rem;border-right:1px solid rgba(255,255,255,0.06);">
+          <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:rgba(245,242,236,0.3);font-family:monospace;margin-bottom:4px;">Contactés</div>
+          <div style="font-size:1.4rem;font-weight:700;color:#4f7cff;font-family:monospace;">3</div>
+        </div>
+        <div style="padding:0.875rem 1.25rem;">
+          <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:rgba(245,242,236,0.3);font-family:monospace;margin-bottom:4px;">Convertis</div>
+          <div style="font-size:1.4rem;font-weight:700;color:#2ecc71;font-family:monospace;">1</div>
+        </div>
+      </div>
+
+      <!-- Two column layout -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;min-height:380px;">
+
+        <!-- Prospect list -->
+        <div style="border-right:1px solid rgba(255,255,255,0.06);overflow:hidden;">
+          <div style="padding:0.6rem 1.25rem;background:rgba(26,79,255,0.06);border-bottom:1px solid rgba(255,255,255,0.04);">
+            <span style="font-size:0.65rem;color:rgba(245,242,236,0.35);font-family:monospace;">Activité : Logiciel de prospection B2B IA · Zone : France entière</span>
+          </div>
+          <div id="demo-p1" onclick="demoSelect(1)" style="padding:0.875rem 1.25rem;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04);background:rgba(26,79,255,0.1);border-left:2px solid #4f7cff;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:0.85rem;font-weight:500;color:#f0ede6;">Menuiserie Berthier</span>
+              <span style="font-size:0.6rem;padding:2px 7px;background:rgba(255,92,58,0.15);border:1px solid rgba(255,92,58,0.3);border-radius:10px;color:#ff5c3a;font-family:monospace;">HOT</span>
+            </div>
+            <div style="font-size:0.75rem;color:rgba(245,242,236,0.45);">Luc Berthier · Gérant · Lyon (69)</div>
+            <div style="font-size:0.72rem;color:rgba(245,242,236,0.3);margin-top:4px;display:flex;align-items:center;gap:5px;">
+              <span style="color:#febc2e;">⚡</span> Recrutement × 3 postes détecté
+            </div>
+          </div>
+          <div id="demo-p2" onclick="demoSelect(2)" style="padding:0.875rem 1.25rem;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:0.85rem;font-weight:500;color:#f0ede6;">Plomberie Gauthier</span>
+              <span style="font-size:0.6rem;padding:2px 7px;background:rgba(255,92,58,0.15);border:1px solid rgba(255,92,58,0.3);border-radius:10px;color:#ff5c3a;font-family:monospace;">HOT</span>
+            </div>
+            <div style="font-size:0.75rem;color:rgba(245,242,236,0.45);">Marc Gauthier · PDG · Bordeaux (33)</div>
+            <div style="font-size:0.72rem;color:rgba(245,242,236,0.3);margin-top:4px;display:flex;align-items:center;gap:5px;">
+              <span style="color:#febc2e;">⚡</span> Nouveau site web lancé
+            </div>
+          </div>
+          <div id="demo-p3" onclick="demoSelect(3)" style="padding:0.875rem 1.25rem;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:0.85rem;font-weight:500;color:#f0ede6;">Cabinet RH Nexus</span>
+              <span style="font-size:0.6rem;padding:2px 7px;background:rgba(245,166,35,0.15);border:1px solid rgba(245,166,35,0.3);border-radius:10px;color:#f5a623;font-family:monospace;">WARM</span>
+            </div>
+            <div style="font-size:0.75rem;color:rgba(245,242,236,0.45);">Sophie Renard · DG · Paris (75)</div>
+            <div style="font-size:0.72rem;color:rgba(245,242,236,0.3);margin-top:4px;display:flex;align-items:center;gap:5px;">
+              <span style="color:#febc2e;">⚡</span> Expansion — 2ème bureau ouvert
+            </div>
+          </div>
+          <div style="padding:0.875rem 1.25rem;cursor:default;">
+            <div style="font-size:0.75rem;color:rgba(245,242,236,0.2);font-style:italic;">+ 7 autres prospects dans votre dashboard…</div>
+          </div>
+        </div>
+
+        <!-- Message panel -->
+        <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.875rem;" id="demo-panel">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:2rem;">
+      <button onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})" style="display:inline-flex;align-items:center;gap:8px;background:#1a4fff;color:#fff;border:none;border-radius:100px;padding:0.9rem 2rem;font-size:0.95rem;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#3d6ae0'" onmouseout="this.style.background='#1a4fff'">
+        Obtenir mes 10 prospects →
+        <span style="background:rgba(255,255,255,0.2);border-radius:100px;padding:2px 10px;font-size:0.82rem;">79 €</span>
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<script>
+const DEMO_DATA = {
+  1: {
+    company: 'Menuiserie Berthier',
+    contact: 'Luc Berthier', role: 'Gérant',
+    location: 'Lyon (69)', sector: 'BTP / Artisanat',
+    signal: 'Recrutement × 3 postes — Indeed & LinkedIn',
+    score: 'hot',
+    objet: 'Menuiserie Berthier — vos 3 recrutements en cours',
+    corps: `Bonjour Luc,
+
+J'ai vu que vous recrutez 3 collaborateurs en ce moment chez Menuiserie Berthier — belle dynamique de croissance.
+
+Ce type d'expansion s'accompagne souvent d'un besoin accru de nouveaux chantiers pour occuper les équipes. C'est exactement ce sur quoi nous travaillons avec nos clients : identifier les donneurs d'ordres qui ont des projets en cours dans votre secteur et zone.
+
+Seriez-vous ouvert à tester 10 prospects qualifiés pour 79 € — un seul chantier décroché et c'est déjà rentabilisé ?
+
+Luc Berthier`,
+  },
+  2: {
+    company: 'Plomberie Gauthier',
+    contact: 'Marc Gauthier', role: 'PDG',
+    location: 'Bordeaux (33)', sector: 'BTP / Services',
+    signal: 'Nouveau site web lancé — détecté via Web',
+    score: 'hot',
+    objet: 'Plomberie Gauthier — votre nouveau site, et après ?',
+    corps: `Bonjour Marc,
+
+Votre nouveau site Plomberie Gauthier vient d'être mis en ligne — beau travail, c'est un vrai signal de professionnalisation.
+
+Un site refait, c'est souvent le moment où on cherche aussi à développer sa clientèle pro et à ne plus dépendre uniquement du bouche-à-oreille.
+
+Pour 79 €, je vous identifie 10 entreprises dans votre zone qui ont des besoins en plomberie en ce moment, avec les messages pour les approcher directement. Un seul contrat décroché couvre largement l'investissement.
+
+Marc Gauthier`,
+  },
+  3: {
+    company: 'Cabinet RH Nexus',
+    contact: 'Sophie Renard', role: 'Directrice Générale',
+    location: 'Paris (75)', sector: 'RH / Conseil',
+    signal: 'Expansion — 2ème bureau ouvert à Lyon',
+    score: 'warm',
+    objet: 'Cabinet RH Nexus — félicitations pour votre expansion',
+    corps: `Bonjour Sophie,
+
+L'ouverture de votre bureau lyonnais est un beau signal de croissance pour Cabinet RH Nexus.
+
+Cette phase d'expansion nécessite souvent de développer rapidement un nouveau portefeuille clients sur un marché que vous ne connaissez pas encore complètement.
+
+PipelineAI peut identifier en 30 secondes les entreprises lyonnaises en recrutement actif qui ont besoin d'un cabinet RH — avec les messages personnalisés pour les approcher. 79 € pour tester, un contrat signé et c'est rentabilisé.
+
+Sophie Renard`,
+  },
+};
+
+function demoSelect(n) {
+  // Update row highlight
+  [1,2,3].forEach(i => {
+    const row = document.getElementById('demo-p' + i);
+    if (row) {
+      row.style.background = i === n ? 'rgba(26,79,255,0.1)' : '';
+      row.style.borderLeft = i === n ? '2px solid #4f7cff' : '2px solid transparent';
+    }
+  });
+
+  const p = DEMO_DATA[n];
+  const scoreColor = p.score === 'hot' ? '#ff5c3a' : '#f5a623';
+  const scoreLabel = p.score === 'hot' ? 'HOT' : 'WARM';
+  const panel = document.getElementById('demo-panel');
+
+  panel.innerHTML = `
+    <div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <span style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:#f0ede6;">${p.company}</span>
+        <span style="font-size:0.6rem;padding:2px 7px;background:rgba(255,92,58,0.15);border:1px solid rgba(255,92,58,0.3);border-radius:10px;color:${scoreColor};font-family:monospace;">${scoreLabel}</span>
+      </div>
+      <div style="font-size:0.75rem;color:rgba(245,242,236,0.45);">${p.contact} · ${p.role} · ${p.location}</div>
+      <div style="font-size:0.72rem;color:rgba(245,242,236,0.3);margin-top:6px;padding:6px 10px;background:rgba(245,166,35,0.07);border-left:2px solid #f5a623;border-radius:0 6px 6px 0;">
+        ⚡ ${p.signal}
+      </div>
+    </div>
+
+    <div style="flex:1;background:#0a0a0a;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:1rem;overflow:auto;">
+      <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(245,242,236,0.3);font-family:monospace;margin-bottom:8px;">Message généré par IA</div>
+      <div style="font-size:0.75rem;font-weight:600;color:#f0ede6;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.06);">Objet : ${p.objet}</div>
+      <div style="font-size:0.78rem;color:rgba(245,242,236,0.7);line-height:1.65;white-space:pre-wrap;">${p.corps}</div>
+    </div>
+
+    <div style="display:flex;gap:8px;">
+      <button onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})" style="flex:1;padding:0.65rem;background:#1a4fff;border:none;border-radius:8px;color:#fff;font-size:0.78rem;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;">
+        Obtenir mes 10 prospects →
+      </button>
+      <button style="padding:0.65rem 0.875rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(245,242,236,0.6);font-size:0.78rem;cursor:default;" disabled>
+        ✉ Email
+      </button>
+    </div>
+  `;
+}
+
+// Init with first prospect selected
+document.addEventListener('DOMContentLoaded', () => demoSelect(1));
+</script>
 
 <!-- PRICING -->
 <section style="padding:5rem 1.25rem;background:#f5f2ec;" id="pricing">
@@ -715,6 +881,10 @@
       <div style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:#7a7a7a;margin-bottom:0.75rem;font-family:'Syne',sans-serif;">Tarifs</div>
       <h2 style="font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;letter-spacing:-0.02em;color:#0e0e0e;margin-bottom:0.75rem;">Choisissez votre plan</h2>
       <p style="color:#7a7a7a;font-size:0.95rem;max-width:480px;margin:0 auto;">Commencez avec l'offre découverte, passez au plan mensuel quand vous êtes prêt.</p>
+      <div style="margin-top:1.25rem;display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(26,79,255,0.08),rgba(123,94,167,0.06));border:1px solid rgba(26,79,255,0.2);border-radius:100px;padding:0.5rem 1.25rem;">
+        <span style="font-size:1rem;">✦</span>
+        <span style="font-size:0.82rem;color:#1a4fff;font-weight:500;">Accès Fondateur — toutes les fonctionnalités Pro débloquées jusqu'au 30 juin 2026</span>
+      </div>
     </div>
 
     <!-- Tooltip style -->
@@ -928,26 +1098,7 @@ function calc() {
 const API_BASE = 'https://pipelineai-backend-production.up.railway.app';
 const STRIPE_PUBLISHABLE_KEY = 'pk_test_51TVtVNPdRoQBFwMnqvARm92OSx7DjHRm4MLHekzXIAiCZSoPwbuYVx6V8jqqLjMeSLVYaLh3IXFjOuxHSHtPPvUL00PkiD9Rz0';
 
-async function handlePlanCheckout(plan) {
-  const email = document.getElementById('f-email') ? document.getElementById('f-email').value.trim() : '';
-  const prenom = document.getElementById('f-prenom') ? document.getElementById('f-prenom').value.trim() : '';
-  if (!email || !email.includes('@')) {
-    document.getElementById('offer').scrollIntoView({behavior:'smooth'});
-    return;
-  }
-  try {
-    const res = await fetch(API_BASE + '/create-checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, prenom: prenom || 'Client', secteur: '', plan: plan === 'business' ? 'agence' : plan }),
-    });
-    if (!res.ok) throw new Error('Erreur');
-    const data = await res.json();
-    window.location.href = data.url;
-  } catch(e) {
-    alert('Une erreur est survenue. Veuillez réessayer.');
-  }
-}
+// handlePlanCheckout replaced by plan modal
 
 async function handleStripeCheckout() {
   const prenom  = document.getElementById('f-prenom').value.trim();
@@ -1002,7 +1153,7 @@ function showSuccessPage(prenom, email) {
       </h1>
       <p style="color:#3a3a3a;font-size:1rem;line-height:1.7;font-weight:300;margin-bottom:2rem">
         Votre commande est confirmée. Nous analysons votre secteur et vos critères de ciblage.<br>
-        <strong style="font-weight:500">Vos 10 premiers prospects arrivent dans 48h maximum.</strong>
+        <strong style="font-weight:500">Vos 10 premiers prospects arrivent dans instantané maximum.</strong>
       </p>
       <div style="background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:20px;padding:1.5rem;margin-bottom:2rem;text-align:left">
         <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;margin-bottom:1.25rem">Ce qui se passe maintenant</div>
@@ -1133,6 +1284,119 @@ async function requestAccessLink() {
     btn.disabled = false;
     btn.textContent = 'Recevoir mon lien →';
   }
+}
+</script>
+
+
+<!-- Modal plan mensuel -->
+<div id="plan-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:1rem;" onclick="if(event.target===this)closePlanModal()">
+  <div style="background:#fff;border-radius:20px;padding:2.5rem;max-width:420px;width:100%;position:relative;box-shadow:0 24px 64px rgba(0,0,0,0.15);">
+    <button onclick="closePlanModal()" style="position:absolute;top:1.25rem;right:1.25rem;background:none;border:none;color:#aaa;cursor:pointer;font-size:1.1rem;">✕</button>
+
+    <div style="text-align:center;margin-bottom:1.75rem;">
+      <div id="plan-modal-badge" style="display:inline-block;background:#e8eeff;color:#1a4fff;font-size:0.75rem;font-weight:600;padding:4px 14px;border-radius:100px;margin-bottom:0.75rem;font-family:'Syne',sans-serif;"></div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:0.4rem;color:#0e0e0e;">Démarrer votre abonnement</h2>
+      <p style="font-size:0.85rem;color:#7a7a7a;line-height:1.6;margin:0;">Renseignez vos informations pour accéder au paiement sécurisé.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <div>
+        <label style="font-size:0.72rem;color:#7a7a7a;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em;">Prénom</label>
+        <input id="plan-prenom" type="text" placeholder="Marie" style="width:100%;padding:10px 12px;border:1.5px solid #e0ddd6;border-radius:10px;font-size:0.9rem;font-family:'DM Sans',sans-serif;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='#1a4fff'" onblur="this.style.borderColor='#e0ddd6'">
+      </div>
+      <div>
+        <label style="font-size:0.72rem;color:#7a7a7a;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em;">Nom</label>
+        <input id="plan-nom" type="text" placeholder="Dupont" style="width:100%;padding:10px 12px;border:1.5px solid #e0ddd6;border-radius:10px;font-size:0.9rem;font-family:'DM Sans',sans-serif;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='#1a4fff'" onblur="this.style.borderColor='#e0ddd6'">
+      </div>
+    </div>
+    <div style="margin-bottom:8px;">
+      <label style="font-size:0.72rem;color:#7a7a7a;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em;">Email professionnel</label>
+      <input id="plan-email" type="email" placeholder="marie@monentreprise.fr" style="width:100%;padding:10px 12px;border:1.5px solid #e0ddd6;border-radius:10px;font-size:0.9rem;font-family:'DM Sans',sans-serif;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='#1a4fff'" onblur="this.style.borderColor='#e0ddd6'" onkeydown="if(event.key==='Enter')submitPlanModal()">
+    </div>
+    <div id="plan-error" style="display:none;font-size:0.8rem;color:#c0392b;margin-bottom:8px;padding:8px 12px;background:#fff0ed;border-radius:8px;"></div>
+    <label style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;cursor:pointer;font-size:0.78rem;color:#7a7a7a;line-height:1.5;">
+      <input type="checkbox" id="plan-rgpd" style="margin-top:2px;flex-shrink:0;width:14px;height:14px;accent-color:#1a4fff;cursor:pointer;">
+      <span>J'accepte la <a href="/mentions.html" target="_blank" style="color:#1a4fff;">politique de confidentialité</a> et les <a href="/mentions.html" target="_blank" style="color:#1a4fff;">CGV</a>.</span>
+    </label>
+    <button onclick="submitPlanModal()" id="plan-btn" style="width:100%;padding:0.9rem;background:#1a4fff;color:#fff;border:none;border-radius:100px;font-size:0.95rem;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#3d6ae0'" onmouseout="this.style.background='#1a4fff'">
+      <span id="plan-btn-label">Accéder au paiement →</span>
+      <span id="plan-btn-loading" style="display:none;">Redirection…</span>
+    </button>
+
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:0.875rem;">
+      <svg width="38" height="16" viewBox="0 0 38 16" fill="none"><rect width="38" height="16" rx="3" fill="#635BFF"/><text x="5" y="12" font-size="9" fill="white" font-family="sans-serif" font-weight="bold">stripe</text></svg>
+      <span style="font-size:0.72rem;color:#aaa;">Paiement sécurisé · Sans engagement</span>
+    </div>
+  </div>
+</div>
+
+<script>
+let _pendingPlan = null;
+
+const PLAN_LABELS = {
+  starter: 'Plan Starter — 29 €/mois',
+  pro: 'Plan Pro — 79 €/mois',
+  business: 'Plan Business — 199 €/mois',
+};
+
+function handlePlanCheckout(plan) {
+  if (plan === 'decouverte') {
+    // Scroll to main form
+    document.getElementById('offer').scrollIntoView({behavior:'smooth'});
+    return;
+  }
+  // Open modal for monthly plans
+  _pendingPlan = plan;
+  const badge = document.getElementById('plan-modal-badge');
+  if (badge) badge.textContent = PLAN_LABELS[plan] || plan;
+  document.getElementById('plan-modal').style.display = 'flex';
+  document.getElementById('plan-error').style.display = 'none';
+  setTimeout(() => document.getElementById('plan-prenom').focus(), 100);
+}
+
+function closePlanModal() {
+  document.getElementById('plan-modal').style.display = 'none';
+  _pendingPlan = null;
+}
+
+async function submitPlanModal() {
+  const prenom = document.getElementById('plan-prenom').value.trim();
+  const nom    = document.getElementById('plan-nom').value.trim();
+  const email  = document.getElementById('plan-email').value.trim();
+  const rgpd   = document.getElementById('plan-rgpd').checked;
+  const errEl  = document.getElementById('plan-error');
+
+  errEl.style.display = 'none';
+  if (!prenom || !nom) return showPlanError('Merci de renseigner votre prénom et nom.');
+  if (!email || !email.includes('@')) return showPlanError('Merci de renseigner un email valide.');
+  if (!rgpd) return showPlanError('Merci d'accepter la politique de confidentialité pour continuer.');
+
+  const btn = document.getElementById('plan-btn');
+  document.getElementById('plan-btn-label').style.display = 'none';
+  document.getElementById('plan-btn-loading').style.display = 'inline';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(API_BASE + '/create-checkout-session', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ email, prenom, secteur: '', plan: _pendingPlan === 'business' ? 'agence' : _pendingPlan }),
+    });
+    if (!res.ok) throw new Error('Erreur serveur');
+    const data = await res.json();
+    window.location.href = data.url;
+  } catch(e) {
+    showPlanError('Une erreur est survenue. Veuillez réessayer.');
+    document.getElementById('plan-btn-label').style.display = 'inline';
+    document.getElementById('plan-btn-loading').style.display = 'none';
+    btn.disabled = false;
+  }
+}
+
+function showPlanError(msg) {
+  const el = document.getElementById('plan-error');
+  el.textContent = msg;
+  el.style.display = 'block';
 }
 </script>
 
