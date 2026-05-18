@@ -1298,6 +1298,7 @@ body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
     <div class="topbar-right">
       <div class="theme-toggle" onclick="toggleTheme()" title="Mode clair/sombre">🌙</div>
       <button class="btn" onclick="exportCSV()">↓ CSV</button>
+      <button class="btn" onclick="exportHubspot()" style="background:rgba(255,122,0,0.1);border-color:rgba(255,122,0,0.3);color:#ff7a00;" title="Export au format HubSpot CRM">↓ HubSpot</button>
       <button class="btn btn-pdf" onclick="exportPDF()">↓ PDF</button>
       <button class="btn" onclick="openSettings()" style="gap:6px">⊙ Paramètres</button>
       <button class="btn btn-accent" onclick="showToast('Génération en cours…', '⚡')">+ Nouvelle campagne</button>
@@ -3308,7 +3309,7 @@ function exportCSV() {
     p.company, p.contact, p.role, p.location, p.email||'',
     p.sector||'', p.score, p.signal, prospectStatuses[p.id]||'detected'
   ]);
-  const csv = [headers, ...rows].map(r => r.map(c => '"' + String(c).replace(/"/g,'""') + '"').join(',')).join('\n');
+  const csv = [headers, ...rows].map(r => r.map(c => String(c).replace(/"/g, '""')).map(c => `"${c}"`).join(",")).join("\n");
   const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a'); a.href=url; a.download='pipelineai-prospects.csv'; a.click();
@@ -3317,6 +3318,69 @@ function exportCSV() {
 }
 
 // ── EXPORT PDF ────────────────────────────────────────────────
+
+// ── EXPORT HUBSPOT CRM ────────────────────────────────────────────────────────
+function exportHubspot() {
+  // Format natif HubSpot — colonnes standard CRM
+  const headers = [
+    'First Name', 'Last Name', 'Email', 'Company Name', 'Job Title',
+    'City', 'State/Region', 'Country', 'Lifecycle Stage', 'Lead Status',
+    'Original Source', 'Notes', 'HubSpot Score'
+  ];
+
+  const rows = PROSPECTS.map(p => {
+    const nameParts = (p.contact || '').split(' ');
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '';
+    const locationParts = (p.location || '').split('(');
+    const city = locationParts[0]?.trim() || '';
+    const status = prospectStatuses[p.id] || 'detected';
+    const statusMap = {
+      detected: 'New',
+      messaged: 'Open',
+      relance_1: 'In Progress',
+      relance_2: 'In Progress',
+      responded: 'Open Deal',
+      converted: 'Customer',
+    };
+    const lifecycleMap = {
+      detected: 'Lead',
+      messaged: 'Marketing Qualified Lead',
+      relance_1: 'Sales Qualified Lead',
+      relance_2: 'Sales Qualified Lead',
+      responded: 'Opportunity',
+      converted: 'Customer',
+    };
+    const note = (prospectNotes[p.id] || '') + (p.signal ? ' | Signal: ' + p.signal : '');
+    const score = p.score === 'hot' ? '90' : p.score === 'warm' ? '60' : '30';
+
+    return [
+      firstName, lastName, p.email || '',
+      p.company || '', p.role || '',
+      city, 'France', 'France',
+      lifecycleMap[status] || 'Lead',
+      statusMap[status] || 'New',
+      'PipelineAI',
+      note,
+      score
+    ];
+  });
+
+  const csv = [headers, ...rows].map(r => r.map(c => String(c || "").replace(/"/g, '""')).map(c => `"${c}"`).join(",")).join("\n");
+
+  const bom = '﻿'; // BOM UTF-8 pour Excel
+  const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'pipelineai-hubspot-import-' + new Date().toISOString().slice(0, 10) + '.csv';
+  a.click();
+
+  showToast('Export HubSpot téléchargé — importez dans Contacts > Importer', '↓');
+  addHistory('Export HubSpot CRM', 'Tous les prospects');
+}
+// ── FIN EXPORT HUBSPOT ────────────────────────────────────────────────────────
+
 function exportPDF() {
   const contacted = PROSPECTS.filter(p => prospectStatuses[p.id] && prospectStatuses[p.id] !== 'detected').length;
   const converted = PROSPECTS.filter(p => prospectStatuses[p.id] === 'converted').length;
