@@ -736,6 +736,25 @@ body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
 .btn-pdf { background: rgba(46,204,113,0.1); border-color: rgba(46,204,113,0.3); color: var(--green); }
 .btn-pdf:hover { background: rgba(46,204,113,0.2); color: var(--green); }
 
+
+/* ── ZONE PRECISION ── */
+.zone-prec-btn {
+  padding: 0.4rem 0.875rem; border-radius: 20px; font-size: 0.78rem;
+  font-family: var(--sans); cursor: pointer; transition: all 0.15s;
+  background: var(--bg-4); border: 1px solid var(--border-2); color: var(--text-2);
+}
+.zone-prec-btn.active {
+  background: var(--accent-dim); border-color: var(--accent); color: var(--accent);
+}
+.zone-select-input {
+  width: 100%; padding: 0.65rem 0.875rem;
+  background: var(--bg-3); border: 1px solid var(--border-2);
+  border-radius: 10px; color: var(--text); font-size: 0.85rem;
+  font-family: var(--sans); outline: none; cursor: pointer;
+  -webkit-appearance: none;
+}
+.zone-select-input:focus { border-color: var(--accent); }
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -1312,21 +1331,24 @@ body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
 
       <div class="onboarding-group">
         <div class="onboarding-label">Zone géographique</div>
-        <div class="chip-grid" id="ob-chips-zone">
+        <div style="margin-bottom:10px;">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;" id="zone-precision-btns">
+            <button class="zone-prec-btn active" data-prec="pays" onclick="setZonePrecision('pays')">🇫🇷 France entière</button>
+            <button class="zone-prec-btn" data-prec="region" onclick="setZonePrecision('region')">Par région</button>
+            <button class="zone-prec-btn" data-prec="departement" onclick="setZonePrecision('departement')">Par département</button>
+            <button class="zone-prec-btn" data-prec="ville" onclick="setZonePrecision('ville')">Par ville</button>
+          </div>
+          <div id="zone-select-wrap" style="display:none;">
+            <select id="zone-select" class="zone-select-input" onchange="updateZoneChip()">
+              <option value="">Sélectionnez…</option>
+            </select>
+          </div>
+        </div>
+        <div id="ob-chips-zone" style="display:none;">
           <div class="chip selected" data-val="France entière">🇫🇷 France entière</div>
-          <div class="chip" data-val="Île-de-France">Paris / IDF</div>
-          <div class="chip" data-val="Auvergne-Rhône-Alpes">Lyon / AuRA</div>
-          <div class="chip" data-val="Nouvelle-Aquitaine">Bordeaux / Aquitaine</div>
-          <div class="chip" data-val="Occitanie">Toulouse / Occitanie</div>
-          <div class="chip" data-val="Hauts-de-France">Lille / Nord</div>
-          <div class="chip" data-val="PACA">Marseille / PACA</div>
-          <div class="chip" data-val="Bretagne">Rennes / Bretagne</div>
-          <div class="chip" data-val="Pays de la Loire">Nantes / Pays Loire</div>
-          <div class="chip" data-val="Grand Est">Strasbourg / Grand Est</div>
-          <div class="chip" data-val="Normandie">Rouen / Normandie</div>
-          <div class="chip" data-val="Bourgogne-Franche-Comté">Dijon / BFC</div>
-          <div class="chip" data-val="Centre-Val de Loire">Orléans / Centre</div>
-          <div class="chip" data-val="Corse">Corse</div>
+        </div>
+        <div id="zone-display" style="min-height:36px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;">
+          <div class="chip selected" data-val="France entière" style="pointer-events:none;">🇫🇷 France entière</div>
         </div>
       </div>
 
@@ -2139,10 +2161,10 @@ async function launchOnboarding() {
   const activite = document.getElementById('ob-activite').value.trim();
   const secteurs = getObSelected('ob-chips-secteur');
   const tailles  = getObSelected('ob-chips-taille');
-  const zones    = getObSelected('ob-chips-zone');
+  const zones    = getSelectedZones();
 
-  if (!secteurs.length || !tailles.length || !zones.length) {
-    showToast('Sélectionnez au moins 1 secteur, 1 taille et 1 zone', '⚠');
+  if (!secteurs.length || !tailles.length) {
+    showToast('Sélectionnez au moins 1 secteur et 1 taille', '⚠');
     return;
   }
 
@@ -2298,8 +2320,8 @@ async function generateProspects() {
   const prenom   = document.getElementById('input-prenom').value.trim() || 'Votre prénom';
   const activite = document.getElementById('input-activite').value.trim();
 
-  if (!secteurs.length || !tailles.length || !zones.length) {
-    showToast('Sélectionnez au moins 1 secteur, 1 taille et 1 zone', '⚠');
+  if (!secteurs.length || !tailles.length) {
+    showToast('Sélectionnez au moins 1 secteur et 1 taille', '⚠');
     return;
   }
 
@@ -3460,6 +3482,120 @@ setTimeout(() => {
   }
 }, 5000);
 // ══════════════════════════════════════════════════════════════
+
+
+// ── ZONE GÉOGRAPHIQUE CASCADE ─────────────────────────────────────────────────
+const REGIONS_FR = [
+  "Auvergne-Rhône-Alpes","Bourgogne-Franche-Comté","Bretagne","Centre-Val de Loire",
+  "Corse","Grand Est","Guadeloupe","Guyane","Hauts-de-France","Île-de-France",
+  "La Réunion","Martinique","Mayotte","Normandie","Nouvelle-Aquitaine","Occitanie",
+  "Pays de la Loire","Provence-Alpes-Côte d'Azur"
+];
+
+const DEPTS_FR = [
+  "01 - Ain","02 - Aisne","03 - Allier","04 - Alpes-de-Haute-Provence","05 - Hautes-Alpes",
+  "06 - Alpes-Maritimes","07 - Ardèche","08 - Ardennes","09 - Ariège","10 - Aube",
+  "11 - Aude","12 - Aveyron","13 - Bouches-du-Rhône","14 - Calvados","15 - Cantal",
+  "16 - Charente","17 - Charente-Maritime","18 - Cher","19 - Corrèze","2A - Corse-du-Sud",
+  "2B - Haute-Corse","21 - Côte-d'Or","22 - Côtes-d'Armor","23 - Creuse","24 - Dordogne",
+  "25 - Doubs","26 - Drôme","27 - Eure","28 - Eure-et-Loir","29 - Finistère",
+  "30 - Gard","31 - Haute-Garonne","32 - Gers","33 - Gironde","34 - Hérault",
+  "35 - Ille-et-Vilaine","36 - Indre","37 - Indre-et-Loire","38 - Isère","39 - Jura",
+  "40 - Landes","41 - Loir-et-Cher","42 - Loire","43 - Haute-Loire","44 - Loire-Atlantique",
+  "45 - Loiret","46 - Lot","47 - Lot-et-Garonne","48 - Lozère","49 - Maine-et-Loire",
+  "50 - Manche","51 - Marne","52 - Haute-Marne","53 - Mayenne","54 - Meurthe-et-Moselle",
+  "55 - Meuse","56 - Morbihan","57 - Moselle","58 - Nièvre","59 - Nord",
+  "60 - Oise","61 - Orne","62 - Pas-de-Calais","63 - Puy-de-Dôme","64 - Pyrénées-Atlantiques",
+  "65 - Hautes-Pyrénées","66 - Pyrénées-Orientales","67 - Bas-Rhin","68 - Haut-Rhin","69 - Rhône",
+  "70 - Haute-Saône","71 - Saône-et-Loire","72 - Sarthe","73 - Savoie","74 - Haute-Savoie",
+  "75 - Paris","76 - Seine-Maritime","77 - Seine-et-Marne","78 - Yvelines","79 - Deux-Sèvres",
+  "80 - Somme","81 - Tarn","82 - Tarn-et-Garonne","83 - Var","84 - Vaucluse",
+  "85 - Vendée","86 - Vienne","87 - Haute-Vienne","88 - Vosges","89 - Yonne",
+  "90 - Territoire de Belfort","91 - Essonne","92 - Hauts-de-Seine","93 - Seine-Saint-Denis",
+  "94 - Val-de-Marne","95 - Val-d'Oise","971 - Guadeloupe","972 - Martinique",
+  "973 - Guyane","974 - La Réunion","976 - Mayotte"
+];
+
+const VILLES_FR = [
+  "Paris","Marseille","Lyon","Toulouse","Nice","Nantes","Montpellier","Strasbourg",
+  "Bordeaux","Lille","Rennes","Reims","Le Havre","Saint-Étienne","Toulon",
+  "Grenoble","Dijon","Angers","Nîmes","Villeurbanne","Le Mans","Aix-en-Provence",
+  "Clermont-Ferrand","Brest","Tours","Amiens","Limoges","Perpignan","Metz","Besançon",
+  "Orléans","Rouen","Mulhouse","Caen","Nancy","Argenteuil","Saint-Denis","Roubaix",
+  "Tourcoing","Montreuil","Avignon","Asnieres-sur-Seine","Versailles","Courbevoie",
+  "Vitry-sur-Seine","Colombes","Pau","Fort-de-France","Créteil","Poitiers",
+  "Calais","Aubervilliers","Champigny-sur-Marne","Le Tampon","Rueil-Malmaison",
+  "Saint-Pierre","Antibes","Boulogne-Billancourt","La Rochelle","Cannes","Mérignac",
+  "Saint-Nazaire","Aix-les-Bains","Drancy","Quimper","Issy-les-Moulineaux",
+  "Noisy-le-Grand","Liévin","Dunkerque","Troyes","Neuilly-sur-Seine","Levallois-Perret",
+  "Cayenne","Chambéry","Pessac","Cergy","Valence","Ivry-sur-Seine","Lorient",
+  "Vénissieux","Clichy","Nanterre","Villeneuve-d'Ascq","Montauban","La Seyne-sur-Mer",
+  "Annecy","Tarbes","Bondy","Bayonne","Colmar","Bourges","Ajaccio","Pantin",
+  "Épinay-sur-Seine","Meaux","Évreux","La Courneuve","Hyères","Béziers","Charleville-Mézières"
+];
+
+let currentZonePrecision = 'pays';
+let selectedZone = 'France entière';
+
+function setZonePrecision(prec) {
+  currentZonePrecision = prec;
+
+  // Update buttons
+  document.querySelectorAll('.zone-prec-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.prec === prec);
+  });
+
+  const wrap = document.getElementById('zone-select-wrap');
+  const select = document.getElementById('zone-select');
+
+  if (prec === 'pays') {
+    wrap.style.display = 'none';
+    selectedZone = 'France entière';
+    updateZoneDisplay();
+    return;
+  }
+
+  wrap.style.display = 'block';
+  select.innerHTML = '<option value="">Sélectionnez…</option>';
+
+  const options = prec === 'region' ? REGIONS_FR :
+                  prec === 'departement' ? DEPTS_FR : VILLES_FR;
+
+  options.forEach(o => {
+    const opt = document.createElement('option');
+    opt.value = o;
+    opt.textContent = o;
+    select.appendChild(opt);
+  });
+
+  select.value = '';
+  selectedZone = '';
+  updateZoneDisplay();
+}
+
+function updateZoneChip() {
+  const select = document.getElementById('zone-select');
+  selectedZone = select.value || '';
+  updateZoneDisplay();
+}
+
+function updateZoneDisplay() {
+  const display = document.getElementById('zone-display');
+  if (!display) return;
+  if (selectedZone) {
+    const flag = currentZonePrecision === 'pays' ? '🇫🇷 ' : 
+                 currentZonePrecision === 'region' ? '🗺️ ' :
+                 currentZonePrecision === 'departement' ? '📍 ' : '🏙️ ';
+    display.innerHTML = '<div class="chip selected" style="pointer-events:none;">' + flag + selectedZone + '</div>';
+  } else {
+    display.innerHTML = '<div style="font-size:0.78rem;color:var(--text-3);">Sélectionnez une zone…</div>';
+  }
+}
+
+function getSelectedZones() {
+  return selectedZone ? [selectedZone] : ['France entière'];
+}
+// ── FIN ZONE CASCADE ──────────────────────────────────────────────────────────
 
 </script>
 
