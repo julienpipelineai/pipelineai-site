@@ -755,6 +755,178 @@ body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
 }
 .zone-select-input:focus { border-color: var(--accent); }
 
+
+/* ── NOTES ── */
+.notes-area {
+  width: 100%; min-height: 80px; max-height: 160px;
+  background: var(--bg-3); border: 1px solid var(--border-2);
+  border-radius: 8px; padding: 0.65rem 0.875rem;
+  color: var(--text); font-size: 0.82rem; font-family: var(--sans);
+  resize: vertical; outline: none; line-height: 1.55;
+  transition: border-color 0.15s;
+}
+.notes-area:focus { border-color: var(--accent); }
+.notes-area::placeholder { color: var(--text-3); }
+.notes-saved { font-size: 0.68rem; color: var(--green); font-family: var(--mono); margin-top: 4px; opacity: 0; transition: opacity 0.3s; }
+.notes-saved.show { opacity: 1; }
+
+/* ── ÉDITEUR INLINE ── */
+.msg-editor {
+  width: 100%; min-height: 180px;
+  background: var(--bg-3); border: 1px solid var(--accent);
+  border-radius: 8px; padding: 0.875rem;
+  color: var(--text); font-size: 0.82rem; font-family: var(--sans);
+  resize: vertical; outline: none; line-height: 1.65;
+}
+.edit-actions { display: flex; gap: 8px; margin-top: 6px; }
+.btn-edit-save {
+  padding: 0.45rem 1rem; background: var(--accent); color: #fff;
+  border: none; border-radius: 7px; font-size: 0.75rem;
+  font-family: var(--mono); cursor: pointer; transition: opacity 0.15s;
+}
+.btn-edit-save:hover { opacity: 0.85; }
+.btn-edit-cancel {
+  padding: 0.45rem 0.875rem; background: var(--bg-4); color: var(--text-2);
+  border: 1px solid var(--border-2); border-radius: 7px; font-size: 0.75rem;
+  font-family: var(--mono); cursor: pointer;
+}
+.btn-edit-toggle {
+  padding: 3px 10px; background: transparent; color: var(--text-3);
+  border: 1px solid var(--border); border-radius: 6px; font-size: 0.68rem;
+  font-family: var(--mono); cursor: pointer; transition: all 0.12s; margin-left: auto;
+}
+.btn-edit-toggle:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ── HISTORIQUE ÉCHANGES ── */
+.exchange-list { display: flex; flex-direction: column; gap: 6px; max-height: 200px; overflow-y: auto; }
+.exchange-item {
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: 0.78rem; color: var(--text-2);
+}
+.exchange-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 5px; }
+.exchange-dot.reply { background: var(--green); }
+.exchange-time { font-family: var(--mono); font-size: 0.65rem; color: var(--text-3); white-space: nowrap; flex-shrink: 0; }
+.exchange-add { display: flex; gap: 8px; margin-top: 8px; }
+.exchange-input {
+  flex: 1; padding: 0.5rem 0.75rem; background: var(--bg-3);
+  border: 1px solid var(--border-2); border-radius: 7px;
+  color: var(--text); font-size: 0.78rem; font-family: var(--sans); outline: none;
+}
+.exchange-input:focus { border-color: var(--accent); }
+.exchange-type-btn {
+  padding: 0.5rem 0.75rem; border-radius: 7px; font-size: 0.72rem;
+  font-family: var(--mono); cursor: pointer; border: 1px solid var(--border-2);
+  background: var(--bg-4); color: var(--text-2); transition: all 0.12s;
+}
+.exchange-type-btn.active { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+.exchange-submit {
+  padding: 0.5rem 0.875rem; background: var(--accent); color: #fff;
+  border: none; border-radius: 7px; font-size: 0.72rem; font-family: var(--mono);
+  cursor: pointer; white-space: nowrap;
+}
+
+/* ── FILTRES AVANCÉS ── */
+.advanced-filters {
+  display: none; padding: 0.875rem 1.25rem;
+  background: var(--bg-2); border-bottom: 1px solid var(--border);
+  gap: 10px; flex-wrap: wrap; align-items: center;
+}
+.advanced-filters.open { display: flex; }
+.filter-select {
+  padding: 0.4rem 0.75rem; background: var(--bg-3); border: 1px solid var(--border-2);
+  border-radius: 7px; color: var(--text); font-size: 0.78rem;
+  font-family: var(--mono); outline: none; cursor: pointer; min-width: 120px;
+}
+.filter-select:focus { border-color: var(--accent); }
+.filter-search {
+  flex: 1; min-width: 160px; padding: 0.4rem 0.75rem;
+  background: var(--bg-3); border: 1px solid var(--border-2);
+  border-radius: 7px; color: var(--text); font-size: 0.78rem;
+  font-family: var(--mono); outline: none;
+}
+.filter-search:focus { border-color: var(--accent); }
+.filter-reset { font-size: 0.72rem; color: var(--text-3); cursor: pointer; font-family: var(--mono); padding: 4px 8px; }
+.filter-reset:hover { color: var(--accent); }
+.filter-toggle-btn {
+  padding: 0.35rem 0.75rem; background: var(--bg-3); border: 1px solid var(--border-2);
+  border-radius: 7px; color: var(--text-2); font-size: 0.72rem;
+  font-family: var(--mono); cursor: pointer; transition: all 0.12s; white-space: nowrap;
+}
+.filter-toggle-btn:hover { border-color: var(--accent); color: var(--accent); }
+.filter-toggle-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+
+/* ── TRAÇABILITÉ ENVOIS ── */
+.send-log { font-size:0.68rem; color:var(--text-3); font-family:var(--mono); margin-top:4px; }
+.send-log span { color:var(--green); }
+
+/* ── VUE "À FAIRE AUJOURD'HUI" ── */
+#today-panel {
+  display:none; position:fixed; top:0; right:0; bottom:0; width:340px; z-index:500;
+  background:var(--bg-2); border-left:1px solid var(--border-2);
+  box-shadow:-8px 0 32px rgba(0,0,0,0.3);
+  flex-direction:column; overflow:hidden;
+}
+#today-panel.open { display:flex; }
+.today-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:1.25rem; border-bottom:1px solid var(--border);
+  background:var(--bg-3);
+}
+.today-title { font-family:var(--mono); font-size:0.82rem; color:var(--text); font-weight:600; }
+.today-close { background:none; border:none; color:var(--text-3); cursor:pointer; font-size:1rem; }
+.today-body { flex:1; overflow-y:auto; padding:1rem; display:flex; flex-direction:column; gap:8px; }
+.today-card {
+  background:var(--bg-3); border:1px solid var(--border); border-radius:10px;
+  padding:0.875rem; cursor:pointer; transition:all 0.12s;
+}
+.today-card:hover { border-color:var(--accent); background:var(--accent-dim); }
+.today-card-company { font-size:0.85rem; font-weight:500; color:var(--text); margin-bottom:3px; }
+.today-card-action { font-size:0.75rem; color:var(--warm); font-family:var(--mono); margin-bottom:4px; }
+.today-card-meta { font-size:0.7rem; color:var(--text-3); }
+.today-badge {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:3px 10px; border-radius:20px; font-size:0.68rem; font-family:var(--mono);
+  background:rgba(245,166,35,0.12); border:1px solid rgba(245,166,35,0.3); color:var(--warm);
+  cursor:pointer; transition:all 0.12s; margin-left:auto;
+}
+.today-badge:hover { background:rgba(245,166,35,0.2); }
+.today-empty { font-size:0.82rem; color:var(--text-3); text-align:center; padding:2rem; font-style:italic; }
+
+/* ── KANBAN ── */
+#kanban-view {
+  display:none; flex:1; overflow-x:auto; padding:1rem 1.25rem;
+  gap:12px; background:var(--bg);
+}
+#kanban-view.active { display:flex; }
+.kanban-col {
+  flex-shrink:0; width:220px; display:flex; flex-direction:column; gap:8px;
+}
+.kanban-col-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0.5rem 0.75rem; background:var(--bg-3); border-radius:8px;
+  font-family:var(--mono); font-size:0.7rem; text-transform:uppercase;
+  letter-spacing:0.08em; color:var(--text-3); border:1px solid var(--border);
+  margin-bottom:4px;
+}
+.kanban-card {
+  background:var(--bg-2); border:1px solid var(--border); border-radius:8px;
+  padding:0.75rem; cursor:pointer; transition:all 0.12s;
+}
+.kanban-card:hover { border-color:var(--accent); transform:translateY(-1px); }
+.kanban-card-company { font-size:0.82rem; font-weight:500; color:var(--text); margin-bottom:3px; }
+.kanban-card-contact { font-size:0.7rem; color:var(--text-3); margin-bottom:5px; }
+.kanban-card-signal { font-size:0.68rem; color:var(--text-2); padding:3px 7px; background:var(--bg-3); border-radius:5px; display:inline-block; }
+
+/* ── VIEW TOGGLE ── */
+.view-toggle { display:flex; gap:4px; }
+.view-btn {
+  padding:0.35rem 0.65rem; border-radius:6px; background:var(--bg-3);
+  border:1px solid var(--border-2); color:var(--text-3); font-size:0.75rem;
+  cursor:pointer; transition:all 0.12s;
+}
+.view-btn.active { background:var(--accent-dim); border-color:var(--accent); color:var(--accent); }
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -1255,6 +1427,7 @@ body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
           <div class="filter-tab" data-filter="converted" onclick="filterProspects('converted', this)">✓ Convertis <span class="tab-count" style="color:var(--text-3)">0</span></div>
         </div>
         <div class="prospect-list" id="prospect-list"></div>
+        <div id="kanban-view"></div>
       </div>
 
       <!-- Detail panel -->
@@ -1295,7 +1468,18 @@ body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
 
       <div class="onboarding-group">
         <div class="onboarding-label">Votre activité en une phrase</div>
-        <input class="onboarding-input" id="ob-activite" type="text" placeholder="ex : J'aide les PME à trouver des clients grâce à l'IA">
+        <input class="onboarding-input" id="ob-activite" type="text" placeholder="ex : Agence de stratégie marketing digitale">
+
+      <div class="onboarding-group">
+        <div class="onboarding-label">Vos services principaux <span style="color:var(--text-3);font-size:0.72rem;">(séparés par des virgules)</span>
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--bg-4);border:1px solid var(--border-2);color:var(--text-3);font-size:0.6rem;font-weight:700;cursor:help;margin-left:5px;position:relative;" title="Plus vos services sont détaillés, plus les messages générés seront précis et personnalisés. Ex : au lieu de 'marketing', écrivez 'SEO, Google Ads, email marketing, brand content LinkedIn'">i</span>
+        </div>
+        <input class="onboarding-input" id="ob-services" type="text" placeholder="ex : SEO, campagnes paid, brand content, réseaux sociaux">
+      </div>
+
+      <div class="onboarding-group">
+        <div class="onboarding-label">Quel problème résolvez-vous pour vos clients ? <span style="color:var(--text-3);font-size:0.72rem;">(optionnel mais recommandé)</span></div>
+        <input class="onboarding-input" id="ob-probleme" type="text" placeholder="ex : Ils manquent de visibilité en ligne et perdent des clients face à leurs concurrents">
       </div>
 
       <div class="onboarding-group">
@@ -1781,11 +1965,13 @@ PROSPECTS.forEach(p => prospectStatuses[p.id] = p.status);
 // ── RENDER PROSPECT LIST ────────────────────────────────────────────────────
 function renderList() {
   const list = document.getElementById('prospect-list');
-  const filtered = activeFilter === 'all'
+  let filtered = activeFilter === 'all'
     ? PROSPECTS
     : activeFilter === 'hot' || activeFilter === 'warm' || activeFilter === 'cold'
       ? PROSPECTS.filter(p => p.score === activeFilter)
       : PROSPECTS.filter(p => prospectStatuses[p.id] === activeFilter);
+  // Apply advanced filters
+  filtered = applyAllFilters(filtered);
   updateFilterCounts();
   updateProgress();
 
@@ -1874,8 +2060,21 @@ function renderDetail() {
                onclick="setMsg('${t.key}')">${t.label}</div>
         `).join('')}
       </div>
-      <div class="message-box">
-        <div class="msg-objet">Objet : ${msg.objet}</div>${msg.corps}
+      <div class="message-box" id="msg-box-${p.id}-${activeMsg}">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <div class="msg-objet" style="margin-bottom:0;">Objet : ${msg.objet}</div>
+          <button class="btn-edit-toggle" onclick="toggleMsgEdit(${p.id})">✏ Modifier</button>
+        </div>
+        <div id="msg-view-${p.id}" style="white-space:pre-wrap;font-size:0.82rem;line-height:1.65;color:var(--text-2);">${msg.corps}</div>
+        <div id="msg-edit-${p.id}" style="display:none;">
+          <input type="text" id="msg-objet-edit-${p.id}" value="${msg.objet}"
+            style="width:100%;padding:0.5rem 0.75rem;background:var(--bg-2);border:1px solid var(--accent);border-radius:6px;color:var(--text);font-size:0.8rem;font-family:var(--sans);outline:none;margin-bottom:6px;">
+          <textarea class="msg-editor" id="msg-corps-edit-${p.id}">${msg.corps}</textarea>
+          <div class="edit-actions">
+            <button class="btn-edit-save" onclick="saveMsgEdit(${p.id})">✓ Sauvegarder</button>
+            <button class="btn-edit-cancel" onclick="cancelMsgEdit(${p.id})">Annuler</button>
+          </div>
+        </div>
       </div>
       <div class="send-actions">
         <button class="send-btn send-btn-email" onclick="sendByEmail(${p.id})">
@@ -1899,6 +2098,43 @@ function renderDetail() {
                onclick="updateStatus(${p.id}, '${o.v}')">${o.l}</div>
         `).join('')}
       </div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-section-title" style="display:flex;align-items:center;justify-content:space-between;">
+        Historique des échanges
+        <span style="font-size:0.68rem;color:var(--text-3);font-family:var(--mono);">${(prospectExchanges[p.id]||[]).length} échange(s)</span>
+      </div>
+      <div class="exchange-list" id="exchange-list-${p.id}">
+        ${(prospectExchanges[p.id]||[]).length === 0
+          ? '<div style="font-size:0.75rem;color:var(--text-3);font-style:italic;">Aucun échange enregistré.</div>'
+          : (prospectExchanges[p.id]||[]).slice().reverse().map(e => `
+            <div class="exchange-item">
+              <div class="exchange-dot ${e.type === 'reply' ? 'reply' : ''}"></div>
+              <div style="flex:1;">${e.type === 'sent' ? '📤 Envoyé' : e.type === 'reply' ? '📥 Réponse' : '📝 Note'} — ${e.text}</div>
+              <div class="exchange-time">${e.time}</div>
+            </div>`).join('')
+        }
+      </div>
+      <div class="exchange-add">
+        <div style="display:flex;gap:5px;margin-right:4px;">
+          <button class="exchange-type-btn active" id="etype-sent-${p.id}" onclick="setExchangeType(${p.id},'sent')">📤</button>
+          <button class="exchange-type-btn" id="etype-reply-${p.id}" onclick="setExchangeType(${p.id},'reply')">📥</button>
+          <button class="exchange-type-btn" id="etype-note-${p.id}" onclick="setExchangeType(${p.id},'note')">📝</button>
+        </div>
+        <input class="exchange-input" id="exchange-input-${p.id}" placeholder="Ajouter un échange ou une note…"
+          onkeydown="if(event.key==='Enter')addExchange(${p.id})">
+        <button class="exchange-submit" onclick="addExchange(${p.id})">+</button>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-section-title">Notes</div>
+      <textarea class="notes-area" id="notes-${p.id}"
+        placeholder="Vos notes sur ce prospect — budget, timing, objections, prochaine étape…"
+        onchange="saveNote(${p.id})"
+        onblur="saveNote(${p.id})">${prospectNotes[p.id] || ''}</textarea>
+      <div class="notes-saved" id="notes-saved-${p.id}">✓ Note sauvegardée</div>
     </div>
   `;
 }
@@ -2169,6 +2405,9 @@ async function animateObStep(i, delayMs) {
 async function launchOnboarding() {
   const prenom   = document.getElementById('ob-prenom').value.trim() || 'Vous';
   const activite = document.getElementById('ob-activite').value.trim();
+  const services = document.getElementById('ob-services')?.value.trim() || '';
+  const probleme = document.getElementById('ob-probleme')?.value.trim() || '';
+  const activite_complete = activite + (services ? ' | Services : ' + services : '') + (probleme ? ' | Probleme resolu : ' + probleme : '');
   const secteurs = getObSelected('ob-chips-secteur');
   const tailles  = getObSelected('ob-chips-taille');
   const zones    = getSelectedZones();
@@ -2197,7 +2436,7 @@ async function launchOnboarding() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         prenom,
-        activite,
+        activite: activite_complete,
         secteurs,
         tailles,
         zones,
@@ -2258,7 +2497,7 @@ async function launchOnboarding() {
   selectedId = null;
 
   // Save activite for relance generation
-  window._clientActivite = activite;
+  window._clientActivite = activite_complete;
   // Save that onboarding is done
   try { localStorage.setItem(OB_KEY, '1'); } catch(e) {}
 
@@ -3170,6 +3409,18 @@ function exportPDF() {
   </div>
 </div>
 
+
+<!-- Today panel -->
+<div id="today-panel">
+  <div class="today-header">
+    <div class="today-title">⏰ À faire aujourd'hui</div>
+    <button class="today-close" onclick="toggleToday()">✕</button>
+  </div>
+  <div class="today-body" id="today-body">
+    <div class="today-empty">Chargement…</div>
+  </div>
+</div>
+
 </body></html>`;
 
   const blob = new Blob([html], {type:'text/html;charset=utf-8;'});
@@ -3607,6 +3858,316 @@ function getSelectedZones() {
 }
 // ── FIN ZONE CASCADE ──────────────────────────────────────────────────────────
 
+
+// ══════════════════════════════════════════════════════════════
+// LOT A — Notes, Éditeur inline, Historique, Filtres avancés
+// ══════════════════════════════════════════════════════════════
+
+// ── NOTES ────────────────────────────────────────────────────
+const prospectNotes = {};
+
+function saveNote(id) {
+  const el = document.getElementById('notes-' + id);
+  if (!el) return;
+  prospectNotes[id] = el.value;
+  const saved = document.getElementById('notes-saved-' + id);
+  if (saved) {
+    saved.classList.add('show');
+    setTimeout(() => saved.classList.remove('show'), 2000);
+  }
+  addHistory('Note modifiée', (PROSPECTS.find(x=>x.id===id)||{}).company || '');
+  updateStatusAPI(id, prospectStatuses[id]);
+}
+
+// ── HISTORIQUE ÉCHANGES ───────────────────────────────────────
+const prospectExchanges = {};
+const exchangeTypes = {};
+
+function setExchangeType(id, type) {
+  exchangeTypes[id] = type;
+  ['sent','reply','note'].forEach(t => {
+    const btn = document.getElementById('etype-' + t + '-' + id);
+    if (btn) btn.classList.toggle('active', t === type);
+  });
+}
+
+function addExchange(id) {
+  const input = document.getElementById('exchange-input-' + id);
+  if (!input || !input.value.trim()) return;
+  const type = exchangeTypes[id] || 'sent';
+  const now = new Date();
+  const time = now.toLocaleDateString('fr-FR', {day:'numeric',month:'short'}) + ' ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'});
+
+  if (!prospectExchanges[id]) prospectExchanges[id] = [];
+  prospectExchanges[id].push({ type, text: input.value.trim(), time });
+  input.value = '';
+
+  const typeLabels = { sent: 'Message envoyé', reply: 'Réponse reçue', note: 'Note ajoutée' };
+  const p = PROSPECTS.find(x=>x.id===id);
+  addHistory(typeLabels[type], p?.company || '');
+
+  // Auto statut
+  if (type === 'reply' && prospectStatuses[id] !== 'converted') {
+    updateStatus(id, 'responded');
+  }
+
+  renderDetail();
+  showToast('Échange enregistré', '✓');
+}
+
+// ── ÉDITEUR INLINE MESSAGE ────────────────────────────────────
+function toggleMsgEdit(id) {
+  const view = document.getElementById('msg-view-' + id);
+  const edit = document.getElementById('msg-edit-' + id);
+  if (!view || !edit) return;
+  const isEditing = edit.style.display !== 'none';
+  view.style.display = isEditing ? '' : 'none';
+  edit.style.display = isEditing ? 'none' : '';
+}
+
+function saveMsgEdit(id) {
+  const p = PROSPECTS.find(x => x.id === id);
+  if (!p) return;
+  const msgKey = { initial:'initial', r1:'relance1', r2:'relance2', r3:'relance3' }[activeMsg] || 'initial';
+  const newObjet = document.getElementById('msg-objet-edit-' + id)?.value.trim();
+  const newCorps = document.getElementById('msg-corps-edit-' + id)?.value.trim();
+  if (!p.msgs[msgKey]) p.msgs[msgKey] = {};
+  if (newObjet) p.msgs[msgKey].objet = newObjet;
+  if (newCorps) p.msgs[msgKey].corps = newCorps;
+
+  addHistory('Message modifié', p.company);
+  showToast('Message sauvegardé ✓', '✓');
+  renderDetail();
+}
+
+function cancelMsgEdit(id) {
+  const view = document.getElementById('msg-view-' + id);
+  const edit = document.getElementById('msg-edit-' + id);
+  if (view) view.style.display = '';
+  if (edit) edit.style.display = 'none';
+}
+
+// ── FILTRES AVANCÉS ───────────────────────────────────────────
+let advancedFiltersOpen = false;
+let activeAdvancedFilters = { search: '', score: '', sector: '', city: '' };
+
+function toggleAdvancedFilters() {
+  advancedFiltersOpen = !advancedFiltersOpen;
+  const bar = document.getElementById('advanced-filters');
+  const btn = document.getElementById('filter-toggle-btn');
+  if (bar) bar.classList.toggle('open', advancedFiltersOpen);
+  if (btn) btn.classList.toggle('active', advancedFiltersOpen);
+
+  if (advancedFiltersOpen) {
+    // Populate sector and city selects from current prospects
+    const sectors = [...new Set(PROSPECTS.map(p => p.sector).filter(Boolean))].sort();
+    const cities = [...new Set(PROSPECTS.map(p => p.location?.split(' ')[0]).filter(Boolean))].sort();
+    const sectorSel = document.getElementById('filter-sector');
+    const citySel = document.getElementById('filter-city');
+    if (sectorSel) {
+      sectorSel.innerHTML = '<option value="">Tous les secteurs</option>' +
+        sectors.map(s => '<option value="' + s + '">' + s + '</option>').join('');
+    }
+    if (citySel) {
+      citySel.innerHTML = '<option value="">Toutes les villes</option>' +
+        cities.map(c => '<option value="' + c + '">' + c + '</option>').join('');
+    }
+  }
+}
+
+function applyAdvancedFilters() {
+  activeAdvancedFilters.search = document.getElementById('filter-search')?.value.toLowerCase() || '';
+  activeAdvancedFilters.score = document.getElementById('filter-score')?.value || '';
+  activeAdvancedFilters.sector = document.getElementById('filter-sector')?.value || '';
+  activeAdvancedFilters.city = document.getElementById('filter-city')?.value || '';
+  renderList();
+}
+
+function resetAdvancedFilters() {
+  activeAdvancedFilters = { search: '', score: '', sector: '', city: '' };
+  ['filter-search','filter-score','filter-sector','filter-city'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  renderList();
+}
+
+function applyAllFilters(prospects) {
+  const f = activeAdvancedFilters;
+  return prospects.filter(p => {
+    if (f.search && !p.company.toLowerCase().includes(f.search) && !p.contact.toLowerCase().includes(f.search)) return false;
+    if (f.score && p.score !== f.score) return false;
+    if (f.sector && p.sector !== f.sector) return false;
+    if (f.city && !p.location?.toLowerCase().includes(f.city.toLowerCase())) return false;
+    return true;
+  });
+}
+// ══════════════════════════════════════════════════════════════
+
+
+// ══════════════════════════════════════════════════════════════
+// LOT B — Traçabilité, À faire, Kanban
+// ══════════════════════════════════════════════════════════════
+
+// ── TRAÇABILITÉ ENVOIS ────────────────────────────────────────
+const sendLog = {}; // { prospectId: [ {channel, msgKey, time} ] }
+
+function logSend(id, channel) {
+  if (!sendLog[id]) sendLog[id] = [];
+  const msgKey = activeMsg;
+  const now = new Date();
+  const time = now.toLocaleDateString('fr-FR',{day:'numeric',month:'short'}) + ' à ' + now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  const labels = {initial:'Message initial', r1:'Relance J+5', r2:'Relance J+12', r3:'Relance J+20'};
+  sendLog[id].push({ channel, msgKey, label: labels[msgKey] || msgKey, time });
+  showSendStatus(id, '✓ ' + (channel === 'email' ? 'Email envoyé' : channel === 'linkedin' ? 'LinkedIn ouvert' : 'Copié') + ' · ' + time);
+}
+
+// Hook into existing send functions
+const _origSendByEmail = sendByEmail;
+sendByEmail = function(id) {
+  logSend(id, 'email');
+  _origSendByEmail(id);
+};
+
+const _origOpenLinkedin = openLinkedin;
+openLinkedin = function(id) {
+  logSend(id, 'linkedin');
+  return _origOpenLinkedin(id);
+};
+
+const _origCopyMessage = copyMessage;
+copyMessage = function(id) {
+  logSend(id, 'copy');
+  _origCopyMessage(id);
+};
+
+// ── VUE KANBAN ────────────────────────────────────────────────
+let currentView = 'list';
+
+const KANBAN_COLS = [
+  { id: 'detected',  label: '🔍 Détecté',    color: 'var(--text-3)' },
+  { id: 'messaged',  label: '✉ Contacté',    color: 'var(--accent)' },
+  { id: 'relance_1', label: '↩ Relance 1',   color: 'var(--warm)' },
+  { id: 'relance_2', label: '↩ Relance 2',   color: 'var(--warm)' },
+  { id: 'responded', label: '💬 A répondu',  color: 'var(--green)' },
+  { id: 'converted', label: '✓ Converti',    color: 'var(--green)' },
+];
+
+function setView(view) {
+  currentView = view;
+  document.getElementById('prospect-list').style.display = view === 'list' ? '' : 'none';
+  const kanban = document.getElementById('kanban-view');
+  const listBtn = document.getElementById('view-list-btn');
+  const kanbanBtn = document.getElementById('view-kanban-btn');
+
+  if (view === 'kanban') {
+    kanban.classList.add('active');
+    listBtn.classList.remove('active');
+    kanbanBtn.classList.add('active');
+    renderKanban();
+  } else {
+    kanban.classList.remove('active');
+    listBtn.classList.add('active');
+    kanbanBtn.classList.remove('active');
+    renderList();
+  }
+}
+
+function renderKanban() {
+  const kanban = document.getElementById('kanban-view');
+  kanban.innerHTML = KANBAN_COLS.map(col => {
+    const cards = PROSPECTS.filter(p => (prospectStatuses[p.id] || 'detected') === col.id);
+    return `
+      <div class="kanban-col">
+        <div class="kanban-col-header">
+          <span style="color:${col.color}">${col.label}</span>
+          <span>${cards.length}</span>
+        </div>
+        ${cards.length === 0
+          ? '<div style="font-size:0.72rem;color:var(--text-3);text-align:center;padding:1rem;font-style:italic;">Vide</div>'
+          : cards.map(p => `
+            <div class="kanban-card" onclick="selectProspect(${p.id});setView('list')">
+              <div class="kanban-card-company">${p.company}</div>
+              <div class="kanban-card-contact">${p.contact} · ${p.location}</div>
+              <div class="kanban-card-signal">${p.signal?.slice(0,40)}${p.signal?.length > 40 ? '…' : ''}</div>
+            </div>`).join('')
+        }
+      </div>`;
+  }).join('');
+}
+
+// ── VUE "À FAIRE AUJOURD'HUI" ─────────────────────────────────
+let todayOpen = false;
+
+function toggleToday() {
+  todayOpen = !todayOpen;
+  const panel = document.getElementById('today-panel');
+  panel.classList.toggle('open', todayOpen);
+  if (todayOpen) renderTodayPanel();
+}
+
+function renderTodayPanel() {
+  const body = document.getElementById('today-body');
+  const today = [];
+
+  PROSPECTS.forEach(p => {
+    const st = prospectStatuses[p.id] || 'detected';
+    const log = sendLog[p.id] || [];
+    const lastSent = log[log.length - 1];
+
+    // Calcul des jours depuis le dernier envoi
+    let daysSince = null;
+    if (lastSent) {
+      const sentDate = new Date(lastSent.rawTime || Date.now());
+      daysSince = Math.floor((Date.now() - sentDate) / 86400000);
+    }
+
+    if (st === 'messaged' && (!lastSent || daysSince >= 5)) {
+      today.push({ p, action: 'Relance J+5 recommandée', urgency: 'high' });
+    } else if (st === 'relance_1' && (!lastSent || daysSince >= 7)) {
+      today.push({ p, action: 'Relance J+12 recommandée', urgency: 'medium' });
+    } else if (st === 'relance_2' && (!lastSent || daysSince >= 8)) {
+      today.push({ p, action: 'Dernière relance J+20', urgency: 'low' });
+    } else if (st === 'detected' && p.score === 'hot') {
+      today.push({ p, action: 'Prospect chaud — à contacter', urgency: 'high' });
+    }
+  });
+
+  if (today.length === 0) {
+    body.innerHTML = `<div class="today-empty">Rien a faire aujourd'hui ! Tous vos prospects sont a jour.</div>`;
+    return;
+  }
+
+  // Sort by urgency
+  const urgencyOrder = { high: 0, medium: 1, low: 2 };
+  today.sort((a, b) => urgencyOrder[a.urgency] - urgencyOrder[b.urgency]);
+
+  body.innerHTML = today.map(item => `
+    <div class="today-card" onclick="selectProspect(${item.p.id});if(todayOpen)toggleToday()">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+        <div>
+          <div class="today-card-company">${item.p.company}</div>
+          <div class="today-card-action">${item.action}</div>
+          <div class="today-card-meta">${item.p.contact} · ${item.p.location}</div>
+        </div>
+        <span style="font-size:0.7rem;padding:2px 8px;border-radius:12px;white-space:nowrap;
+          background:${item.urgency === 'high' ? 'rgba(255,92,58,0.12)' : item.urgency === 'medium' ? 'rgba(245,166,35,0.12)' : 'rgba(79,124,255,0.1)'};
+          color:${item.urgency === 'high' ? 'var(--red)' : item.urgency === 'medium' ? 'var(--warm)' : 'var(--accent)'};">
+          ${item.urgency === 'high' ? '🔴 Urgent' : item.urgency === 'medium' ? '🟠 Cette semaine' : '🔵 Bientôt'}
+        </span>
+      </div>
+    </div>`).join('');
+}
+
+// Re-render kanban + today when status changes
+const _origUpdateStatus2 = updateStatus;
+updateStatus = function(id, status) {
+  _origUpdateStatus2(id, status);
+  if (currentView === 'kanban') renderKanban();
+  if (todayOpen) renderTodayPanel();
+};
+// ══════════════════════════════════════════════════════════════
+
 </script>
 
 <!-- MODAL CHOIX CLIENT MAIL -->
@@ -3676,6 +4237,18 @@ function getSelectedZones() {
     <textarea id="victor-input" placeholder="Posez votre question à Victor…" rows="1"
       onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();victorSend();}"></textarea>
     <button id="victor-send" onclick="victorSend()">➤</button>
+  </div>
+</div>
+
+
+<!-- Today panel -->
+<div id="today-panel">
+  <div class="today-header">
+    <div class="today-title">⏰ À faire aujourd'hui</div>
+    <button class="today-close" onclick="toggleToday()">✕</button>
+  </div>
+  <div class="today-body" id="today-body">
+    <div class="today-empty">Chargement…</div>
   </div>
 </div>
 
