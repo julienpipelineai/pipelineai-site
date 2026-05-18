@@ -1966,6 +1966,16 @@ function copyMessage(id) {
       btn.classList.remove('copied');
     }, 2000);
   }
+  // Auto statut selon le type de message copié
+  const statusMap = { initial: 'messaged', r1: 'relance_1', r2: 'relance_2', r3: 'relance_2' };
+  const newStatus = statusMap[activeMsg];
+  if (newStatus) {
+    const current = prospectStatuses[id];
+    const order = ['detected', 'messaged', 'relance_1', 'relance_2', 'responded', 'converted'];
+    if (order.indexOf(newStatus) > order.indexOf(current || 'detected')) {
+      updateStatus(id, newStatus);
+    }
+  }
   showToast('Message copié dans le presse-papier', '✓');
 }
 
@@ -2056,9 +2066,15 @@ function openLinkedin(id) {
   const url = p.linkedin || 'https://linkedin.com/search/results/people/?keywords=' + encodeURIComponent(p.contact + ' ' + p.company);
   window.open(url, '_blank');
 
-  // Mise à jour statut auto
-  if (activeMsg === 'initial' && prospectStatuses[id] === 'detected') {
-    updateStatus(id, 'messaged');
+  // Auto statut selon le type de message envoyé
+  const _statusMap = { initial: 'messaged', r1: 'relance_1', r2: 'relance_2', r3: 'relance_2' };
+  const _newStatus = _statusMap[activeMsg];
+  if (_newStatus) {
+    const _order = ['detected', 'messaged', 'relance_1', 'relance_2', 'responded', 'converted'];
+    const _current = prospectStatuses[id] || 'detected';
+    if (_order.indexOf(_newStatus) > _order.indexOf(_current)) {
+      updateStatus(id, _newStatus);
+    }
   }
   const _lp = PROSPECTS.find(x => x.id === id);
   if (_lp) addHistory('LinkedIn ouvert', _lp.company);
