@@ -2210,6 +2210,9 @@ async function launchOnboarding() {
   // Save that onboarding is done
   try { localStorage.setItem(OB_KEY, '1'); } catch(e) {}
 
+  // ── SAUVEGARDE EN BASE DE DONNÉES ──
+  await saveProspectsToDB(newProspects);
+
   hideOnboarding();
   renderList();
 
@@ -2539,8 +2542,8 @@ async function handleMagicLink(token) {
     saveSession({access_token: data.access_token});
     window.history.replaceState({}, '', window.location.pathname);
     hideOverlay();
-    showToast('Connecté ! Bienvenue sur PipelineAI 👋', '✓');
-    renderList();
+    showToast('Connecté ! Chargement de vos prospects…', '✓');
+    await loadProspects();
     return true;
   } catch(e) {
     hideOverlay();
@@ -2558,38 +2561,153 @@ async function handleMagicLink(token) {
   }
 }
 
-// ── LOAD PROSPECTS FROM API ──────────────────────────────────────────────────
+// ── LOAD PROSPECTS FROM DB ───────────────────────────────────────────────────
 async function loadProspects() {
   const session = getSession();
   if (!session) { showLoginScreen(); return; }
   const payload = parseJwt(session.access_token);
   if (!payload) { clearSession(); showLoginScreen(); return; }
+
   showOverlay('Chargement de vos prospects…');
   try {
     const res = await fetch(API_BASE + '/prospects/order/' + payload.order_id, {
-      headers: {'Authorization': 'Bearer ' + session.access_token},
+      headers: { 'Authorization': 'Bearer ' + session.access_token },
     });
     if (res.status === 401) { clearSession(); showLoginScreen(); return; }
     if (!res.ok) throw new Error('Erreur serveur');
-    hideOverlay();
-    showToast('Prospects chargés', '◈');
-    renderList();
-    updateTopbar(payload.sub, payload.order_id);
-    startPolling(payload.order_id, session.access_token);
-    setTimeout(() => selectProspect(1), 400);
+
+    const data = await res.json();
+    const dbProspects = data.prospects || [];
+
+    if (dbProspects.length > 0) {
+      // Charger les prospects depuis la base
+      PROSPECTS.length = 0;
+      prospectStatuses = {};
+      dbProspects.forEach((p, i) => {
+        const prospect = {
+          id: p.id,
+          score: p.score,
+          company: p.company,
+          contact: p.contact,
+          role: p.role,
+          location: p.location,
+          sector: p.sector,
+          signal: p.signal,
+          signal_source: p.signal_source,
+          email: p.email,
+          linkedin: p.linkedin || ('https://linkedin.com/search/results/people/?keywords=' + encodeURIComponent(p.contact + ' ' + p.company)),
+          seq: 'Étape 1/4',
+          status: p.status || 'detected',
+          msgs: p.msgs || { initial: null, relance1: null, relance2: null, relance3: null },
+        };
+        PROSPECTS.push(prospect);
+        prospectStatuses[prospect.id] = prospect.status;
+      });
+
+      // Info client
+      if (data.client) {
+        const prenom = data.client.prenom;
+        const userEl = document.querySelector('.user-row div:last-child div:first-child');
+        if (userEl && prenom) userEl.textContent = prenom;
+        document.title = prenom + ' — PipelineAI Dashboard';
+      }
+
+      hideOverlay();
+      renderList();
+      updateTopbar(payload.sub, payload.order_id);
+      showToast(dbProspects.length + ' prospects chargés depuis votre compte', '◈');
+      setTimeout(() => selectProspect(PROSPECTS[0].id), 400);
+    } else {
+      // Pas encore de prospects — afficher onboarding
+      hideOverlay();
+      renderList();
+      setTimeout(showOnboarding, 400);
+    }
   } catch(e) {
+    console.error('Erreur chargement prospects:', e);
     hideOverlay();
     renderList();
     setTimeout(() => selectProspect(1), 400);
   }
 }
 
+// ── SAVE PROSPECTS TO DB ──────────────────────────────────────────────────────
+async function saveProspectsToDB(prospects) {
+  const session = getSession();
+  if (!session) return;
+  const payload = parseJwt(session.access_token);
+  if (!payload) return;
+
+  try {
+    const body = {
+      prospects: prospects.map(p => ({
+        company: p.company,
+        contact: p.contact,
+        role: p.role,
+        location: p.location,
+        email: p.email || '',
+        linkedin: p.linkedin || '',
+        sector: p.sector || '',
+        signal: p.signal || '',
+        signal_source: p.signal_source || '',
+        score: p.score || 'warm',
+        msgs: p.msgs || {},
+      }))
+    };
+
+    const res = await fetch(API_BASE + '/prospects/order/' + payload.order_id + '/batch', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + session.access_token,
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      // Mettre à jour les IDs avec ceux de la base
+      const saved = data.prospects || [];
+      saved.forEach((dbP, i) => {
+        if (PROSPECTS[i]) {
+          const oldId = PROSPECTS[i].id;
+          const newId = dbP.id;
+          PROSPECTS[i].id = newId;
+          prospectStatuses[newId] = prospectStatuses[oldId] || 'detected';
+          delete prospectStatuses[oldId];
+        }
+      });
+      showToast('Prospects sauvegardés dans votre compte ✓', '◈');
+    }
+  } catch(e) {
+    console.error('Erreur sauvegarde prospects:', e);
+  }
+}
+
 // ── STATUS UPDATE via API ────────────────────────────────────────────────────
 async function updateStatusAPI(pid, status) {
   const s = getSession(); if (!s) return;
-  fetch(API_BASE + '/prospects/' + pid + '/status?status=' + status, {
-    method:'PATCH', headers:{'Authorization':'Bearer ' + s.access_token},
-  }).catch(()=>{});
+  fetch(API_BASE + '/prospects/' + pid, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + s.access_token,
+    },
+    body: JSON.stringify({ status }),
+  }).catch(() => {});
+}
+
+// ── SAVE RELANCE TO DB ────────────────────────────────────────────────────────
+async function saveRelanceToDB(pid, msgKey, msgData) {
+  const s = getSession(); if (!s) return;
+  fetch(API_BASE + '/prospects/' + pid, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + s.access_token,
+    },
+    body: JSON.stringify({ msgs: { [msgKey]: msgData } }),
+  }).catch(() => {});
 }
 const _orig_updateStatus = updateStatus;
 function updateStatus(id, status) {
