@@ -311,6 +311,57 @@ body.light-mode .topbar{background:#f5f2ec;}
 .tbtn-pdf{background:rgba(0,230,118,0.08);border-color:rgba(0,230,118,0.25);color:var(--green);}
 .tbtn-pdf:hover{background:rgba(0,230,118,0.15);}
 
+
+/* ── VICTOR CHATBOT ── */
+#victor-bubble{position:fixed;bottom:24px;right:24px;z-index:999;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#e8ff47,#a0c020);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:0 4px 16px rgba(232,255,71,0.3);transition:transform 0.2s;animation:victorPulse 3s ease infinite;}
+#victor-bubble:hover{transform:scale(1.08);}
+@keyframes victorPulse{0%,100%{box-shadow:0 4px 16px rgba(232,255,71,0.3);}50%{box-shadow:0 4px 24px rgba(232,255,71,0.55);}}
+.victor-notif{position:absolute;top:-2px;right:-2px;width:12px;height:12px;border-radius:50%;background:#ff5c3a;border:2px solid var(--bg);animation:blink 2s ease infinite;}
+#victor-panel{position:fixed;bottom:84px;right:24px;z-index:999;width:340px;max-width:calc(100vw - 48px);background:var(--bg2);border:1px solid var(--border2);border-radius:18px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,0.5);display:none;flex-direction:column;max-height:500px;}
+#victor-panel.open{display:flex;}
+.victor-header{display:flex;align-items:center;gap:10px;padding:0.875rem 1rem;background:rgba(232,255,71,0.06);border-bottom:1px solid var(--border);}
+.victor-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#e8ff47,#a0c020);display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;}
+.victor-name{font-size:0.85rem;font-weight:600;color:var(--text);}
+.victor-status{font-size:0.65rem;color:var(--green);display:flex;align-items:center;gap:4px;}
+.victor-status::before{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--green);}
+.victor-close{margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;font-size:0.95rem;padding:4px;}
+.victor-messages{flex:1;overflow-y:auto;padding:0.875rem;display:flex;flex-direction:column;gap:8px;scroll-behavior:smooth;}
+.vmsg{display:flex;gap:7px;align-items:flex-start;}
+.vmsg.user{flex-direction:row-reverse;}
+.vmsg-avatar{width:24px;height:24px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,#e8ff47,#a0c020);display:flex;align-items:center;justify-content:center;font-size:0.65rem;}
+.vmsg.user .vmsg-avatar{background:var(--bg4);border:1px solid var(--border2);}
+.vmsg-bubble{max-width:80%;padding:0.6rem 0.8rem;border-radius:12px;font-size:0.78rem;line-height:1.55;color:var(--text);}
+.vmsg.victor .vmsg-bubble{background:var(--bg3);border:1px solid var(--border);border-radius:4px 12px 12px 12px;}
+.vmsg.user .vmsg-bubble{background:var(--accent);color:#000;border-radius:12px 4px 12px 12px;}
+.vmsg-typing .vmsg-bubble{display:flex;gap:4px;align-items:center;padding:0.7rem 0.9rem;}
+.typing-dot{width:5px;height:5px;border-radius:50%;background:var(--text3);animation:typingBounce 1.2s ease infinite;}
+.typing-dot:nth-child(2){animation-delay:0.2s;}.typing-dot:nth-child(3){animation-delay:0.4s;}
+@keyframes typingBounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);}}
+.victor-suggestions{display:flex;flex-wrap:wrap;gap:5px;padding:0.4rem 0.875rem;}
+.victor-suggestion{font-size:0.68rem;padding:3px 8px;background:rgba(232,255,71,0.08);border:1px solid rgba(232,255,71,0.2);color:var(--accent);border-radius:20px;cursor:pointer;transition:all 0.12s;}
+.victor-suggestion:hover{background:rgba(232,255,71,0.15);}
+.victor-input-row{display:flex;gap:7px;padding:0.75rem 0.875rem;border-top:1px solid var(--border);}
+#victor-input{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:0.55rem 0.75rem;color:var(--text);font-size:0.78rem;font-family:var(--mono);outline:none;resize:none;max-height:70px;}
+#victor-input:focus{border-color:var(--accent);}
+#victor-send{width:32px;height:32px;border-radius:8px;flex-shrink:0;background:var(--accent);border:none;cursor:pointer;color:#000;font-size:0.9rem;display:flex;align-items:center;justify-content:center;transition:opacity 0.15s;}
+#victor-send:hover{opacity:0.85;}
+#victor-send:disabled{opacity:0.4;cursor:not-allowed;}
+
+/* ── ANALYTICS MODAL ── */
+#analytics-modal{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:1rem;}
+#analytics-modal.open{display:flex;}
+.analytics-panel{background:var(--bg2);border:1px solid var(--border2);border-radius:20px;padding:1.75rem;width:720px;max-width:95vw;max-height:85vh;overflow-y:auto;position:relative;}
+.analytics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.25rem;}
+.astat{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:1rem;}
+.astat-label{font-size:0.6rem;font-family:var(--mono);text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);margin-bottom:5px;}
+.astat-val{font-family:var(--mono);font-size:1.5rem;color:var(--text);}
+.astat-val.good{color:var(--green);}
+.astat-val.accent{color:var(--accent);}
+.atable{width:100%;border-collapse:collapse;font-size:0.78rem;}
+.atable th{background:var(--bg4);padding:8px 12px;text-align:left;font-family:var(--mono);font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);}
+.atable td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text2);}
+.atable tr:last-child td{border-bottom:none;}
+
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:3px;height:3px;}
 ::-webkit-scrollbar-track{background:transparent;}
@@ -361,6 +412,7 @@ body.light-mode .topbar{background:#f5f2ec;}
     </div>
     <div class="topbar-right">
       <div class="theme-toggle" onclick="toggleTheme()" title="Mode clair/sombre">🌙</div>
+      <button class="tbtn" onclick="showAnalytics()" id="analytics-btn">📊 Analytics</button>
       <button class="tbtn" onclick="exportCSV()">↓ CSV</button>
       <button class="tbtn tbtn-pdf" onclick="exportPDF()">↓ PDF</button>
       <button class="tbtn tbtn-accent" onclick="generateBatch()">⚡ +10 prospects</button>
@@ -368,6 +420,13 @@ body.light-mode .topbar{background:#f5f2ec;}
   </div>
 
   <div class="content">
+    <!-- Accès Fondateur Banner -->
+    <div id="fondateur-banner" style="background:linear-gradient(135deg,rgba(232,255,71,0.08),rgba(0,230,118,0.05));border:1px solid rgba(232,255,71,0.2);border-radius:8px;padding:0.65rem 1rem;margin-bottom:1rem;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:0.9rem;flex-shrink:0;">✦</span>
+      <span style="font-size:0.78rem;color:var(--accent);font-weight:500;">Accès Fondateur actif — toutes les fonctionnalités Pro débloquées jusqu'au 30 juin 2026</span>
+      <button onclick="document.getElementById('fondateur-banner').style.display='none'" style="margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;font-size:0.85rem;padding:2px;flex-shrink:0;">✕</button>
+    </div>
+
     <!-- Upsell -->
     <div id="upsell-banner">
       <span class="upsell-icon">🚀</span>
@@ -1264,7 +1323,48 @@ function exportPDF() {
   <table><thead><tr><th>Entreprise</th><th>Contact</th><th>Localisation</th><th>Score</th><th>Statut</th></tr></thead>
   <tbody>${rows}</tbody></table>
   <footer>PipelineAI · pipelineai.fr · Dashboard Julien · Confidentiel</footer>
-  </body></html>`;
+  
+<!-- Victor chatbot -->
+<button id="victor-bubble" onclick="toggleVictor()" title="Victor — Assistant PipelineAI">
+  🤖
+  <span class="victor-notif" id="victor-notif"></span>
+</button>
+
+<div id="victor-panel">
+  <div class="victor-header">
+    <div class="victor-avatar">🤖</div>
+    <div>
+      <div class="victor-name">Victor</div>
+      <div class="victor-status">Coach commercial IA</div>
+    </div>
+    <button class="victor-close" onclick="toggleVictor()">✕</button>
+  </div>
+  <div class="victor-messages" id="victor-messages"></div>
+  <div class="victor-suggestions" id="victor-suggestions"></div>
+  <div class="victor-input-row">
+    <textarea id="victor-input" placeholder="Posez votre question…" rows="1"
+      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();victorSend();}"></textarea>
+    <button id="victor-send" onclick="victorSend()">➤</button>
+  </div>
+</div>
+
+<!-- Analytics modal -->
+<div id="analytics-modal" onclick="if(event.target===this)closeAnalytics()">
+  <div class="analytics-panel">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+      <div>
+        <div style="font-size:0.6rem;font-family:var(--mono);text-transform:uppercase;letter-spacing:0.1em;color:var(--text3);margin-bottom:4px;">Dashboard Admin</div>
+        <div style="font-size:1.1rem;font-weight:600;color:var(--text);font-family:var(--mono);">Analytics PipelineAI</div>
+      </div>
+      <button onclick="closeAnalytics()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:1rem;padding:4px;">✕</button>
+    </div>
+    <div id="analytics-content">
+      <div style="text-align:center;padding:2rem;color:var(--text3);font-size:0.82rem;">Chargement des données…</div>
+    </div>
+  </div>
+</div>
+
+</body></html>`;
   const blob = new Blob([html],{type:'text/html;charset=utf-8;'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a'); a.href=url; a.download='pipelineai-julien-'+new Date().toISOString().slice(0,10)+'.html'; a.click();
@@ -1382,6 +1482,174 @@ function sendViaClient(clientId, customUrl) {
 }
 // ── FIN MODAL MAIL ────────────────────────────────────────────────────────────
 
+
+// ══════════════════════════════════════════════════════════════
+// VICTOR — Coach commercial IA
+// ══════════════════════════════════════════════════════════════
+const JULIEN_API = 'https://pipelineai-backend-production.up.railway.app';
+
+function getVictorSystem() {
+  const total = ALL_PROSPECTS.length;
+  const contacted = ALL_PROSPECTS.filter(p => statusMap[p.id] && statusMap[p.id] !== 'detected').length;
+  const converted = ALL_PROSPECTS.filter(p => statusMap[p.id] === 'converted').length;
+  return "Tu es Victor, assistant commercial de Julien, fondateur de PipelineAI. " +
+    "Tu coaches Julien sur sa prospection B2B pour vendre PipelineAI aux PME francaises. " +
+    "PipelineAI = logiciel IA qui genere 10 prospects qualifies + messages personnalises pour 79 EUR. " +
+    "Pipeline Julien : " + total + " prospects, " + contacted + " contactes, " + converted + " convertis. " +
+    "Reponds en francais, sois direct et actionnable, max 3-4 phrases. " +
+    "Propose des suggestions format [SUGGESTIONS: q1 | q2].";
+}
+
+let victorOpen = false;
+let victorHistory = [];
+let victorInit = false;
+
+function toggleVictor() {
+  victorOpen = !victorOpen;
+  document.getElementById('victor-panel').classList.toggle('open', victorOpen);
+  const notif = document.getElementById('victor-notif');
+  if (notif) notif.style.display = 'none';
+  if (victorOpen && !victorInit) {
+    victorInit = true;
+    victorAdd("victor", "Bonjour Julien ! Je suis Victor, votre coach commercial.\n\nComment puis-je vous aider aujourd'hui ?");
+    victorSuggestions(["Conseils pour relancer un prospect froid", "Comment améliorer mon taux de réponse ?", "Script d'accroche efficace", "Analyser mon pipeline"]);
+  }
+}
+
+function victorAdd(role, text) {
+  const msgs = document.getElementById('victor-messages');
+  const div = document.createElement('div');
+  div.className = 'vmsg ' + role;
+  div.innerHTML = `<div class="vmsg-avatar">${role === "victor" ? "🤖" : "👤"}</div><div class="vmsg-bubble">${text.replace(/\n/g, "<br>")}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function victorSuggestions(list) {
+  const el = document.getElementById('victor-suggestions');
+  el.innerHTML = list.slice(0,4).map(s => `<button class="victor-suggestion" onclick="victorAsk('${s.replace(/'/g, "&#39;")}')"> ${s}</button>`).join('');
+}
+
+function victorAsk(q) {
+  document.getElementById('victor-input').value = q;
+  victorSend();
+}
+
+async function victorSend() {
+  const input = document.getElementById('victor-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  document.getElementById('victor-suggestions').innerHTML = '';
+  victorAdd('user', text);
+  victorHistory.push({role: 'user', content: text});
+
+  // Typing indicator
+  const msgs = document.getElementById('victor-messages');
+  const typing = document.createElement('div');
+  typing.id = 'victor-typing';
+  typing.className = 'vmsg victor vmsg-typing';
+  typing.innerHTML = '<div class="vmsg-avatar">🤖</div><div class="vmsg-bubble"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+  msgs.appendChild(typing);
+  msgs.scrollTop = msgs.scrollHeight;
+  document.getElementById('victor-send').disabled = true;
+
+  try {
+    const res = await fetch(JULIEN_API + '/victor/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({system: getVictorSystem(), messages: victorHistory.slice(-10)}),
+    });
+    const data = await res.json();
+    const reply = data.reply || 'Désolé, une erreur est survenue.';
+
+    document.getElementById('victor-typing')?.remove();
+
+    const suggMatch = reply.match(/\[SUGGESTIONS:\s*([^\]]+)\]/);
+    const clean = reply.replace(/\[SUGGESTIONS:[^\]]+\]/, '').trim();
+    victorAdd('victor', clean);
+    victorHistory.push({role: 'assistant', content: clean});
+    if (suggMatch) victorSuggestions(suggMatch[1].split('|').map(s => s.trim()).filter(Boolean));
+
+  } catch(e) {
+    document.getElementById('victor-typing')?.remove();
+    victorAdd('victor', 'Je ne suis pas disponible pour le moment. Réessayez dans quelques instants.');
+  }
+  document.getElementById('victor-send').disabled = false;
+}
+
+setTimeout(() => {
+  if (!victorOpen) {
+    const n = document.getElementById('victor-notif');
+    if (n) n.style.display = 'block';
+  }
+}, 8000);
+
+// ══════════════════════════════════════════════════════════════
+// ANALYTICS ADMIN
+// ══════════════════════════════════════════════════════════════
+const ADMIN_TOKEN = 'pai_admin_julien_2026';
+
+async function showAnalytics() {
+  const modal = document.getElementById('analytics-modal');
+  modal.classList.add('open');
+  document.getElementById('analytics-content').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text3);font-size:0.82rem;font-family:var(--mono);">Chargement des données…</div>';
+
+  try {
+    const res = await fetch(JULIEN_API + '/admin/stats', {
+      headers: {'X-Admin-Token': ADMIN_TOKEN},
+    });
+
+    if (!res.ok) throw new Error('Accès refusé ou erreur serveur');
+    const d = await res.json();
+
+    document.getElementById('analytics-content').innerHTML = `
+      <div class="analytics-grid">
+        <div class="astat"><div class="astat-label">Clients total</div><div class="astat-val accent">${d.total_clients || 0}</div></div>
+        <div class="astat"><div class="astat-label">Nouveaux ce mois</div><div class="astat-val accent">${d.new_this_month || 0}</div></div>
+        <div class="astat"><div class="astat-label">Prospects générés</div><div class="astat-val">${d.total_prospects || 0}</div></div>
+        <div class="astat"><div class="astat-label">Taux contact moy.</div><div class="astat-val good">${d.avg_contact_rate || '0%'}</div></div>
+        <div class="astat"><div class="astat-label">Taux conversion moy.</div><div class="astat-val good">${d.avg_conversion_rate || '0%'}</div></div>
+        <div class="astat"><div class="astat-label">Plan le + vendu</div><div class="astat-val">${d.top_plan || '—'}</div></div>
+      </div>
+
+      ${d.top_sectors?.length ? `
+      <div style="margin-bottom:1.25rem;">
+        <div style="font-size:0.6rem;font-family:var(--mono);text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);margin-bottom:0.75rem;">Top secteurs</div>
+        <table class="atable">
+          <thead><tr><th>Secteur</th><th>Prospects</th><th>Taux contact</th></tr></thead>
+          <tbody>${d.top_sectors.map(s => '<tr><td>' + s.sector + '</td><td>' + s.count + '</td><td>' + s.contact_rate + '</td></tr>').join('')}</tbody>
+        </table>
+      </div>` : ''}
+
+      ${d.top_signals?.length ? `
+      <div style="margin-bottom:1.25rem;">
+        <div style="font-size:0.6rem;font-family:var(--mono);text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);margin-bottom:0.75rem;">Top signaux</div>
+        <table class="atable">
+          <thead><tr><th>Signal</th><th>Occurrences</th></tr></thead>
+          <tbody>${d.top_signals.map(s => '<tr><td>' + s.signal + '</td><td>' + s.count + '</td></tr>').join('')}</tbody>
+        </table>
+      </div>` : ''}
+
+      ${d.recent_clients?.length ? `
+      <div>
+        <div style="font-size:0.6rem;font-family:var(--mono);text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);margin-bottom:0.75rem;">Derniers clients</div>
+        <table class="atable">
+          <thead><tr><th>Email</th><th>Plan</th><th>Date</th></tr></thead>
+          <tbody>${d.recent_clients.map(c => '<tr><td>' + c.email + '</td><td>' + c.plan + '</td><td>' + new Date(c.created_at).toLocaleDateString("fr-FR") + '</td></tr>').join('')}</tbody>
+        </table>
+      </div>` : '<div style="font-size:0.82rem;color:var(--text3);text-align:center;padding:1rem;">Aucun client pour l\'instant.</div>'}
+    `;
+  } catch(e) {
+    document.getElementById("analytics-content").innerHTML = `<div style="text-align:center;padding:2rem;color:var(--warm);font-size:0.82rem;font-family:var(--mono);">Erreur : ${e.message}</div>`;
+  }
+}
+
+function closeAnalytics() {
+  document.getElementById('analytics-modal').classList.remove('open');
+}
+// ══════════════════════════════════════════════════════════════
+
 </script>
 
 <!-- MODAL CHOIX CLIENT MAIL -->
@@ -1401,5 +1669,46 @@ function sendViaClient(clientId, customUrl) {
     <button onclick="closeMailModal()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:#6b6864;cursor:pointer;font-size:1rem;line-height:1;padding:4px;">✕</button>
   </div>
 </div>
+
+<!-- Victor chatbot -->
+<button id="victor-bubble" onclick="toggleVictor()" title="Victor — Assistant PipelineAI">
+  🤖
+  <span class="victor-notif" id="victor-notif"></span>
+</button>
+
+<div id="victor-panel">
+  <div class="victor-header">
+    <div class="victor-avatar">🤖</div>
+    <div>
+      <div class="victor-name">Victor</div>
+      <div class="victor-status">Coach commercial IA</div>
+    </div>
+    <button class="victor-close" onclick="toggleVictor()">✕</button>
+  </div>
+  <div class="victor-messages" id="victor-messages"></div>
+  <div class="victor-suggestions" id="victor-suggestions"></div>
+  <div class="victor-input-row">
+    <textarea id="victor-input" placeholder="Posez votre question…" rows="1"
+      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();victorSend();}"></textarea>
+    <button id="victor-send" onclick="victorSend()">➤</button>
+  </div>
+</div>
+
+<!-- Analytics modal -->
+<div id="analytics-modal" onclick="if(event.target===this)closeAnalytics()">
+  <div class="analytics-panel">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+      <div>
+        <div style="font-size:0.6rem;font-family:var(--mono);text-transform:uppercase;letter-spacing:0.1em;color:var(--text3);margin-bottom:4px;">Dashboard Admin</div>
+        <div style="font-size:1.1rem;font-weight:600;color:var(--text);font-family:var(--mono);">Analytics PipelineAI</div>
+      </div>
+      <button onclick="closeAnalytics()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:1rem;padding:4px;">✕</button>
+    </div>
+    <div id="analytics-content">
+      <div style="text-align:center;padding:2rem;color:var(--text3);font-size:0.82rem;">Chargement des données…</div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
