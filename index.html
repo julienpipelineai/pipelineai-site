@@ -445,7 +445,6 @@
     nav { padding: 0.75rem 1rem; }
   }
 </style>
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 </head>
 <body>
 
@@ -479,7 +478,7 @@
   <div class="hero-proof">
     <div class="proof-item"><span>✓</span> Sans abonnement</div>
     <span class="proof-sep">·</span>
-    <div class="proof-item"><span>✓</span> Résultats instantanés</div>
+    <div class="proof-item"><span>✓</span> Résultats en 48h</div>
     <span class="proof-sep">·</span>
     <div class="proof-item"><span>✓</span> Remboursé si aucun prospect qualifié</div>
   </div>
@@ -550,6 +549,10 @@
             </select>
           </div>
           <div id="form-error" style="display:none;color:#c0392b;font-size:0.8rem;margin-bottom:8px;padding:8px 12px;background:#fff0ed;border-radius:8px"></div>
+          <label style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;cursor:pointer;font-size:0.78rem;color:#7a7a7a;line-height:1.5;">
+            <input type="checkbox" id="f-rgpd" style="margin-top:2px;flex-shrink:0;width:14px;height:14px;accent-color:#1a4fff;cursor:pointer;">
+            <span>J'accepte la <a href="/mentions.html" target="_blank" style="color:#1a4fff;text-decoration:underline;">politique de confidentialité</a> et les <a href="/mentions.html" target="_blank" style="color:#1a4fff;text-decoration:underline;">CGV</a>. Mes données sont utilisées uniquement pour générer mes prospects.</span>
+          </label>
           <button class="price-cta" id="stripe-btn" onclick="handleStripeCheckout()">
             <span id="btn-label">Payer 79 € et démarrer →</span>
             <span id="btn-loading" style="display:none">Redirection vers le paiement…</span>
@@ -617,7 +620,7 @@
   <div class="container">
     <div class="section-header">
       <div class="section-eyebrow">Comment ça marche</div>
-      <h2 class="section-title">De zéro à 10 prospects<br>en moins d'une minute</h2>
+      <h2 class="section-title">De zéro à 10 prospects<br>en 48 heures</h2>
     </div>
     <div class="steps-grid">
       <div class="step">
@@ -692,7 +695,7 @@
     </button>
     <div class="guarantee-badges">
       <div class="badge"><span>🛡</span> Satisfait ou remboursé</div>
-      <div class="badge"><span>⚡</span> Résultats instantanés</div>
+      <div class="badge"><span>⚡</span> Résultats en 48h</div>
       <div class="badge"><span>🔒</span> Sans engagement</div>
       <div class="badge"><span>📊</span> Dashboard inclus 30 jours</div>
     </div>
@@ -773,7 +776,7 @@
 <!-- FOOTER -->
 <footer>
   <strong>PipelineAI</strong> — Votre commercial IA pour PME &amp; TPE<br>
-  <span style="margin-top:0.5rem;display:block">© 2026 · <a href="/mentions.html" style="color:rgba(245,242,236,0.4)">Mentions légales & CGV</a> · <a href="mailto:julien@pipelineai.fr" style="color:rgba(245,242,236,0.4)">Contact</a></span>
+  <span style="margin-top:0.5rem;display:block">© 2026 · Mentions légales · <a href="mailto:julien@pipelineai.fr" style="color:rgba(245,242,236,0.4)">Contact</a></span>
 </footer>
 
 <script>
@@ -826,6 +829,8 @@ async function handleStripeCheckout() {
   if (!prenom || !nom) return showError('Merci de renseigner votre prénom et nom.');
   if (!email || !email.includes('@')) return showError('Merci de renseigner un email valide.');
   if (!secteur) return showError("Merci de sélectionner votre secteur d'activité.");
+  const rgpd = document.getElementById('f-rgpd');
+  if (!rgpd || !rgpd.checked) return showError("Merci d'accepter la politique de confidentialité et les CGV pour continuer.");
   setLoading(true);
   try {
     const res = await fetch(API_BASE + '/create-checkout-session', {
@@ -867,7 +872,7 @@ function showSuccessPage(prenom, email) {
       </h1>
       <p style="color:#3a3a3a;font-size:1rem;line-height:1.7;font-weight:300;margin-bottom:2rem">
         Votre commande est confirmée. Nous analysons votre secteur et vos critères de ciblage.<br>
-        <strong style="font-weight:500">Vos 10 premiers prospects sont générés en moins d'une minute.</strong>
+        <strong style="font-weight:500">Vos 10 premiers prospects arrivent dans 48h maximum.</strong>
       </p>
       <div style="background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:20px;padding:1.5rem;margin-bottom:2rem;text-align:left">
         <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;margin-bottom:1.25rem">Ce qui se passe maintenant</div>
