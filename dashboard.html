@@ -2061,16 +2061,25 @@ function setPage(page, el) {
 // ── SEND ACTIONS ────────────────────────────────────────────────────────────
 function sendByEmail(id) {
   const p = PROSPECTS.find(x => x.id === id);
-  if (!p || !p.email) {
-    showToast('Email non disponible pour ce prospect', '⚠');
+  if (!p) return;
+
+  // Auto statut selon le message actif — TOUJOURS, même sans email
+  const _statusMap = { initial: 'messaged', r1: 'relance_1', r2: 'relance_2', r3: 'relance_2' };
+  const _newStatus = _statusMap[activeMsg];
+  if (_newStatus) {
+    const _order = ['detected', 'messaged', 'relance_1', 'relance_2', 'responded', 'converted'];
+    const _current = prospectStatuses[id] || 'detected';
+    if (_order.indexOf(_newStatus) > _order.indexOf(_current)) {
+      updateStatus(id, _newStatus);
+    }
+  }
+
+  if (!p.email) {
+    showToast('Email non disponible — statut mis à jour', '✓');
     return;
   }
-  // Ouvrir modal choix client mail
+
   openMailModal(id);
-  // Auto statut "messaged" si message initial
-  if (activeMsg === 'initial' && (!prospectStatuses[id] || prospectStatuses[id] === 'detected')) {
-    updateStatus(id, 'messaged');
-  }
   showSendStatus(id, '✓ Choisissez votre client mail');
 }
 
@@ -2085,7 +2094,8 @@ function openLinkedin(id) {
   navigator.clipboard.writeText(text).catch(() => {});
 
   // Ouvre le profil LinkedIn
-  const url = p.linkedin || 'https://linkedin.com/search/results/people/?keywords=' + encodeURIComponent(p.contact + ' ' + p.company);
+  // Toujours utiliser la recherche LinkedIn — les URLs directes générées par IA sont souvent incorrectes
+  const url = 'https://linkedin.com/search/results/people/?keywords=' + encodeURIComponent(p.contact + ' ' + p.company);
   window.open(url, '_blank');
 
   // Auto statut selon le type de message envoyé
