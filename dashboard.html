@@ -2035,6 +2035,10 @@ function sendByEmail(id) {
   }
   // Ouvrir modal choix client mail
   openMailModal(id);
+  // Auto statut "messaged" si message initial
+  if (activeMsg === 'initial' && (!prospectStatuses[id] || prospectStatuses[id] === 'detected')) {
+    updateStatus(id, 'messaged');
+  }
   showSendStatus(id, '✓ Choisissez votre client mail');
 }
 
@@ -3398,19 +3402,17 @@ async function victorSend() {
   document.getElementById('victor-send').disabled = true;
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch(API_BASE + '/victor/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 600,
         system: getVictorSystem(),
         messages: victorHistory.slice(-10),
       })
     });
 
     const data = await response.json();
-    const reply = data.content?.[0]?.text || 'Désolé, une erreur est survenue.';
+    const reply = data.reply || data.content?.[0]?.text || 'Désolé, une erreur est survenue.';
 
     victorHideTyping();
 
