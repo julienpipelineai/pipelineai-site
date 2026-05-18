@@ -708,73 +708,198 @@
 </section>
 
 <!-- PRICING -->
-<section style="padding:5rem 1.25rem;background:#f5f2ec;">
-  <div style="max-width:1000px;margin:0 auto;">
+<section style="padding:5rem 1.25rem;background:#f5f2ec;" id="pricing">
+  <div style="max-width:1100px;margin:0 auto;">
+
     <div style="text-align:center;margin-bottom:3rem;">
-      <div style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:#7a7a7a;margin-bottom:0.75rem;font-family:monospace">Tarifs</div>
-      <h2 style="font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-0.02em;color:#0e0e0e;margin-bottom:0.75rem">Choisissez votre plan</h2>
-      <p style="color:#7a7a7a;font-size:1rem;max-width:500px;margin:0 auto">Commencez avec l'offre découverte, passez au plan mensuel quand vous êtes prêt.</p>
+      <div style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:#7a7a7a;margin-bottom:0.75rem;font-family:'Syne',sans-serif;">Tarifs</div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;letter-spacing:-0.02em;color:#0e0e0e;margin-bottom:0.75rem;">Choisissez votre plan</h2>
+      <p style="color:#7a7a7a;font-size:0.95rem;max-width:480px;margin:0 auto;">Commencez avec l'offre découverte, passez au plan mensuel quand vous êtes prêt.</p>
     </div>
-    <div class="pricing-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;">
 
-      <!-- STARTER -->
-      <div style="background:#fff;border-radius:16px;padding:2rem;border:1px solid #e8e4dc;">
-        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:#7a7a7a;font-family:monospace;margin-bottom:0.5rem">Starter</div>
-        <div style="font-family:'Syne',sans-serif;font-size:2.8rem;font-weight:800;letter-spacing:-0.03em;color:#0e0e0e;line-height:1">29€</div>
-        <div style="font-size:0.8rem;color:#7a7a7a;margin-bottom:1.5rem">/ mois · sans engagement</div>
-        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;padding:0">
-          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem"><span style="color:#1a4fff">✓</span> 20 prospects qualifiés/mois</li>
-          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem"><span style="color:#1a4fff">✓</span> Messages IA personnalisés</li>
-          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem"><span style="color:#1a4fff">✓</span> 1 séquence de relance</li>
-          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem"><span style="color:#1a4fff">✓</span> Dashboard de suivi</li>
-        </ul>
-        <button onclick="handlePlanCheckout('starter')" style="width:100%;padding:0.875rem;border-radius:10px;background:#f5f2ec;border:1.5px solid #0e0e0e;color:#0e0e0e;font-size:0.9rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s" onmouseover="this.style.background='#0e0e0e';this.style.color='#fff'" onmouseout="this.style.background='#f5f2ec';this.style.color='#0e0e0e'">
-          Commencer →
-        </button>
-      </div>
+    <!-- Tooltip style -->
+    <style>
+      .feat-info { display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:#e0ddd6;color:#7a7a7a;font-size:0.6rem;font-weight:700;cursor:help;margin-left:4px;position:relative;flex-shrink:0; }
+      .feat-info:hover::after { content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#0e0e0e;color:#f5f2ec;font-size:0.72rem;padding:6px 10px;border-radius:7px;white-space:nowrap;z-index:99;font-weight:400;max-width:220px;white-space:normal;text-align:center;line-height:1.4;box-shadow:0 4px 12px rgba(0,0,0,0.2); }
+      .feat-info:hover::before { content:'';position:absolute;bottom:calc(100% + 1px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#0e0e0e;z-index:99; }
+    </style>
 
-      <!-- PRO -->
-      <div class="pricing-pro" style="background:#0e0e0e;border-radius:16px;padding:2rem;position:relative;transform:scale(1.03)">
-        <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#1a4fff;color:#fff;font-size:0.65rem;padding:3px 12px;border-radius:20px;font-family:monospace;text-transform:uppercase;letter-spacing:0.1em;white-space:nowrap">⭐ Le plus populaire</div>
-        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.4);font-family:monospace;margin-bottom:0.5rem">Pro</div>
-        <div style="font-family:'Syne',sans-serif;font-size:2.8rem;font-weight:800;letter-spacing:-0.03em;color:#fff;line-height:1">79€</div>
-        <div style="font-size:0.8rem;color:rgba(255,255,255,0.4);margin-bottom:1.5rem">/ mois · sans engagement</div>
-        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;padding:0">
-          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#fff"><span style="color:#1a4fff">✓</span> 100 prospects qualifiés/mois</li>
-          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#fff"><span style="color:#1a4fff">✓</span> Messages IA ultra-personnalisés</li>
-          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#fff"><span style="color:#1a4fff">✓</span> 3 séquences de relance</li>
-          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#fff"><span style="color:#1a4fff">✓</span> Pipeline commercial complet</li>
-          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#fff"><span style="color:#1a4fff">✓</span> Accès prioritaire nouveautés</li>
-        </ul>
-        <button onclick="handlePlanCheckout('pro')" style="width:100%;padding:0.875rem;border-radius:10px;background:#1a4fff;border:none;color:#fff;font-size:0.9rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s" onmouseover="this.style.background='#3d6ae0'" onmouseout="this.style.background='#1a4fff'">
-          Commencer →
-        </button>
-      </div>
-
-      <!-- AGENCE -->
-      <div style="background:#fff;border-radius:16px;padding:2rem;border:1px solid #e8e4dc;">
-        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:#7a7a7a;font-family:monospace;margin-bottom:0.5rem">Agence</div>
-        <div style="font-family:'Syne',sans-serif;font-size:2.8rem;font-weight:800;letter-spacing:-0.03em;color:#0e0e0e;line-height:1">199€</div>
-        <div style="font-size:0.8rem;color:#7a7a7a;margin-bottom:1.5rem">/ mois · sans engagement</div>
-        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;padding:0">
-          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem"><span style="color:#1a4fff">✓</span> Prospects illimités</li>
-          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem"><span style="color:#1a4fff">✓</span> Messages IA multi-profils</li>
-          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem"><span style="color:#1a4fff">✓</span> Séquences illimitées</li>
-          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem"><span style="color:#1a4fff">✓</span> 3 comptes utilisateurs</li>
-          <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem"><span style="color:#1a4fff">✓</span> Support prioritaire</li>
-        </ul>
-        <button onclick="handlePlanCheckout('agence')" style="width:100%;padding:0.875rem;border-radius:10px;background:#f5f2ec;border:1.5px solid #0e0e0e;color:#0e0e0e;font-size:0.9rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s" onmouseover="this.style.background='#0e0e0e';this.style.color='#fff'" onmouseout="this.style.background='#f5f2ec';this.style.color='#0e0e0e'">
-          Commencer →
-        </button>
-      </div>
-
+    <!-- Comparison table -->
+    <div style="background:#fff;border-radius:20px;overflow:hidden;border:1px solid #e8e4dc;margin-bottom:2rem;">
+      <table style="width:100%;border-collapse:collapse;font-size:0.88rem;">
+        <thead>
+          <tr style="border-bottom:2px solid #e8e4dc;">
+            <th style="padding:1.25rem 1.5rem;text-align:left;font-weight:600;color:#0e0e0e;width:28%;">Fonctionnalité</th>
+            <th style="padding:1.25rem 1rem;text-align:center;color:#7a7a7a;font-weight:500;width:18%;">
+              <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Découverte</div>
+              <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:#0e0e0e;">79€</div>
+              <div style="font-size:0.72rem;color:#aaa;">paiement unique</div>
+            </th>
+            <th style="padding:1.25rem 1rem;text-align:center;color:#7a7a7a;font-weight:500;width:18%;">
+              <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Starter</div>
+              <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:#0e0e0e;">29€</div>
+              <div style="font-size:0.72rem;color:#aaa;">/mois</div>
+            </th>
+            <th style="padding:1.25rem 1rem;text-align:center;background:rgba(26,79,255,0.04);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;width:18%;">
+              <div style="font-size:0.65rem;background:#1a4fff;color:#fff;border-radius:20px;padding:2px 8px;display:inline-block;margin-bottom:6px;letter-spacing:0.05em;">⭐ POPULAIRE</div>
+              <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#7a7a7a;margin-bottom:4px;">Pro</div>
+              <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:#1a4fff;">79€</div>
+              <div style="font-size:0.72rem;color:#aaa;">/mois</div>
+            </th>
+            <th style="padding:1.25rem 1rem;text-align:center;color:#7a7a7a;font-weight:500;width:18%;">
+              <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Business</div>
+              <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:#0e0e0e;">199€</div>
+              <div style="font-size:0.72rem;color:#aaa;">/mois</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Prospects -->
+          <tr style="border-bottom:1px solid #f0ede6;background:#fafaf8;">
+            <td style="padding:1rem 1.5rem;font-weight:500;color:#0e0e0e;">Prospects générés</td>
+            <td style="padding:1rem;text-align:center;color:#0e0e0e;font-weight:600;">10 <span style="font-size:0.72rem;color:#aaa;font-weight:400;">(unique)</span></td>
+            <td style="padding:1rem;text-align:center;color:#0e0e0e;font-weight:600;">20 <span style="font-size:0.72rem;color:#aaa;font-weight:400;">/mois</span></td>
+            <td style="padding:1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;color:#1a4fff;font-weight:700;">100 <span style="font-size:0.72rem;color:#aaa;font-weight:400;">/mois</span></td>
+            <td style="padding:1rem;text-align:center;color:#0e0e0e;font-weight:600;">500 <span style="font-size:0.72rem;color:#aaa;font-weight:400;">/mois</span></td>
+          </tr>
+          <!-- Messages -->
+          <tr style="border-bottom:1px solid #f0ede6;">
+            <td style="padding:1rem 1.5rem;color:#3a3a3a;">Messages personnalisés IA</td>
+            <td style="padding:1rem;text-align:center;">✓</td>
+            <td style="padding:1rem;text-align:center;">✓</td>
+            <td style="padding:1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;">✓</td>
+            <td style="padding:1rem;text-align:center;">✓</td>
+          </tr>
+          <!-- Relances -->
+          <tr style="border-bottom:1px solid #f0ede6;background:#fafaf8;">
+            <td style="padding:1rem 1.5rem;color:#3a3a3a;">Relances à la demande</td>
+            <td style="padding:1rem;text-align:center;">✓</td>
+            <td style="padding:1rem;text-align:center;">✓</td>
+            <td style="padding:1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;">✓</td>
+            <td style="padding:1rem;text-align:center;">✓</td>
+          </tr>
+          <!-- Séquences auto -->
+          <tr style="border-bottom:1px solid #f0ede6;">
+            <td style="padding:1rem 1.5rem;color:#3a3a3a;display:flex;align-items:center;">
+              Séquences automatiques
+              <span class="feat-info" data-tip="Vos relances J+5, J+12 et J+20 partent automatiquement sans action de votre part. Définissez la séquence une fois, PipelineAI s'occupe du reste.">i</span>
+            </td>
+            <td style="padding:1rem;text-align:center;color:#ccc;">—</td>
+            <td style="padding:1rem;text-align:center;color:#ccc;">—</td>
+            <td style="padding:1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;color:#1a4fff;font-weight:600;">✓</td>
+            <td style="padding:1rem;text-align:center;color:#1a4fff;font-weight:600;">✓</td>
+          </tr>
+          <!-- Emails vérifiés -->
+          <tr style="border-bottom:1px solid #f0ede6;background:#fafaf8;">
+            <td style="padding:1rem 1.5rem;color:#3a3a3a;display:flex;align-items:center;">
+              Emails vérifiés
+              <span class="feat-info" data-tip="Les adresses email des prospects sont vérifiées et validées par notre partenaire. Fini les bounces — vos messages arrivent à destination.">i</span>
+            </td>
+            <td style="padding:1rem;text-align:center;color:#ccc;">—</td>
+            <td style="padding:1rem;text-align:center;color:#ccc;">—</td>
+            <td style="padding:1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;color:#1a4fff;font-weight:600;">✓</td>
+            <td style="padding:1rem;text-align:center;color:#1a4fff;font-weight:600;">✓</td>
+          </tr>
+          <!-- Tracking -->
+          <tr style="border-bottom:1px solid #f0ede6;">
+            <td style="padding:1rem 1.5rem;color:#3a3a3a;display:flex;align-items:center;">
+              Tracking des ouvertures
+              <span class="feat-info" data-tip="Savoir si votre prospect a ouvert votre email vous permet de concentrer vos relances sur les contacts vraiment intéressés. Taux d'ouverture, clics et engagement en temps réel.">i</span>
+            </td>
+            <td style="padding:1rem;text-align:center;color:#ccc;">—</td>
+            <td style="padding:1rem;text-align:center;color:#ccc;">—</td>
+            <td style="padding:1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;color:#1a4fff;font-weight:600;">✓</td>
+            <td style="padding:1rem;text-align:center;color:#1a4fff;font-weight:600;">✓</td>
+          </tr>
+          <!-- Export CSV -->
+          <tr style="border-bottom:1px solid #f0ede6;background:#fafaf8;">
+            <td style="padding:1rem 1.5rem;color:#3a3a3a;">Export CSV</td>
+            <td style="padding:1rem;text-align:center;">✓</td>
+            <td style="padding:1rem;text-align:center;">✓</td>
+            <td style="padding:1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;">✓</td>
+            <td style="padding:1rem;text-align:center;">✓</td>
+          </tr>
+          <!-- Export PDF -->
+          <tr style="border-bottom:1px solid #f0ede6;">
+            <td style="padding:1rem 1.5rem;color:#3a3a3a;">Export rapport PDF</td>
+            <td style="padding:1rem;text-align:center;color:#ccc;">—</td>
+            <td style="padding:1rem;text-align:center;">✓</td>
+            <td style="padding:1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;">✓</td>
+            <td style="padding:1rem;text-align:center;">✓</td>
+          </tr>
+          <!-- Import CSV -->
+          <tr style="border-bottom:1px solid #f0ede6;background:#fafaf8;">
+            <td style="padding:1rem 1.5rem;color:#3a3a3a;display:flex;align-items:center;">
+              Import CSV / LinkedIn
+              <span class="feat-info" data-tip="Importez vos propres contacts depuis LinkedIn ou un fichier CSV. PipelineAI génère des messages personnalisés pour chacun d'eux.">i</span>
+            </td>
+            <td style="padding:1rem;text-align:center;color:#ccc;">—</td>
+            <td style="padding:1rem;text-align:center;color:#ccc;">—</td>
+            <td style="padding:1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;color:#1a4fff;font-weight:600;">✓</td>
+            <td style="padding:1rem;text-align:center;color:#1a4fff;font-weight:600;">✓</td>
+          </tr>
+          <!-- Victor -->
+          <tr style="border-bottom:1px solid #f0ede6;">
+            <td style="padding:1rem 1.5rem;color:#3a3a3a;display:flex;align-items:center;">
+              Victor — Coach IA
+              <span class="feat-info" data-tip="Victor est votre assistant commercial IA disponible 24h/24. Il vous guide dans l'utilisation du dashboard et vous coache pour améliorer votre taux de réponse.">i</span>
+            </td>
+            <td style="padding:1rem;text-align:center;color:#ccc;">—</td>
+            <td style="padding:1rem;text-align:center;">✓</td>
+            <td style="padding:1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;">✓</td>
+            <td style="padding:1rem;text-align:center;">✓</td>
+          </tr>
+          <!-- Utilisateurs -->
+          <tr style="border-bottom:1px solid #f0ede6;background:#fafaf8;">
+            <td style="padding:1rem 1.5rem;color:#3a3a3a;">Comptes utilisateurs</td>
+            <td style="padding:1rem;text-align:center;">1</td>
+            <td style="padding:1rem;text-align:center;">1</td>
+            <td style="padding:1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;">1</td>
+            <td style="padding:1rem;text-align:center;font-weight:600;color:#0e0e0e;">3</td>
+          </tr>
+          <!-- CTA row -->
+          <tr>
+            <td style="padding:1.25rem 1.5rem;"></td>
+            <td style="padding:1.25rem 1rem;text-align:center;">
+              <button onclick="handlePlanCheckout('decouverte')" style="width:100%;padding:0.75rem;border-radius:10px;background:#f5f2ec;border:1.5px solid #0e0e0e;color:#0e0e0e;font-size:0.85rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;" onmouseover="this.style.background='#0e0e0e';this.style.color='#fff'" onmouseout="this.style.background='#f5f2ec';this.style.color='#0e0e0e'">
+                Démarrer →
+              </button>
+            </td>
+            <td style="padding:1.25rem 1rem;text-align:center;">
+              <button onclick="handlePlanCheckout('starter')" style="width:100%;padding:0.75rem;border-radius:10px;background:#f5f2ec;border:1.5px solid #0e0e0e;color:#0e0e0e;font-size:0.85rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;" onmouseover="this.style.background='#0e0e0e';this.style.color='#fff'" onmouseout="this.style.background='#f5f2ec';this.style.color='#0e0e0e'">
+                Démarrer →
+              </button>
+            </td>
+            <td style="padding:1.25rem 1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;border-bottom:2px solid #1a4fff;border-radius:0 0 0 0;">
+              <button onclick="handlePlanCheckout('pro')" style="width:100%;padding:0.75rem;border-radius:10px;background:#1a4fff;border:none;color:#fff;font-size:0.85rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;" onmouseover="this.style.background='#3d6ae0'" onmouseout="this.style.background='#1a4fff'">
+                Démarrer →
+              </button>
+            </td>
+            <td style="padding:1.25rem 1rem;text-align:center;">
+              <button onclick="handlePlanCheckout('business')" style="width:100%;padding:0.75rem;border-radius:10px;background:#f5f2ec;border:1.5px solid #0e0e0e;color:#0e0e0e;font-size:0.85rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;" onmouseover="this.style.background='#0e0e0e';this.style.color='#fff'" onmouseout="this.style.background='#f5f2ec';this.style.color='#0e0e0e'">
+                Démarrer →
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div style="text-align:center;margin-top:2rem;padding:1.25rem;background:#fff;border-radius:12px;border:1px solid #e8e4dc;">
-      <span style="font-size:0.85rem;color:#7a7a7a">Vous voulez tester d'abord ? </span>
-      <strong style="font-size:0.85rem;color:#0e0e0e">L'offre découverte à 79 € (paiement unique)</strong>
-      <span style="font-size:0.85rem;color:#7a7a7a"> vous donne 10 prospects qualifiés sans engagement.</span>
-      <a href="#offer" style="display:inline-block;margin-left:8px;font-size:0.85rem;color:#1a4fff;text-decoration:none;font-weight:500">Démarrer →</a>
+
+    <!-- Plan sur mesure -->
+    <div style="text-align:center;padding:1.25rem;background:#fff;border-radius:12px;border:1px solid #e8e4dc;">
+      <span style="font-size:0.88rem;color:#7a7a7a;">Vous avez des besoins spécifiques ou un volume plus important ? </span>
+      <strong style="font-size:0.88rem;color:#0e0e0e;">Un plan sur mesure est disponible.</strong>
+      <a href="mailto:julien@pipelineai.fr" style="display:inline-block;margin-left:8px;font-size:0.88rem;color:#1a4fff;text-decoration:none;font-weight:500;">Contactez-nous →</a>
     </div>
+
+    <!-- Mobile cards (hidden on desktop) -->
+    <style>
+      @media (max-width: 640px) {
+        .pricing-table { display: none; }
+        .pricing-cards { display: flex !important; }
+      }
+    </style>
+
   </div>
 </section>
 
@@ -814,7 +939,7 @@ async function handlePlanCheckout(plan) {
     const res = await fetch(API_BASE + '/create-checkout-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, prenom: prenom || 'Client', secteur: '', plan }),
+      body: JSON.stringify({ email, prenom: prenom || 'Client', secteur: '', plan: plan === 'business' ? 'agence' : plan }),
     });
     if (!res.ok) throw new Error('Erreur');
     const data = await res.json();
