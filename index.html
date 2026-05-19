@@ -4,1199 +4,636 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PipelineAI — 10 prospects qualifiés pour 79 €</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink: #0e0e0e;
-    --ink-2: #3a3a3a;
-    --ink-3: #7a7a7a;
-    --paper: #f5f2ec;
-    --paper-2: #edeae2;
-    --accent: #1a4fff;
-    --accent-light: #e8eeff;
-    --green: #0f6e3f;
-    --green-light: #e0f5eb;
-    --red-light: #fff0ed;
-    --red: #c0392b;
-  }
+:root {
+  --bg:#0B1120; --bg-2:#111827; --bg-3:#0F172A;
+  --border:#1F2937; --border-2:rgba(255,255,255,0.06);
+  --blue:#3B82F6; --violet:#8B5CF6; --cyan:#06B6D4;
+  --green:#10B981; --amber:#F59E0B; --red:#EF4444;
+  --text:#F1F5F9; --text-2:#94A3B8; --text-3:#475569;
+  --grad:linear-gradient(135deg,#3B82F6 0%,#8B5CF6 100%);
+  --grad-2:linear-gradient(135deg,#06B6D4 0%,#3B82F6 100%);
+  --glow:0 0 40px rgba(59,130,246,0.2);
+  --mono:'JetBrains Mono',monospace; --sans:'Plus Jakarta Sans',sans-serif;
+  --r:20px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);overflow-x:hidden;}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--paper);
-    color: var(--ink);
-    overflow-x: hidden;
-  }
+/* ── GRID BG ── */
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(59,130,246,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,0.035) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 50% at 50% 0%,black 30%,transparent 100%);pointer-events:none;}
 
-  /* ─── NAV ─── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1rem 2.5rem;
-    background: rgba(245, 242, 236, 0.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(0,0,0,0.06);
-  }
-  .nav-logo {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800; font-size: 1.1rem; letter-spacing: -0.02em;
-  }
-  .nav-logo span { color: var(--accent); }
-  .nav-cta {
-    background: var(--ink); color: var(--paper);
-    border: none; border-radius: 100px;
-    padding: 0.55rem 1.4rem; font-size: 0.875rem;
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer; transition: transform 0.15s, background 0.15s;
-    white-space: nowrap;
-  }
-  .nav-cta:hover { background: var(--accent); transform: scale(1.03); }
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;height:64px;background:rgba(11,17,32,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border-2);}
+.nav-logo{display:flex;align-items:center;gap:10px;font-size:1.05rem;font-weight:700;letter-spacing:-0.02em;color:var(--text);text-decoration:none;}
+.nav-logo-mark{width:30px;height:30px;border-radius:8px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:800;box-shadow:var(--glow);}
+.nav-logo .ai{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-center{display:flex;align-items:center;gap:2rem;}
+.nav-center a{font-size:0.875rem;color:var(--text-2);text-decoration:none;transition:color 0.15s;}
+.nav-center a:hover{color:var(--text);}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.btn-outline{padding:0.5rem 1.1rem;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text-2);font-size:0.875rem;font-family:var(--sans);cursor:pointer;transition:all 0.15s;}
+.btn-outline:hover{border-color:var(--blue);color:var(--text);}
+.btn-nav-cta{padding:0.55rem 1.3rem;border-radius:10px;background:var(--grad);color:#fff;border:none;font-size:0.875rem;font-family:var(--sans);font-weight:600;cursor:pointer;transition:all 0.2s;box-shadow:0 0 20px rgba(59,130,246,0.25);}
+.btn-nav-cta:hover{transform:translateY(-1px);box-shadow:0 0 30px rgba(59,130,246,0.4);}
 
-  /* ─── HERO ─── */
-  .hero {
-    min-height: 100vh;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 7rem 2rem 4rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero-bg {
-    position: absolute; inset: 0; z-index: 0;
-    background:
-      radial-gradient(ellipse 60% 40% at 20% 80%, rgba(26,79,255,0.07) 0%, transparent 70%),
-      radial-gradient(ellipse 50% 50% at 80% 20%, rgba(15,110,63,0.06) 0%, transparent 70%);
-  }
-  .hero-eyebrow {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--accent-light); border: 1px solid rgba(26,79,255,0.2);
-    border-radius: 100px; padding: 0.4rem 1rem;
-    font-size: 0.8rem; font-weight: 500; color: var(--accent);
-    margin-bottom: 2rem; position: relative; z-index: 1;
-    animation: fadeUp 0.6s ease both;
-  }
-  .eyebrow-dot {
-    width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
-    animation: pulse 2s ease infinite; flex-shrink: 0;
-  }
-  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
+/* ── HERO ── */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8rem 1.5rem 5rem;text-align:center;overflow:hidden;}
+.hero-glow{position:absolute;top:-150px;left:50%;transform:translateX(-50%);width:900px;height:700px;background:radial-gradient(ellipse,rgba(59,130,246,0.12) 0%,transparent 70%);pointer-events:none;}
+.hero-glow-2{position:absolute;top:30%;right:-80px;width:350px;height:350px;background:radial-gradient(ellipse,rgba(139,92,246,0.08) 0%,transparent 70%);pointer-events:none;}
 
-  .hero h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(2.2rem, 6vw, 4.8rem);
-    font-weight: 800;
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-    max-width: 820px;
-    position: relative; z-index: 1;
-    animation: fadeUp 0.6s 0.1s ease both;
-  }
-  .hero h1 em {
-    font-style: normal; position: relative; color: var(--accent);
-  }
-  .hero h1 em::after {
-    content: '';
-    position: absolute; left: 0; bottom: -4px; right: 0;
-    height: 3px; background: var(--accent); border-radius: 2px;
-    transform: scaleX(0); transform-origin: left;
-    animation: underline 0.5s 0.9s ease forwards;
-  }
-  @keyframes underline { to { transform: scaleX(1); } }
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:5px 14px 5px 10px;border-radius:100px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);font-size:0.78rem;color:#93C5FD;margin-bottom:2rem;animation:fadeUp 0.6s ease both;}
+.eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);animation:blink 2s ease infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
 
-  .hero-sub {
-    margin-top: 1.5rem;
-    font-size: clamp(0.95rem, 2vw, 1.2rem);
-    color: var(--ink-2);
-    max-width: 560px;
-    line-height: 1.65;
-    font-weight: 300;
-    position: relative; z-index: 1;
-    animation: fadeUp 0.6s 0.2s ease both;
-  }
-  .hero-actions {
-    display: flex; gap: 12px; align-items: center; justify-content: center;
-    margin-top: 2.5rem; flex-wrap: wrap;
-    position: relative; z-index: 1;
-    animation: fadeUp 0.6s 0.3s ease both;
-  }
-  .btn-primary {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--ink); color: var(--paper);
-    border: none; border-radius: 100px;
-    padding: 0.9rem 2rem; font-size: 1rem;
-    font-family: 'DM Sans', sans-serif; font-weight: 500;
-    cursor: pointer; transition: transform 0.15s, background 0.15s;
-    text-decoration: none;
-  }
-  .btn-primary:hover { background: var(--accent); transform: translateY(-2px); }
-  .btn-primary .price-tag {
-    background: rgba(255,255,255,0.2); border-radius: 100px;
-    padding: 2px 10px; font-size: 0.85rem; font-weight: 600;
-  }
-  .btn-secondary {
-    display: inline-flex; align-items: center; gap: 6px;
-    color: var(--ink-2); font-size: 0.9rem; cursor: pointer;
-    border: none; background: none; font-family: 'DM Sans', sans-serif;
-    text-decoration: underline; text-underline-offset: 3px;
-  }
-  .hero-proof {
-    display: flex; align-items: center; gap: 1rem;
-    margin-top: 3rem; flex-wrap: wrap; justify-content: center;
-    position: relative; z-index: 1;
-    animation: fadeUp 0.6s 0.4s ease both;
-  }
-  .proof-item {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 0.82rem; color: var(--ink-3);
-  }
-  .proof-sep { color: var(--paper-2); font-size: 1.2rem; }
+.hero h1{font-size:clamp(2.2rem,6vw,4.2rem);font-weight:800;letter-spacing:-0.03em;line-height:1.08;max-width:820px;margin:0 auto 1.5rem;animation:fadeUp 0.6s 0.1s ease both;}
+.grad-word{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:clamp(0.95rem,2vw,1.15rem);color:var(--text-2);max-width:560px;line-height:1.72;margin:0 auto 2.5rem;animation:fadeUp 0.6s 0.15s ease both;}
+.hero-cta-row{display:flex;align-items:center;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:3.5rem;animation:fadeUp 0.6s 0.2s ease both;}
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+.btn-hero-main{display:inline-flex;align-items:center;gap:10px;padding:0.9rem 2rem;border-radius:14px;background:var(--grad);color:#fff;border:none;font-size:1rem;font-weight:700;font-family:var(--sans);cursor:pointer;transition:all 0.2s;box-shadow:0 0 28px rgba(59,130,246,0.35),0 4px 20px rgba(0,0,0,0.3);}
+.btn-hero-main:hover{transform:translateY(-2px);box-shadow:0 0 44px rgba(59,130,246,0.5),0 8px 30px rgba(0,0,0,0.4);}
+.btn-hero-main .ptag{background:rgba(255,255,255,0.18);border-radius:8px;padding:2px 10px;font-size:0.85rem;}
+.btn-hero-sec{display:inline-flex;align-items:center;gap:6px;padding:0.9rem 1.5rem;border-radius:14px;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text-2);font-size:0.9rem;font-family:var(--sans);cursor:pointer;transition:all 0.15s;text-decoration:none;}
+.btn-hero-sec:hover{border-color:rgba(255,255,255,0.15);color:var(--text);}
 
-  /* ─── SECTIONS ─── */
-  .section { padding: 5rem 2rem; }
-  .container { max-width: 980px; margin: 0 auto; }
+.hero-proof{display:flex;align-items:center;gap:2rem;justify-content:center;flex-wrap:wrap;animation:fadeUp 0.6s 0.25s ease both;}
+.proof-item{display:flex;align-items:center;gap:7px;font-size:0.82rem;color:var(--text-3);}
+.proof-item svg{flex-shrink:0;}
+.proof-sep{width:1px;height:18px;background:var(--border);}
 
-  /* ─── OFFER ─── */
-  .offer-section { background: var(--ink); color: var(--paper); }
-  .offer-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
-  }
-  .offer-label {
-    font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
-    color: rgba(245,242,236,0.5); margin-bottom: 1rem;
-    font-family: 'Syne', sans-serif;
-  }
-  .offer-title {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(1.6rem, 3.5vw, 2.8rem);
-    font-weight: 700; line-height: 1.15; letter-spacing: -0.02em;
-  }
-  .offer-title span { color: #6b9bff; }
-  .offer-desc {
-    margin-top: 1.25rem; color: rgba(245,242,236,0.65);
-    font-size: 0.95rem; line-height: 1.7; font-weight: 300;
-  }
-  .offer-features { margin-top: 2rem; display: flex; flex-direction: column; gap: 12px; }
-  .offer-feature {
-    display: flex; align-items: flex-start; gap: 12px;
-    font-size: 0.92rem; color: rgba(245,242,236,0.85);
-  }
-  .feat-check {
-    width: 20px; height: 20px; border-radius: 50%;
-    background: rgba(26,79,255,0.25); border: 1px solid rgba(26,79,255,0.4);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; margin-top: 1px; font-size: 0.7rem; color: #6b9bff;
-  }
+/* ── STATS ROW ── */
+.stats-row{padding:4rem 0;border-top:1px solid var(--border-2);border-bottom:1px solid var(--border-2);background:var(--bg-3);}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);max-width:900px;margin:0 auto;border-radius:16px;overflow:hidden;}
+.stat-cell{background:var(--bg-2);padding:1.75rem;text-align:center;}
+.stat-val{font-size:2rem;font-weight:800;letter-spacing:-0.04em;background:var(--grad-2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;}
+.stat-label{font-size:0.78rem;color:var(--text-3);font-family:var(--mono);}
 
-  /* ─── PRICE CARD ─── */
-  .price-card {
-    background: var(--paper); color: var(--ink);
-    border-radius: 24px; padding: 2.5rem;
-    position: relative; overflow: hidden;
-  }
-  .price-card::before {
-    content: '';
-    position: absolute; top: 20px; right: -32px;
-    background: var(--accent); color: #fff;
-    font-size: 0.65rem; letter-spacing: 0.1em;
-    font-family: 'Syne', sans-serif; font-weight: 700;
-    padding: 5px 40px; transform: rotate(45deg);
-  }
-  .card-eyebrow {
-    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;
-    color: var(--ink-3); font-family: 'Syne', sans-serif; margin-bottom: 1.5rem;
-  }
-  .price-display { display: flex; align-items: baseline; gap: 6px; margin-bottom: 0.5rem; }
-  .price-amount {
-    font-family: 'Syne', sans-serif;
-    font-size: 4rem; font-weight: 800; line-height: 1;
-    letter-spacing: -0.04em; color: var(--accent);
-  }
-  .price-currency { font-size: 1.6rem; font-weight: 600; color: var(--accent); align-self: flex-start; margin-top: 0.8rem; }
-  .price-type { font-size: 0.85rem; color: var(--ink-3); margin-bottom: 1.5rem; }
-  .price-cta {
-    width: 100%; padding: 1rem; border-radius: 100px;
-    background: var(--accent); color: #fff; border: none;
-    font-size: 1rem; font-family: 'DM Sans', sans-serif; font-weight: 500;
-    cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
-    margin-bottom: 1rem;
-  }
-  .price-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,79,255,0.3); }
-  .price-guarantee { font-size: 0.8rem; color: var(--ink-3); text-align: center; line-height: 1.5; }
-  .price-divider { border: none; border-top: 1px solid var(--paper-2); margin: 1.5rem 0; }
-  .price-limit {
-    display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem;
-  }
-  .limit-bar-wrap { flex: 1; margin: 0 12px; height: 4px; background: var(--paper-2); border-radius: 2px; overflow: hidden; }
-  .limit-bar { height: 100%; width: 73%; background: var(--accent); border-radius: 2px;
-    animation: fillBar 1.5s 0.5s ease both; }
-  @keyframes fillBar { from { width: 0; } to { width: 73%; } }
-  .limit-count { font-weight: 600; color: var(--accent); white-space: nowrap; }
+/* ── PROBLEMS/SOLUTION ── */
+.section{padding:6rem 0;}
+.section.dark{background:var(--bg-3);}
+.container{max-width:1100px;margin:0 auto;padding:0 1.5rem;}
+.eyebrow{font-family:var(--mono);font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.875rem;}
+.eyebrow.blue{color:var(--blue);}
+.eyebrow.red{color:#F87171;}
+.eyebrow.green{color:var(--green);}
+.section-h2{font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:800;letter-spacing:-0.025em;line-height:1.15;margin-bottom:1rem;}
+.section-p{font-size:1rem;color:var(--text-2);line-height:1.7;max-width:500px;}
 
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+.prob-list{display:flex;flex-direction:column;gap:12px;margin-top:2rem;}
+.prob-card{display:flex;gap:14px;padding:1.25rem;border-radius:14px;background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.1);}
+.prob-icon{font-size:1.3rem;flex-shrink:0;}
+.prob-title{font-size:0.92rem;font-weight:600;color:var(--text);margin-bottom:3px;}
+.prob-desc{font-size:0.84rem;color:var(--text-2);line-height:1.6;}
+.sol-card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:2rem;box-shadow:var(--glow);}
+.sol-item{display:flex;gap:12px;padding:0.875rem 0;border-bottom:1px solid var(--border-2);}
+.sol-item:last-child{border-bottom:none;padding-bottom:0;}
+.sol-check{width:20px;height:20px;border-radius:50%;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25);display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:var(--green);flex-shrink:0;margin-top:1px;}
+.sol-text{font-size:0.87rem;color:var(--text-2);line-height:1.6;}
+.sol-text strong{color:var(--text);}
+.sol-stat{margin-top:1.25rem;padding:1rem;background:rgba(16,185,129,0.04);border:1px solid rgba(16,185,129,0.12);border-radius:10px;font-size:0.82rem;color:var(--text-2);line-height:1.6;}
 
-  .section-header { text-align: center; margin-bottom: 3.5rem; }
-  .section-eyebrow {
-    font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--accent); font-family: 'Syne', sans-serif; font-weight: 600; margin-bottom: 0.75rem;
-  }
-  .section-title {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(1.6rem, 3vw, 2.6rem);
-    font-weight: 700; letter-spacing: -0.02em; line-height: 1.15;
-  }
-  .roi-calc {
-    background: var(--paper); border-radius: 24px;
-    padding: 2rem; max-width: 640px; margin: 0 auto;
-    border: 1px solid rgba(0,0,0,0.07);
-  }
-  .calc-title { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 1.1rem; margin-bottom: 2rem; }
-  .calc-row { display: flex; align-items: center; gap: 16px; margin-bottom: 1.25rem; flex-wrap: wrap; }
-  .calc-label { font-size: 0.9rem; color: var(--ink-2); min-width: 180px; }
-  .calc-input {
-    flex: 1; min-width: 120px; -webkit-appearance: none; appearance: none;
-    height: 4px; background: var(--paper-2); border-radius: 2px; outline: none; cursor: pointer;
-  }
-  .calc-input::-webkit-slider-thumb {
-    -webkit-appearance: none; width: 22px; height: 22px;
-    border-radius: 50%; background: var(--accent); cursor: pointer;
-    box-shadow: 0 0 0 4px rgba(26,79,255,0.15);
-  }
-  .calc-val {
-    font-family: 'Syne', sans-serif; font-weight: 700;
-    font-size: 1rem; color: var(--accent); min-width: 70px; text-align: right;
-  }
-  .calc-results {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
-    margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--paper-2);
-  }
-  .calc-result { background: var(--paper-2); border-radius: 14px; padding: 1.25rem; text-align: center; }
-  .result-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); margin-bottom: 8px; }
-  .result-value { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.5rem; color: var(--ink); }
-  .result-value.good { color: var(--green); }
+/* ── FEATURES ── */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:var(--r);overflow:hidden;margin-top:3.5rem;}
+.feat-card{background:var(--bg-2);padding:2rem;transition:background 0.2s;}
+.feat-card:hover{background:rgba(59,130,246,0.04);}
+.feat-icon-wrap{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:1.25rem;}
+.ic-blue{background:rgba(59,130,246,0.1);}
+.ic-violet{background:rgba(139,92,246,0.1);}
+.ic-cyan{background:rgba(6,182,212,0.1);}
+.ic-green{background:rgba(16,185,129,0.1);}
+.ic-amber{background:rgba(245,158,11,0.1);}
+.ic-pink{background:rgba(236,72,153,0.1);}
+.feat-title{font-size:1rem;font-weight:700;margin-bottom:0.5rem;}
+.feat-desc{font-size:0.87rem;color:var(--text-2);line-height:1.65;}
 
-  /* ─── HOW IT WORKS ─── */
-  .steps-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
-  }
-  .step {
-    position: relative; padding: 2rem;
-    background: var(--paper); border-radius: 20px;
-    border: 1px solid rgba(0,0,0,0.06);
-    transition: transform 0.2s;
-  }
-  .step:hover { transform: translateY(-4px); }
-  .step-num {
-    font-family: 'Syne', sans-serif; font-size: 3rem; font-weight: 800;
-    color: var(--paper-2); line-height: 1; margin-bottom: 1rem;
-  }
-  .step h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.75rem; }
-  .step p { font-size: 0.9rem; color: var(--ink-2); line-height: 1.65; font-weight: 300; }
-  .step-icon {
-    width: 44px; height: 44px; border-radius: 12px;
-    background: var(--accent-light); display: flex; align-items: center;
-    justify-content: center; font-size: 1.25rem; margin-bottom: 1.25rem;
-  }
+/* ── DEMO ── */
+.demo-win{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.4),var(--glow);margin-top:3rem;}
+.demo-tb{display:flex;align-items:center;justify-content:space-between;padding:0.875rem 1.25rem;background:var(--bg-3);border-bottom:1px solid var(--border);}
+.demo-tb-l{display:flex;align-items:center;gap:10px;}
+.demo-lm{width:24px;height:24px;border-radius:6px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:800;}
+.demo-tb-title{font-size:0.82rem;font-weight:600;}
+.demo-tag{font-family:var(--mono);font-size:0.62rem;padding:2px 8px;border-radius:20px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);color:#93C5FD;}
+.demo-dots{display:flex;gap:5px;}
+.demo-dot{width:10px;height:10px;border-radius:50%;}
+.demo-kpis{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border);}
+.kpi{padding:0.875rem 1.25rem;border-right:1px solid var(--border);}
+.kpi:last-child{border-right:none;}
+.kpi-l{font-family:var(--mono);font-size:0.58rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-3);margin-bottom:3px;}
+.kpi-v{font-family:var(--mono);font-size:1.3rem;font-weight:700;}
+.kpi-v.bl{color:var(--blue);}
+.kpi-v.re{color:#F87171;}
+.kpi-v.gr{color:var(--green);}
+.demo-split{display:grid;grid-template-columns:1fr 1fr;min-height:320px;}
+.demo-plist{border-right:1px solid var(--border);}
+.demo-plh{padding:0.55rem 1.25rem;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:0.58rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);background:var(--bg-3);}
+.dpr{padding:0.875rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.03);cursor:pointer;transition:background 0.1s;}
+.dpr:hover{background:rgba(255,255,255,0.02);}
+.dpr.on{background:rgba(59,130,246,0.07);border-left:2px solid var(--blue);}
+.dpr-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;}
+.dpr-co{font-size:0.84rem;font-weight:600;}
+.dpr-sc{font-size:0.6rem;padding:2px 6px;border-radius:5px;font-family:var(--mono);}
+.dpr-sc.hot{background:rgba(239,68,68,0.12);color:#FCA5A5;border:1px solid rgba(239,68,68,0.18);}
+.dpr-sc.warm{background:rgba(245,158,11,0.12);color:#FCD34D;border:1px solid rgba(245,158,11,0.18);}
+.dpr-ct{font-size:0.7rem;color:var(--text-3);}
+.dpr-sig{font-size:0.67rem;color:var(--cyan);margin-top:3px;display:flex;align-items:center;gap:4px;}
+.demo-mpanel{padding:1.25rem;display:flex;flex-direction:column;gap:12px;}
+.sig-box{padding:10px 14px;border-radius:10px;background:rgba(6,182,212,0.05);border:1px solid rgba(6,182,212,0.12);border-left:3px solid var(--cyan);font-size:0.77rem;color:var(--text-2);line-height:1.5;}
+.msg-box{flex:1;padding:12px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;}
+.msg-tag{font-family:var(--mono);font-size:0.58rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);margin-bottom:7px;}
+.msg-ob{font-size:0.8rem;font-weight:600;color:var(--text);padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:8px;}
+.msg-bd{font-size:0.77rem;color:var(--text-2);line-height:1.65;white-space:pre-wrap;}
+.demo-actions{display:flex;gap:7px;}
+.da-btn{flex:1;padding:8px;border-radius:8px;font-size:0.72rem;font-family:var(--sans);cursor:pointer;border:1px solid var(--border);background:var(--bg-3);color:var(--text-2);}
+.da-btn.pri{background:var(--grad);border:none;color:#fff;font-weight:600;}
 
-  /* ─── TESTIMONIALS ─── */
-  .testimonials-section { background: var(--ink); }
-  .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-  .testimonial {
-    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 18px; padding: 1.75rem; transition: background 0.2s;
-  }
-  .testimonial:hover { background: rgba(255,255,255,0.08); }
-  .testimonial-text {
-    font-size: 0.92rem; color: rgba(245,242,236,0.8);
-    line-height: 1.7; font-weight: 300; font-style: italic; margin-bottom: 1.5rem;
-  }
-  .testimonial-text strong { color: #fff; font-style: normal; font-weight: 500; }
-  .testimonial-author { display: flex; align-items: center; gap: 12px; }
-  .author-avatar {
-    width: 38px; height: 38px; border-radius: 50%;
-    background: var(--accent); display: flex; align-items: center; justify-content: center;
-    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.8rem; color: #fff; flex-shrink: 0;
-  }
-  .author-name { font-weight: 500; font-size: 0.9rem; color: rgba(245,242,236,0.9); }
-  .author-role { font-size: 0.78rem; color: rgba(245,242,236,0.45); }
+/* ── HOW IT WORKS ── */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:3.5rem;}
+.step{}
+.step-num{width:40px;height:40px;border-radius:12px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.9rem;margin-bottom:1.25rem;box-shadow:var(--glow);}
+.step-title{font-size:1rem;font-weight:700;margin-bottom:0.5rem;}
+.step-desc{font-size:0.87rem;color:var(--text-2);line-height:1.65;}
 
-  /* ─── FINAL CTA ─── */
-  .final-cta-section { text-align: center; }
-  .final-sub { font-size: 1rem; color: var(--ink-2); margin-bottom: 2.5rem; font-weight: 300; max-width: 480px; margin-left: auto; margin-right: auto; }
-  .final-price-tag {
-    display: inline-flex; align-items: baseline; gap: 6px;
-    background: var(--accent-light); border: 1px solid rgba(26,79,255,0.2);
-    border-radius: 100px; padding: 0.5rem 1.25rem; margin-bottom: 2rem;
-    font-family: 'Syne', sans-serif;
-  }
-  .final-price-big { font-size: 2rem; font-weight: 800; color: var(--accent); }
-  .final-price-small { font-size: 0.85rem; color: var(--ink-3); }
-  .guarantee-badges {
-    display: flex; gap: 1.5rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap;
-  }
-  .badge { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--ink-3); }
+/* ── PRICING ── */
+.pricing-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:var(--r);overflow:hidden;}
+.pc{background:var(--bg-2);padding:1.75rem;display:flex;flex-direction:column;}
+.pc.star{background:rgba(59,130,246,0.05);position:relative;}
+.pc.star::before{content:'⭐ POPULAIRE';position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--grad);color:#fff;font-size:0.58rem;font-weight:700;padding:3px 12px;border-radius:0 0 8px 8px;letter-spacing:0.05em;font-family:var(--mono);}
+.pc-plan{font-family:var(--mono);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);margin-bottom:0.875rem;}
+.pc-price{font-size:2rem;font-weight:800;letter-spacing:-0.04em;margin-bottom:3px;}
+.pc-price.g{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.pc-per{font-size:0.82rem;color:var(--text-3);font-weight:400;margin-left:3px;}
+.pc-desc{font-size:0.82rem;color:var(--text-2);margin:0.75rem 0 1.25rem;line-height:1.5;}
+.pc-feats{list-style:none;display:flex;flex-direction:column;gap:7px;flex:1;margin-bottom:1.75rem;}
+.pc-feats li{display:flex;gap:9px;font-size:0.81rem;color:var(--text-2);}
+.pc-feats li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;}
+.pc-feats li.off{opacity:0.3;}
+.pc-feats li.off::before{content:'—';color:var(--text-3);}
+.pc-btn{width:100%;padding:0.75rem;border-radius:10px;font-size:0.85rem;font-family:var(--sans);font-weight:600;cursor:pointer;transition:all 0.15s;border:1px solid var(--border);background:rgba(255,255,255,0.04);color:var(--text-2);}
+.pc-btn:hover{border-color:var(--blue);color:var(--text);}
+.pc-btn.pri{background:var(--grad);border:none;color:#fff;box-shadow:var(--glow);}
+.pc-btn.pri:hover{box-shadow:0 0 36px rgba(59,130,246,0.5);}
+.founder-pill{display:inline-flex;align-items:center;gap:8px;padding:7px 18px;border-radius:100px;background:linear-gradient(135deg,rgba(59,130,246,0.08),rgba(139,92,246,0.06));border:1px solid rgba(59,130,246,0.18);font-size:0.8rem;color:#93C5FD;margin-top:1.5rem;}
 
-  /* ─── FOOTER ─── */
-  footer {
-    background: var(--ink); color: rgba(245,242,236,0.4);
-    text-align: center; padding: 2rem; font-size: 0.82rem;
-  }
-  footer strong { color: rgba(245,242,236,0.7); font-weight: 500; }
+/* ── OFFER ── */
+.offer-wrap{display:grid;grid-template-columns:1fr 1fr;gap:4rem;background:var(--bg-2);border:1px solid var(--border);border-radius:24px;padding:3rem;box-shadow:var(--glow);}
+.offer-tag{font-family:var(--mono);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--blue);margin-bottom:0.875rem;}
+.offer-h2{font-size:1.9rem;font-weight:800;letter-spacing:-0.025em;line-height:1.2;margin-bottom:1rem;}
+.offer-sub{font-size:0.95rem;color:var(--text-2);line-height:1.7;margin-bottom:2rem;}
+.offer-feats{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:2rem;}
+.offer-feats li{display:flex;gap:10px;font-size:0.9rem;color:var(--text-2);}
+.ck{color:var(--green);font-weight:700;flex-shrink:0;}
+.price-box{display:flex;align-items:center;gap:12px;padding:1.25rem;background:rgba(59,130,246,0.05);border:1px solid rgba(59,130,246,0.12);border-radius:14px;}
+.price-big{font-size:2.8rem;font-weight:800;letter-spacing:-0.04em;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.price-note{font-size:0.87rem;color:var(--text-2);line-height:1.5;}
+.form-wrap{display:flex;flex-direction:column;gap:11px;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.flabel{font-family:var(--mono);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-3);display:block;margin-bottom:5px;}
+.finput{width:100%;padding:0.875rem 1rem;border-radius:12px;background:var(--bg-3);border:1px solid var(--border);color:var(--text);font-size:0.9rem;font-family:var(--sans);outline:none;transition:border-color 0.15s;height:50px;}
+.finput:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.08);}
+.finput::placeholder{color:var(--text-3);}
+.fselect{width:100%;padding:0.875rem 1rem;border-radius:12px;background:var(--bg-3);border:1px solid var(--border);color:var(--text);font-size:0.9rem;font-family:var(--sans);outline:none;cursor:pointer;height:50px;-webkit-appearance:none;}
+.fselect:focus{border-color:var(--blue);}
+.ferror{font-size:0.8rem;color:#F87171;display:none;padding:10px 12px;background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.15);border-radius:8px;}
+.frgpd{display:flex;align-items:flex-start;gap:9px;font-size:0.78rem;color:var(--text-2);line-height:1.5;cursor:pointer;}
+.frgpd input{margin-top:2px;flex-shrink:0;accent-color:var(--blue);}
+.frgpd a{color:var(--blue);text-decoration:none;}
+.btn-submit-main{width:100%;padding:1rem;border-radius:14px;background:var(--grad);color:#fff;border:none;font-size:1rem;font-family:var(--sans);font-weight:700;cursor:pointer;transition:all 0.2s;box-shadow:0 0 24px rgba(59,130,246,0.3);}
+.btn-submit-main:hover{transform:translateY(-1px);box-shadow:0 0 38px rgba(59,130,246,0.45);}
+.btn-submit-main:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+.form-trust{display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;}
+.trust-item{display:flex;align-items:center;gap:5px;font-size:0.75rem;color:var(--text-3);}
 
-  /* ─── FORM INPUTS ─── */
-  .form-input {
-    width: 100%; padding: 11px 13px;
-    border: 1px solid #ddd; border-radius: 10px;
-    font-size: 0.9rem; font-family: 'DM Sans', sans-serif;
-    outline: none; background: #fff; color: #0e0e0e;
-    -webkit-appearance: none;
-  }
-  .form-input:focus { border-color: var(--accent); }
-  .form-label {
-    font-size: 0.72rem; color: #7a7a7a; display: block;
-    margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em;
-  }
+/* ── FAQ ── */
+.faq-list{max-width:720px;margin:3rem auto 0;display:flex;flex-direction:column;gap:2px;}
+.faq-it{background:var(--bg-2);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.faq-q{width:100%;padding:1.2rem 1.5rem;text-align:left;background:none;border:none;color:var(--text);font-size:0.93rem;font-weight:600;font-family:var(--sans);cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background 0.15s;}
+.faq-q:hover{background:rgba(255,255,255,0.02);}
+.faq-ic{color:var(--text-3);font-size:1rem;transition:transform 0.2s;flex-shrink:0;}
+.faq-it.open .faq-ic{transform:rotate(45deg);color:var(--blue);}
+.faq-a{display:none;padding:0 1.5rem 1.25rem;font-size:0.87rem;color:var(--text-2);line-height:1.7;}
+.faq-it.open .faq-a{display:block;}
 
-  /* ══════════════════════════════════════
-     RESPONSIVE — MOBILE FIRST
-  ══════════════════════════════════════ */
+/* ── FINAL CTA ── */
+.final-cta{padding:6rem 0;text-align:center;}
+.final-h2{font-size:clamp(1.8rem,4vw,3rem);font-weight:800;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem;}
+.final-sub{font-size:1rem;color:var(--text-2);max-width:480px;margin:0 auto 2.5rem;line-height:1.7;}
 
-  /* Tablet */
-  @media (max-width: 900px) {
-    .offer-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-    .steps-grid { grid-template-columns: 1fr 1fr; }
-    .testimonials-grid { grid-template-columns: 1fr; gap: 1rem; }
-  }
+/* ── FOOTER ── */
+footer{padding:2.5rem 0;border-top:1px solid var(--border-2);}
+.footer-in{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.footer-copy{font-size:0.82rem;color:var(--text-3);}
+.footer-links{display:flex;gap:1.5rem;}
+.footer-links a{font-size:0.82rem;color:var(--text-3);text-decoration:none;transition:color 0.15s;}
+.footer-links a:hover{color:var(--text-2);}
 
-  /* Mobile */
-  @media (max-width: 640px) {
-    /* Demo section */
-    #demo > div > div:nth-child(3) > div:last-child { grid-template-columns: 1fr !important; }
-    #demo-panel { display: none !important; }
+/* ── MODALS ── */
+.mover{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:1rem;}
+.mover.open{display:flex;}
+.mbox{background:var(--bg-2);border:1px solid var(--border);border-radius:20px;padding:2.5rem;max-width:420px;width:100%;position:relative;box-shadow:0 30px 80px rgba(0,0,0,0.5),var(--glow);animation:fadeUp 0.25s ease both;}
+.mclose{position:absolute;top:1.25rem;right:1.25rem;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text-3);border-radius:8px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.85rem;transition:all 0.15s;}
+.mclose:hover{color:var(--text);}
+.mtitle{font-size:1.15rem;font-weight:700;margin-bottom:0.4rem;}
+.msub{font-size:0.84rem;color:var(--text-2);margin-bottom:1.5rem;line-height:1.5;}
 
-    /* Nav */
-    nav { padding: 0.875rem 1.25rem; }
-    .nav-logo { font-size: 1rem; }
-    .nav-cta { padding: 0.45rem 1rem; font-size: 0.8rem; }
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.fu{opacity:0;transform:translateY(22px);transition:opacity 0.6s ease,transform 0.6s ease;}
+.fu.vis{opacity:1;transform:translateY(0);}
 
-    /* Hero */
-    .hero { padding: 6rem 1.25rem 3rem; min-height: auto; }
-    .hero-eyebrow { font-size: 0.72rem; padding: 0.35rem 0.85rem; text-align: center; }
-    .hero h1 { font-size: 2.1rem; letter-spacing: -0.02em; }
-    .hero-sub { font-size: 0.95rem; margin-top: 1rem; }
-    .hero-actions { flex-direction: column; align-items: stretch; gap: 10px; margin-top: 2rem; }
-    .btn-primary { justify-content: center; font-size: 0.95rem; padding: 0.875rem 1.5rem; }
-    .btn-secondary { justify-content: center; }
-    .hero-proof { gap: 0.75rem; margin-top: 2rem; }
-    .proof-sep { display: none; }
-    .proof-item { font-size: 0.78rem; }
-
-    /* Sections */
-    .section { padding: 3.5rem 1.25rem; }
-
-    /* Offer */
-    .offer-grid { grid-template-columns: 1fr; gap: 2rem; }
-    .offer-title { font-size: 1.6rem; }
-    .price-card { padding: 1.75rem 1.5rem; }
-    .price-card::before { font-size: 0.55rem; padding: 4px 36px; top: 16px; right: -30px; }
-    .price-amount { font-size: 3.2rem; }
-    .price-currency { font-size: 1.4rem; }
-
-    /* Form inside price card */
-    .form-grid-2 { grid-template-columns: 1fr !important; }
-
-    /* ROI */
-    .roi-calc { padding: 1.5rem 1.25rem; }
-    .calc-row { gap: 10px; }
-    .calc-label { min-width: auto; width: 100%; font-size: 0.85rem; }
-    .calc-input { width: 100%; }
-    .calc-val { min-width: auto; text-align: left; }
-    .calc-results { grid-template-columns: 1fr; gap: 8px; }
-    .result-value { font-size: 1.3rem; }
-
-    /* Steps */
-    .steps-grid { grid-template-columns: 1fr; gap: 1rem; }
-    .step { padding: 1.5rem; }
-    .step-num { font-size: 2.2rem; }
-
-    /* Testimonials */
-    .testimonials-grid { grid-template-columns: 1fr; gap: 1rem; }
-    .testimonial { padding: 1.25rem; }
-
-    /* Final CTA */
-    .final-cta-section .btn-primary { width: 100%; justify-content: center; }
-    .guarantee-badges { gap: 1rem; }
-    .badge { font-size: 0.78rem; }
-
-    /* Pricing section */
-    .pricing-grid { grid-template-columns: 1fr !important; gap: 1rem !important; }
-    .pricing-pro { transform: scale(1) !important; }
-
-    /* Section title */
-    .section-title { font-size: 1.6rem; }
-    .section-header { margin-bottom: 2.5rem; }
-  }
-
-  /* Very small screens */
-  @media (max-width: 380px) {
-    .hero h1 { font-size: 1.85rem; }
-    nav { padding: 0.75rem 1rem; }
-  }
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .two-col,.offer-wrap{grid-template-columns:1fr;}
+  .feat-grid{grid-template-columns:1fr 1fr;}
+  .pricing-cards{grid-template-columns:1fr 1fr;}
+  .steps{grid-template-columns:1fr;}
+  .nav-center{display:none;}
+  nav{padding:0 1.25rem;}
+}
+@media(max-width:640px){
+  .feat-grid,.pricing-cards{grid-template-columns:1fr;}
+  .demo-split{grid-template-columns:1fr;}
+  .demo-mpanel{display:none;}
+  .frow{grid-template-columns:1fr;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
-  <div class="nav-logo">Pipeline<span>AI</span></div>
-  <div style="display:flex;align-items:center;gap:10px;">
-    <button onclick="showAccessModal()" style="background:none;border:1px solid rgba(0,0,0,0.15);border-radius:100px;padding:0.5rem 1.1rem;font-size:0.82rem;font-family:'DM Sans',sans-serif;cursor:pointer;color:var(--ink-2);transition:all 0.15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='rgba(0,0,0,0.15)';this.style.color='var(--ink-2)'">
-      Mon dashboard
-    </button>
-    <button class="nav-cta" onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})">Démarrer pour 79 €</button>
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-mark">P</div>
+    Pipeline<span class="ai">AI</span>
+  </a>
+  <div class="nav-center">
+    <a href="#features">Fonctionnalités</a>
+    <a href="#demo">Démo</a>
+    <a href="#pricing">Tarifs</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <div class="nav-right">
+    <button class="btn-outline" onclick="showAccessModal()">Mon dashboard</button>
+    <button class="btn-nav-cta" onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})">Démarrer — 79 €</button>
   </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-bg"></div>
+  <div class="grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow-2"></div>
+
   <div class="hero-eyebrow">
-    <span class="eyebrow-dot"></span>
-    Généré en 30 secondes — prospects qualifiés &amp; messages prêts
+    <div class="eyebrow-dot"></div>
+    ✦ Accès Fondateur — fonctionnalités Pro jusqu'au 30 juin 2026
   </div>
-  <h1>Trouvez vos 10 prochains<br>prospects qualifiés pour <em>79 €</em></h1>
+
+  <h1>Trouvez vos 10 prochains<br><span class="grad-word">prospects qualifiés</span><br>pour 79 €</h1>
+
   <p class="hero-sub">
-    Vous passez des heures à chercher des clients manuellement — LinkedIn, appels à froid, relances oubliées. PipelineAI identifie les PME qui ont besoin de vous, rédige les messages personnalisés et gère les relances. Vous n'avez plus qu'à décrocher.
+    Vous passez des heures à chercher des clients manuellement. PipelineAI identifie les PME qui ont besoin de vous, rédige les messages personnalisés sur leurs signaux d'intention, et gère vos relances.
   </p>
-  <div class="hero-actions">
-    <button class="btn-primary" onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})">
-      Tester maintenant
-      <span class="price-tag">79 €</span>
+
+  <div class="hero-cta-row">
+    <button class="btn-hero-main" onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})">
+      Démarrer ma prospection <span class="ptag">79 €</span>
     </button>
-    <button class="btn-secondary" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">
-      Voir comment ça marche ↓
-    </button>
+    <a href="#demo" class="btn-hero-sec">Voir la démo →</a>
   </div>
+
   <div class="hero-proof">
-    <div class="proof-item"><span>✓</span> Sans abonnement</div>
-    <span class="proof-sep">·</span>
-    <div class="proof-item"><span>✓</span> Généré en 30 secondes</div>
-    <span class="proof-sep">·</span>
-    
+    <div class="proof-item">🔒 Paiement sécurisé</div>
+    <div class="proof-sep"></div>
+    <div class="proof-item">⚡ Généré en 30 secondes</div>
+    <div class="proof-sep"></div>
+    <div class="proof-item">↩ Remboursé si non qualifié</div>
+    <div class="proof-sep"></div>
+    <div class="proof-item">📊 Dashboard inclus</div>
   </div>
 </section>
 
-<!-- OFFER -->
-<section class="section offer-section" id="offer">
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stats-grid">
+    <div class="stat-cell"><div class="stat-val">30s</div><div class="stat-label">Génération</div></div>
+    <div class="stat-cell"><div class="stat-val">10</div><div class="stat-label">Prospects / session</div></div>
+    <div class="stat-cell"><div class="stat-val">×4</div><div class="stat-label">Taux de réponse</div></div>
+    <div class="stat-cell"><div class="stat-val">79€</div><div class="stat-label">Paiement unique</div></div>
+  </div>
+</div>
+
+<!-- PROBLÈMES / SOLUTION -->
+<section class="section">
   <div class="container">
-    <div class="offer-grid">
+    <div class="two-col fu">
       <div>
-        <div class="offer-label">Ce que vous obtenez</div>
-        <h2 class="offer-title">Un commercial IA qui travaille<br><span>pendant que vous dormez</span></h2>
-        <p class="offer-desc">
-          Pour 79 €, nous identifions 10 prospects PME/TPE qui ont un signal d'intention clair — 
-          recrutement, nouveau site, ouverture, levée de fonds. Chaque prospect est livré avec 
-          un message personnalisé prêt à envoyer et une séquence de relance automatique.
-        </p>
-        <div class="offer-features">
-          <div class="offer-feature"><div class="feat-check">✓</div><span>10 prospects qualifiés, ciblés sur votre secteur et zone géographique</span></div>
-          <div class="offer-feature"><div class="feat-check">✓</div><span>1 message IA ultra-personnalisé par prospect, basé sur ses signaux d'activité</span></div>
-          <div class="offer-feature"><div class="feat-check">✓</div><span>Séquence de 3 relances automatiques espacées intelligemment</span></div>
-          <div class="offer-feature"><div class="feat-check">✓</div><span>Dashboard de suivi inclus</span></div>
-          <div class="offer-feature"><div class="feat-check">✓</div><span>Migration vers un plan mensuel avec −20 % la première année</span></div>
+        <div class="eyebrow red">Le problème</div>
+        <h2 class="section-h2">La prospection manuelle est un <span style="background:linear-gradient(135deg,#EF4444,#F59E0B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">gouffre de temps</span></h2>
+        <p class="section-p" style="margin-bottom:1.75rem;">Un commercial passe en moyenne 2h par semaine à chercher des prospects — sans garantie de résultat.</p>
+        <div class="prob-list">
+          <div class="prob-card"><div class="prob-icon">⏱</div><div><div class="prob-title">2h par semaine perdues</div><div class="prob-desc">À chercher sur LinkedIn, qualifier les entreprises, rédiger des messages génériques que personne ne lit.</div></div></div>
+          <div class="prob-card"><div class="prob-icon">📉</div><div><div class="prob-title">3% de taux de réponse</div><div class="prob-desc">Sans signal d'intention, vous prospectez à l'aveugle. Les messages non personnalisés finissent en spam.</div></div></div>
+          <div class="prob-card"><div class="prob-icon">🔄</div><div><div class="prob-title">Relances oubliées</div><div class="prob-desc">80% des ventes se font après 5 contacts. La majorité des commerciaux abandonnent au 2ème.</div></div></div>
         </div>
       </div>
-
-      <div class="price-card">
-        <div class="card-eyebrow">Paiement unique — sans engagement</div>
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:0.25rem">
-          <div class="price-display" style="margin-bottom:0">
-            <span class="price-currency">€</span>
-            <span class="price-amount">79</span>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:2px">
-            <span style="font-size:1rem;color:#7a7a7a;text-decoration:line-through;font-family:'Syne',sans-serif;font-weight:600">49 €</span>
-            <span style="font-size:0.72rem;color:#7a7a7a">prix de lancement terminé</span>
-          </div>
-        </div>
-        <div class="price-type">Paiement unique — sans engagement</div>
-
-        <div id="checkout-form" style="margin-bottom:1rem">
-          <div class="form-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-            <div>
-              <label class="form-label">Prénom</label>
-              <input id="f-prenom" type="text" placeholder="Marie" class="form-input">
-            </div>
-            <div>
-              <label class="form-label">Nom</label>
-              <input id="f-nom" type="text" placeholder="Dupont" class="form-input">
-            </div>
-          </div>
-          <div style="margin-bottom:8px">
-            <label class="form-label">Email professionnel</label>
-            <input id="f-email" type="email" placeholder="marie@monentreprise.fr" class="form-input">
-          </div>
-          <div style="margin-bottom:8px">
-            <label class="form-label">Secteur d'activité</label>
-            <select id="f-secteur" class="form-input" style="cursor:pointer">
-              <option value="">Choisissez votre secteur…</option>
-              <option>Artisanat / BTP</option>
-              <option>Commerce / Retail</option>
-              <option>Conseil / Consulting</option>
-              <option>Restauration / Hôtellerie</option>
-              <option>Services aux entreprises</option>
-              <option>Santé / Bien-être</option>
-              <option>Tech / Digital</option>
-              <option>Autre</option>
-            </select>
-          </div>
-          <div id="form-error" style="display:none;color:#c0392b;font-size:0.8rem;margin-bottom:8px;padding:8px 12px;background:#fff0ed;border-radius:8px"></div>
-          <label style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;cursor:pointer;font-size:0.78rem;color:#7a7a7a;line-height:1.5;">
-            <input type="checkbox" id="f-rgpd" style="margin-top:2px;flex-shrink:0;width:14px;height:14px;accent-color:#1a4fff;cursor:pointer;">
-            <span>J'accepte la <a href="/mentions.html" target="_blank" style="color:#1a4fff;text-decoration:underline;">politique de confidentialité</a> et les <a href="/mentions.html" target="_blank" style="color:#1a4fff;text-decoration:underline;">CGV</a>. Mes données sont utilisées uniquement pour générer mes prospects.</span>
-          </label>
-          <button class="price-cta" id="stripe-btn" onclick="handleStripeCheckout()">
-            <span id="btn-label">Payer 79 € et démarrer →</span>
-            <span id="btn-loading" style="display:none">Redirection vers le paiement…</span>
-          </button>
-        </div>
-
-        <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:0.75rem">
-          <svg width="38" height="16" viewBox="0 0 38 16" fill="none"><rect width="38" height="16" rx="3" fill="#635BFF"/><text x="5" y="12" font-size="9" fill="white" font-family="sans-serif" font-weight="bold">stripe</text></svg>
-          <span style="font-size:0.75rem;color:#7a7a7a">Paiement sécurisé · SSL · Visa · Mastercard</span>
-        </div>
-        
-        <hr class="price-divider">
-        </div>
+      <div class="sol-card fu">
+        <div class="eyebrow green" style="margin-bottom:1.25rem;">La solution PipelineAI</div>
+        <div class="sol-item"><div class="sol-check">✓</div><div class="sol-text"><strong>Signaux d'intention réels</strong> — recrutements, nouveaux sites, expansions détectés en temps réel</div></div>
+        <div class="sol-item"><div class="sol-check">✓</div><div class="sol-text"><strong>Messages ultra-personnalisés</strong> — chaque message mentionne le signal spécifique de l'entreprise</div></div>
+        <div class="sol-item"><div class="sol-check">✓</div><div class="sol-text"><strong>Séquences J+5, J+12, J+20</strong> — relances générées avec des angles différents à chaque fois</div></div>
+        <div class="sol-item"><div class="sol-check">✓</div><div class="sol-text"><strong>10 prospects en 30 secondes</strong> — ciblés sur votre secteur, taille et zone géographique exacte</div></div>
+        <div class="sol-item"><div class="sol-check">✓</div><div class="sol-text"><strong>Pipeline commercial complet</strong> — statuts, notes, historique, export HubSpot natif</div></div>
+        <div class="sol-stat">Contacter une PME qui vient d'ouvrir un poste ou de lever des fonds multiplie vos chances de conversion par <strong style="color:var(--text);">×4</strong>. C'est ce que PipelineAI détecte pour vous.</div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- FEATURES -->
+<section class="section dark" id="features">
+  <div class="container">
+    <div style="text-align:center;" class="fu">
+      <div class="eyebrow blue">Fonctionnalités</div>
+      <h2 class="section-h2">Tout ce qu'il faut pour prospecter<br>intelligemment</h2>
+    </div>
+    <div class="feat-grid fu">
+      <div class="feat-card"><div class="feat-icon-wrap ic-blue">🎯</div><div class="feat-title">Détection de signaux</div><div class="feat-desc">Recrutements, nouveaux sites, expansions — l'IA identifie les PME en phase d'achat active.</div></div>
+      <div class="feat-card"><div class="feat-icon-wrap ic-violet">✉️</div><div class="feat-title">Messages IA personnalisés</div><div class="feat-desc">Chaque message est rédigé en fonction du signal détecté et de vos services exacts. Pas de template.</div></div>
+      <div class="feat-card"><div class="feat-icon-wrap ic-cyan">🔄</div><div class="feat-title">Séquences de relance</div><div class="feat-desc">J+5, J+12, J+20 avec des angles différents — statistique, cas client, question inattendue.</div></div>
+      <div class="feat-card"><div class="feat-icon-wrap ic-green">📍</div><div class="feat-title">Ciblage précis</div><div class="feat-desc">Région, département ou ville — filtrez par secteur, taille et zone géographique exacte.</div></div>
+      <div class="feat-card"><div class="feat-icon-wrap ic-amber">📊</div><div class="feat-title">Pipeline Kanban</div><div class="feat-desc">Visualisez vos prospects en colonnes, suivez statuts, notes et actions prioritaires.</div></div>
+      <div class="feat-card"><div class="feat-icon-wrap ic-pink">🔗</div><div class="feat-title">Export CRM natif</div><div class="feat-desc">Export HubSpot, Pipedrive ou CSV. Lifecycle Stage et score calculés automatiquement.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section class="section" id="demo">
+  <div class="container">
+    <div style="text-align:center;" class="fu">
+      <div class="eyebrow blue">Aperçu du dashboard</div>
+      <h2 class="section-h2">Voici ce que vous obtenez après votre achat</h2>
+      <p class="section-p" style="margin:0 auto 0.5rem;">Le dashboard est paramétré sur votre activité, vos services et votre zone. Cette démo est configurée pour PipelineAI. Cliquez sur un prospect.</p>
+    </div>
+    <div class="demo-win fu">
+      <div class="demo-tb">
+        <div class="demo-tb-l">
+          <div class="demo-lm">P</div>
+          <span class="demo-tb-title">PipelineAI Dashboard</span>
+          <span class="demo-tag">DÉMO — Configuré pour PipelineAI</span>
+        </div>
+        <div class="demo-dots">
+          <div class="demo-dot" style="background:#FF5F57"></div>
+          <div class="demo-dot" style="background:#FEBC2E"></div>
+          <div class="demo-dot" style="background:#28C840"></div>
+        </div>
+      </div>
+      <div class="demo-kpis">
+        <div class="kpi"><div class="kpi-l">Prospects</div><div class="kpi-v">10</div></div>
+        <div class="kpi"><div class="kpi-l">Chauds</div><div class="kpi-v re">7</div></div>
+        <div class="kpi"><div class="kpi-l">Contactés</div><div class="kpi-v bl">3</div></div>
+        <div class="kpi"><div class="kpi-l">Convertis</div><div class="kpi-v gr">1</div></div>
+      </div>
+      <div class="demo-split">
+        <div class="demo-plist">
+          <div class="demo-plh">Activité : Logiciel prospection IA · France entière</div>
+          <div class="dpr on" id="dpr1" onclick="demoSel(1,this)">
+            <div class="dpr-top"><span class="dpr-co">Menuiserie Berthier</span><span class="dpr-sc hot">HOT</span></div>
+            <div class="dpr-ct">Luc Berthier · Gérant · Lyon (69)</div>
+            <div class="dpr-sig">⚡ Recrutement × 3 postes — Indeed</div>
+          </div>
+          <div class="dpr" id="dpr2" onclick="demoSel(2,this)">
+            <div class="dpr-top"><span class="dpr-co">Plomberie Gauthier</span><span class="dpr-sc hot">HOT</span></div>
+            <div class="dpr-ct">Marc Gauthier · PDG · Bordeaux (33)</div>
+            <div class="dpr-sig">⚡ Nouveau site web lancé</div>
+          </div>
+          <div class="dpr" id="dpr3" onclick="demoSel(3,this)">
+            <div class="dpr-top"><span class="dpr-co">Cabinet RH Nexus</span><span class="dpr-sc warm">WARM</span></div>
+            <div class="dpr-ct">Sophie Renard · DG · Paris (75)</div>
+            <div class="dpr-sig">⚡ Expansion — 2ème bureau ouvert</div>
+          </div>
+          <div style="padding:0.875rem 1.25rem;font-size:0.72rem;color:var(--text-3);font-style:italic;">+ 7 autres prospects dans votre dashboard…</div>
+        </div>
+        <div class="demo-mpanel" id="demo-panel2"></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:2rem;" class="fu">
+      <button class="btn-hero-main" onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})">Obtenir mes 10 prospects <span class="ptag">79 €</span></button>
+    </div>
+  </div>
+</section>
 
 <!-- HOW IT WORKS -->
-<section class="section" id="how">
+<section class="section dark">
   <div class="container">
-    <div class="section-header">
-      <div class="section-eyebrow">Comment ça marche</div>
-      <h2 class="section-title">10 prospects<br>en moins d'une minute</h2>
+    <div style="text-align:center;" class="fu">
+      <div class="eyebrow blue">Comment ça marche</div>
+      <h2 class="section-h2">10 prospects qualifiés<br>en moins d'une minute</h2>
     </div>
-    <div class="steps-grid">
-      <div class="step">
-        <div class="step-num">01</div>
-        <div class="step-icon">🎯</div>
-        <h3>Vous définissez votre cible</h3>
-        <p>Secteur, zone géographique, taille d'entreprise. 5 minutes pour paramétrer votre profil idéal. L'IA s'occupe du reste.</p>
+    <div class="steps fu">
+      <div class="step"><div class="step-num">1</div><h3 class="step-title">Configurez votre profil</h3><p class="step-desc">Activité, services, secteur cible, taille d'entreprise et zone géographique jusqu'à la ville. 2 minutes.</p></div>
+      <div class="step"><div class="step-num">2</div><h3 class="step-title">L'IA génère vos prospects</h3><p class="step-desc">PipelineAI analyse les signaux d'intention réels et génère 10 prospects avec emails nominatifs et messages personnalisés.</p></div>
+      <div class="step"><div class="step-num">3</div><h3 class="step-title">Envoyez et convertissez</h3><p class="step-desc">Copiez le message, envoyez, suivez dans le pipeline. Les relances J+5, J+12, J+20 sont prêtes à l'emploi.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="pricing">
+  <div class="container">
+    <div style="text-align:center;" class="fu">
+      <div class="eyebrow blue">Tarifs</div>
+      <h2 class="section-h2">Choisissez votre plan</h2>
+      <p style="color:var(--text-2);font-size:0.95rem;margin-top:0.5rem;">Commencez avec l'offre découverte, passez au mensuel quand vous êtes prêt.</p>
+      <div class="founder-pill">✦ Accès Fondateur — fonctionnalités Pro jusqu'au 30 juin 2026</div>
+    </div>
+    <div style="margin-top:3rem;" class="fu">
+      <div class="pricing-cards">
+        <div class="pc">
+          <div class="pc-plan">Découverte</div>
+          <div><span class="pc-price">79€</span><span class="pc-per">unique</span></div>
+          <div class="pc-desc">Pour tester et valider votre approche.</div>
+          <ul class="pc-feats">
+            <li>10 prospects qualifiés</li>
+            <li>Messages personnalisés IA</li>
+            <li>Relances à la demande</li>
+            <li>Export CSV</li>
+            <li class="off">Séquences automatiques</li>
+            <li class="off">Emails vérifiés</li>
+            <li class="off">Victor Coach IA</li>
+          </ul>
+          <button class="pc-btn" onclick="handlePlanCheckout('decouverte')">Démarrer →</button>
+        </div>
+        <div class="pc">
+          <div class="pc-plan">Starter</div>
+          <div><span class="pc-price">29€</span><span class="pc-per">/mois</span></div>
+          <div class="pc-desc">Pour les indépendants actifs.</div>
+          <ul class="pc-feats">
+            <li>20 prospects/mois</li>
+            <li>Messages personnalisés</li>
+            <li>Relances à la demande</li>
+            <li>Export CSV + PDF</li>
+            <li>Victor Coach IA</li>
+            <li class="off">Séquences automatiques</li>
+            <li class="off">Emails vérifiés</li>
+          </ul>
+          <button class="pc-btn" onclick="handlePlanCheckout('starter')">Démarrer →</button>
+        </div>
+        <div class="pc star">
+          <div class="pc-plan">Pro</div>
+          <div><span class="pc-price g">79€</span><span class="pc-per">/mois</span></div>
+          <div class="pc-desc">Pour scaler votre prospection.</div>
+          <ul class="pc-feats">
+            <li>100 prospects/mois</li>
+            <li>Messages ultra-personnalisés</li>
+            <li>Séquences auto J+5/12/20</li>
+            <li>Emails vérifiés</li>
+            <li>Tracking ouvertures</li>
+            <li>Import CSV / LinkedIn</li>
+            <li>Export HubSpot natif</li>
+          </ul>
+          <button class="pc-btn pri" onclick="handlePlanCheckout('pro')">Démarrer →</button>
+        </div>
+        <div class="pc">
+          <div class="pc-plan">Business</div>
+          <div><span class="pc-price">199€</span><span class="pc-per">/mois</span></div>
+          <div class="pc-desc">Pour les équipes commerciales.</div>
+          <ul class="pc-feats">
+            <li>500 prospects/mois</li>
+            <li>Tout le plan Pro</li>
+            <li>3 comptes utilisateurs</li>
+            <li>Analytics équipe</li>
+            <li>Support prioritaire</li>
+          </ul>
+          <button class="pc-btn" onclick="handlePlanCheckout('business')">Démarrer →</button>
+        </div>
       </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <div class="step-icon">🔍</div>
-        <h3>On détecte les signaux</h3>
-        <p>PipelineAI analyse les actualités business, offres d'emploi et signaux de croissance pour identifier les PME en phase de développement actif.</p>
+    </div>
+    <p style="text-align:center;margin-top:1.75rem;font-size:0.875rem;color:var(--text-2);" class="fu">
+      Besoin d'un volume plus important ? <a href="mailto:julien@pipelineai.fr" style="color:var(--blue);text-decoration:none;">Plan sur mesure →</a>
+    </p>
+  </div>
+</section>
+
+<!-- OFFER FORM -->
+<section class="section dark" id="offer">
+  <div class="container">
+    <div class="offer-wrap fu">
+      <div>
+        <div class="offer-tag">Offre Découverte</div>
+        <h2 class="offer-h2">Un seul client converti<br>et c'est déjà rentable</h2>
+        <p class="offer-sub">Pas d'abonnement. Pas de carte enregistrée. Juste 10 prospects qualifiés avec les messages pour les approcher.</p>
+        <ul class="offer-feats">
+          <li><span class="ck">✓</span>10 prospects PME ciblés sur votre secteur</li>
+          <li><span class="ck">✓</span>Messages personnalisés sur signal d'intention réel</li>
+          <li><span class="ck">✓</span>Emails nominatifs (prenom.nom@entreprise.fr)</li>
+          <li><span class="ck">✓</span>Séquences de relance J+5, J+12, J+20</li>
+          <li><span class="ck">✓</span>Dashboard pipeline + export CSV</li>
+          <li><span class="ck">✓</span>Généré en 30 secondes</li>
+        </ul>
+        <div class="price-box">
+          <div class="price-big">79 €</div>
+          <div class="price-note">Paiement unique · Sans engagement<br>Remboursé si prospects non qualifiés</div>
+        </div>
       </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <div class="step-icon">✉️</div>
-        <h3>Les messages arrivent, prêts</h3>
-        <p>Chaque prospect est livré avec un message personnalisé basé sur son actualité réelle. Vous validez, vous envoyez. C'est tout.</p>
+      <div class="form-wrap">
+        <div class="frow">
+          <div><label class="flabel">Prénom</label><input type="text" id="f-prenom" class="finput" placeholder="Marie"></div>
+          <div><label class="flabel">Nom</label><input type="text" id="f-nom" class="finput" placeholder="Dupont"></div>
+        </div>
+        <div><label class="flabel">Email professionnel</label><input type="email" id="f-email" class="finput" placeholder="marie@entreprise.fr"></div>
+        <div>
+          <label class="flabel">Secteur d'activité</label>
+          <select id="f-secteur" class="fselect">
+            <option value="">Sélectionnez votre secteur…</option>
+            <option>BTP / Artisanat</option><option>Commerce / Retail</option>
+            <option>Conseil / Services B2B</option><option>Finance / Assurance</option>
+            <option>Formation / RH</option><option>Immobilier</option>
+            <option>Industrie / Fabrication</option><option>Marketing / Communication</option>
+            <option>Restauration / Hôtellerie</option><option>Santé / Bien-être</option>
+            <option>Tech / SaaS / Logiciel</option><option>Transport / Logistique</option>
+            <option>Autre</option>
+          </select>
+        </div>
+        <div id="form-error" class="ferror"></div>
+        <label class="frgpd">
+          <input type="checkbox" id="f-rgpd">
+          <span>J'accepte la <a href="/mentions.html" target="_blank">politique de confidentialité</a> et les <a href="/mentions.html" target="_blank">CGV</a>. Mes données sont utilisées uniquement pour générer mes prospects.</span>
+        </label>
+        <button class="btn-submit-main" id="stripe-btn" onclick="handleStripeCheckout()">
+          <span id="btn-label">Générer mes 10 prospects — 79 €</span>
+          <span id="btn-loading" style="display:none;">Redirection…</span>
+        </button>
+        <div class="form-trust">
+          <div class="trust-item">🔒 Stripe sécurisé</div>
+          <div class="trust-item">⚡ 30 secondes</div>
+          <div class="trust-item">↩ Remboursé si non qualifié</div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- SOCIAL PROOF -->
-<section class="section testimonials-section">
+<!-- FAQ -->
+<section class="section" id="faq">
   <div class="container">
-    <div class="section-header" style="margin-bottom:3rem">
-      <div class="section-eyebrow" style="color:#6b9bff">Pourquoi PipelineAI</div>
-      <h2 class="section-title" style="color:#f5f2ec">La prospection manuelle<br>est un métier à temps plein</h2>
+    <div style="text-align:center;" class="fu">
+      <div class="eyebrow blue">FAQ</div>
+      <h2 class="section-h2">Questions fréquentes</h2>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;">
-      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:1.75rem;">
-        <div style="font-size:2rem;margin-bottom:1rem;">⏱</div>
-        <div style="font-size:1.1rem;font-weight:600;color:#f5f2ec;margin-bottom:0.75rem;font-family:'Syne',sans-serif;">2h par semaine</div>
-        <div style="font-size:0.9rem;color:rgba(245,242,236,0.6);line-height:1.65;font-weight:300;">C'est le temps moyen qu'un dirigeant de PME passe à chercher de nouveaux clients sur LinkedIn. Du temps qui ne génère aucun revenu direct.</div>
-      </div>
-      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:1.75rem;">
-        <div style="font-size:2rem;margin-bottom:1rem;">📉</div>
-        <div style="font-size:1.1rem;font-weight:600;color:#f5f2ec;margin-bottom:0.75rem;font-family:'Syne',sans-serif;">3% de taux de réponse</div>
-        <div style="font-size:0.9rem;color:rgba(245,242,236,0.6);line-height:1.65;font-weight:300;">Sur les messages de prospection génériques. Les messages personnalisés sur un signal d'intention précis atteignent 15 à 25% de réponses.</div>
-      </div>
-      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:1.75rem;">
-        <div style="font-size:2rem;margin-bottom:1rem;">🎯</div>
-        <div style="font-size:1.1rem;font-weight:600;color:#f5f2ec;margin-bottom:0.75rem;font-family:'Syne',sans-serif;">Le bon moment</div>
-        <div style="font-size:0.9rem;color:rgba(245,242,236,0.6);line-height:1.65;font-weight:300;">Contacter une PME qui vient d'ouvrir un poste ou de lever des fonds multiplie vos chances de conversion par 4. C'est ce que PipelineAI détecte pour vous.</div>
-      </div>
-    </div>
-    <div style="text-align:center;margin-top:2.5rem;padding:1.5rem;background:rgba(255,255,255,0.04);border-radius:14px;border:1px solid rgba(255,255,255,0.07);">
-      <p style="font-size:0.95rem;color:rgba(245,242,236,0.5);font-style:italic;margin:0;">Soyez parmi les premiers à tester PipelineAI et obtenez l'<strong style="color:#6b9bff;font-style:normal;">Accès Fondateur</strong> — toutes les fonctionnalités Pro jusqu'au 30 juin 2026.</p>
+    <div class="faq-list fu">
+      <div class="faq-it"><button class="faq-q" onclick="toggleFaq(this)">Comment PipelineAI trouve-t-il les prospects ?<span class="faq-ic">+</span></button><div class="faq-a">PipelineAI analyse les signaux d'intention réels — annonces de recrutement, nouveaux sites, expansions — pour identifier les PME en phase de développement actif dans votre secteur et zone géographique.</div></div>
+      <div class="faq-it"><button class="faq-q" onclick="toggleFaq(this)">Les emails générés sont-ils réels ?<span class="faq-ic">+</span></button><div class="faq-a">PipelineAI génère des emails nominatifs au format prenom.nom@entreprise.fr. Nous intégrerons prochainement Dropcontact pour une vérification et validation des emails en temps réel.</div></div>
+      <div class="faq-it"><button class="faq-q" onclick="toggleFaq(this)">Puis-je modifier les messages générés ?<span class="faq-ic">+</span></button><div class="faq-a">Oui — chaque message est éditable directement dans le dashboard. Vous pouvez modifier l'objet et le corps, les changements sont sauvegardés automatiquement.</div></div>
+      <div class="faq-it"><button class="faq-q" onclick="toggleFaq(this)">Que se passe-t-il si les prospects ne sont pas qualifiés ?<span class="faq-ic">+</span></button><div class="faq-a">Si les prospects générés ne correspondent pas à vos critères, nous vous remboursons intégralement sur simple demande à julien@pipelineai.fr dans les 7 jours suivant la livraison.</div></div>
+      <div class="faq-it"><button class="faq-q" onclick="toggleFaq(this)">Comment me reconnecter à mon dashboard ?<span class="faq-ic">+</span></button><div class="faq-a">Cliquez sur "Mon dashboard" en haut de page, entrez votre email et vous recevez un lien d'accès instantané valable 24 heures. Pas de mot de passe à retenir.</div></div>
+      <div class="faq-it"><button class="faq-q" onclick="toggleFaq(this)">PipelineAI fonctionne pour quel type d'activité ?<span class="faq-ic">+</span></button><div class="faq-a">PipelineAI est optimisé pour la prospection B2B — agences, consultants, prestataires, SaaS, formateurs. Si vous vendez à des PME ou TPE françaises, PipelineAI est fait pour vous.</div></div>
     </div>
   </div>
 </section>
 
 <!-- FINAL CTA -->
-<section class="section final-cta-section">
+<section class="final-cta">
   <div class="container">
-    <div class="section-eyebrow">Prêt à commencer ?</div>
-    <h2 class="section-title">Un seul client suffit<br>à rentabiliser l'investissement</h2>
-    <p class="final-sub">Pas d'abonnement. Pas de carte enregistrée. Si vos 10 prospects ne sont pas qualifiés selon vos critères, on vous rembourse.</p>
-    <div class="final-price-tag">
-      <span class="final-price-big">79 €</span>
-      <span class="final-price-small">— paiement unique, garanti</span>
-    </div>
-    <br><br>
-    <button class="btn-primary" onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})" style="font-size:1.05rem;padding:1rem 2.5rem">
-      Démarrer ma prospection
-      <span class="price-tag">79 €</span>
-    </button>
-    <div class="guarantee-badges">
-      
-      <div class="badge"><span>⚡</span> Résultats instantanés</div>
-      <div class="badge"><span>🔒</span> Sans engagement</div>
-      <div class="badge"><span>📊</span> Dashboard de suivi inclus</div>
-    </div>
-  </div>
-</section>
-
-<!-- DEMO INTERACTIVE -->
-<section style="padding:5rem 1.25rem;background:#0e0e0e;" id="demo">
-  <div style="max-width:980px;margin:0 auto;">
-
-    <div style="text-align:center;margin-bottom:3rem;">
-      <div style="font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:#4f7cff;font-family:'Syne',sans-serif;font-weight:600;margin-bottom:0.75rem;">Aperçu du dashboard</div>
-      <h2 style="font-family:'Syne',sans-serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;letter-spacing:-0.02em;line-height:1.15;color:#f5f2ec;">Voici ce que vous recevez<br>après votre achat</h2>
-      <p style="color:rgba(245,242,236,0.5);font-size:0.95rem;margin-top:0.75rem;max-width:560px;margin-left:auto;margin-right:auto;">Le dashboard est entièrement paramétré selon <strong style="color:rgba(245,242,236,0.8);">votre activité, votre zone et vos services</strong>. La démo ci-dessous est configurée pour PipelineAI — vos prospects seront générés pour votre secteur. Cliquez sur un prospect pour voir le message.</p>
-    </div>
-
-    <!-- Mini dashboard -->
-    <div style="background:#111;border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.4);">
-
-      <!-- Topbar -->
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:0.875rem 1.25rem;background:#0a0a0a;border-bottom:1px solid rgba(255,255,255,0.06);">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <div style="width:28px;height:28px;background:#1a4fff;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;color:#fff;">PA</div>
-          <span style="font-size:0.82rem;font-weight:500;color:#f0ede6;">PipelineAI</span>
-          <span style="font-size:0.68rem;padding:2px 8px;background:rgba(26,79,255,0.15);border:1px solid rgba(26,79,255,0.3);border-radius:20px;color:#4f7cff;font-family:monospace;">DÉMO — Configuré pour PipelineAI</span>
-        </div>
-        <div style="display:flex;gap:6px;">
-          <div style="width:10px;height:10px;border-radius:50%;background:#ff5f57;"></div>
-          <div style="width:10px;height:10px;border-radius:50%;background:#febc2e;"></div>
-          <div style="width:10px;height:10px;border-radius:50%;background:#28c840;"></div>
-        </div>
-      </div>
-
-      <!-- Stats bar -->
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:1px solid rgba(255,255,255,0.06);">
-        <div style="padding:0.875rem 1.25rem;border-right:1px solid rgba(255,255,255,0.06);">
-          <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:rgba(245,242,236,0.3);font-family:monospace;margin-bottom:4px;">Prospects</div>
-          <div style="font-size:1.4rem;font-weight:700;color:#f0ede6;font-family:monospace;">10</div>
-        </div>
-        <div style="padding:0.875rem 1.25rem;border-right:1px solid rgba(255,255,255,0.06);">
-          <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:rgba(245,242,236,0.3);font-family:monospace;margin-bottom:4px;">Chauds</div>
-          <div style="font-size:1.4rem;font-weight:700;color:#ff5c3a;font-family:monospace;">7</div>
-        </div>
-        <div style="padding:0.875rem 1.25rem;border-right:1px solid rgba(255,255,255,0.06);">
-          <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:rgba(245,242,236,0.3);font-family:monospace;margin-bottom:4px;">Contactés</div>
-          <div style="font-size:1.4rem;font-weight:700;color:#4f7cff;font-family:monospace;">3</div>
-        </div>
-        <div style="padding:0.875rem 1.25rem;">
-          <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:rgba(245,242,236,0.3);font-family:monospace;margin-bottom:4px;">Convertis</div>
-          <div style="font-size:1.4rem;font-weight:700;color:#2ecc71;font-family:monospace;">1</div>
-        </div>
-      </div>
-
-      <!-- Two column layout -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;min-height:380px;">
-
-        <!-- Prospect list -->
-        <div style="border-right:1px solid rgba(255,255,255,0.06);overflow:hidden;">
-          <div style="padding:0.6rem 1.25rem;background:rgba(26,79,255,0.06);border-bottom:1px solid rgba(255,255,255,0.04);">
-            <span style="font-size:0.65rem;color:rgba(245,242,236,0.35);font-family:monospace;">Activité : Logiciel de prospection B2B IA · Zone : France entière</span>
-          </div>
-          <div id="demo-p1" onclick="demoSelect(1)" style="padding:0.875rem 1.25rem;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04);background:rgba(26,79,255,0.1);border-left:2px solid #4f7cff;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-              <span style="font-size:0.85rem;font-weight:500;color:#f0ede6;">Menuiserie Berthier</span>
-              <span style="font-size:0.6rem;padding:2px 7px;background:rgba(255,92,58,0.15);border:1px solid rgba(255,92,58,0.3);border-radius:10px;color:#ff5c3a;font-family:monospace;">HOT</span>
-            </div>
-            <div style="font-size:0.75rem;color:rgba(245,242,236,0.45);">Luc Berthier · Gérant · Lyon (69)</div>
-            <div style="font-size:0.72rem;color:rgba(245,242,236,0.3);margin-top:4px;display:flex;align-items:center;gap:5px;">
-              <span style="color:#febc2e;">⚡</span> Recrutement × 3 postes détecté
-            </div>
-          </div>
-          <div id="demo-p2" onclick="demoSelect(2)" style="padding:0.875rem 1.25rem;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04);">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-              <span style="font-size:0.85rem;font-weight:500;color:#f0ede6;">Plomberie Gauthier</span>
-              <span style="font-size:0.6rem;padding:2px 7px;background:rgba(255,92,58,0.15);border:1px solid rgba(255,92,58,0.3);border-radius:10px;color:#ff5c3a;font-family:monospace;">HOT</span>
-            </div>
-            <div style="font-size:0.75rem;color:rgba(245,242,236,0.45);">Marc Gauthier · PDG · Bordeaux (33)</div>
-            <div style="font-size:0.72rem;color:rgba(245,242,236,0.3);margin-top:4px;display:flex;align-items:center;gap:5px;">
-              <span style="color:#febc2e;">⚡</span> Nouveau site web lancé
-            </div>
-          </div>
-          <div id="demo-p3" onclick="demoSelect(3)" style="padding:0.875rem 1.25rem;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04);">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-              <span style="font-size:0.85rem;font-weight:500;color:#f0ede6;">Cabinet RH Nexus</span>
-              <span style="font-size:0.6rem;padding:2px 7px;background:rgba(245,166,35,0.15);border:1px solid rgba(245,166,35,0.3);border-radius:10px;color:#f5a623;font-family:monospace;">WARM</span>
-            </div>
-            <div style="font-size:0.75rem;color:rgba(245,242,236,0.45);">Sophie Renard · DG · Paris (75)</div>
-            <div style="font-size:0.72rem;color:rgba(245,242,236,0.3);margin-top:4px;display:flex;align-items:center;gap:5px;">
-              <span style="color:#febc2e;">⚡</span> Expansion — 2ème bureau ouvert
-            </div>
-          </div>
-          <div style="padding:0.875rem 1.25rem;cursor:default;">
-            <div style="font-size:0.75rem;color:rgba(245,242,236,0.2);font-style:italic;">+ 7 autres prospects dans votre dashboard…</div>
-          </div>
-        </div>
-
-        <!-- Message panel -->
-        <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.875rem;" id="demo-panel">
-          <!-- Filled by JS -->
-        </div>
-      </div>
-    </div>
-
-    <div style="text-align:center;margin-top:2rem;">
-      <button onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})" style="display:inline-flex;align-items:center;gap:8px;background:#1a4fff;color:#fff;border:none;border-radius:100px;padding:0.9rem 2rem;font-size:0.95rem;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#3d6ae0'" onmouseout="this.style.background='#1a4fff'">
-        Obtenir mes 10 prospects →
-        <span style="background:rgba(255,255,255,0.2);border-radius:100px;padding:2px 10px;font-size:0.82rem;">79 €</span>
+    <div class="fu">
+      <h2 class="final-h2">Prêt à automatiser<br>votre <span class="grad-word">prospection</span> ?</h2>
+      <p class="final-sub">Pas d'abonnement. Pas de carte enregistrée. Juste 10 prospects qualifiés pour 79 €. Un seul client signé et c'est rentabilisé.</p>
+      <button class="btn-hero-main" onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})">
+        Démarrer ma prospection <span class="ptag">79 €</span>
       </button>
     </div>
-
-  </div>
-</section>
-
-<script>
-const DEMO_DATA = {
-  1: {
-    company: 'Menuiserie Berthier',
-    contact: 'Luc Berthier', role: 'Gérant',
-    location: 'Lyon (69)', sector: 'BTP / Artisanat',
-    signal: 'Recrutement × 3 postes — Indeed & LinkedIn',
-    score: 'hot',
-    objet: 'Menuiserie Berthier — vos 3 recrutements en cours',
-    corps: `Bonjour Luc,
-
-J'ai vu que vous recrutez 3 collaborateurs en ce moment chez Menuiserie Berthier — belle dynamique de croissance.
-
-Ce type d'expansion s'accompagne souvent d'un besoin accru de nouveaux chantiers pour occuper les équipes. C'est exactement ce sur quoi nous travaillons avec nos clients : identifier les donneurs d'ordres qui ont des projets en cours dans votre secteur et zone.
-
-Seriez-vous ouvert à tester 10 prospects qualifiés pour 79 € — un seul chantier décroché et c'est déjà rentabilisé ?
-
-Luc Berthier`,
-  },
-  2: {
-    company: 'Plomberie Gauthier',
-    contact: 'Marc Gauthier', role: 'PDG',
-    location: 'Bordeaux (33)', sector: 'BTP / Services',
-    signal: 'Nouveau site web lancé — détecté via Web',
-    score: 'hot',
-    objet: 'Plomberie Gauthier — votre nouveau site, et après ?',
-    corps: `Bonjour Marc,
-
-Votre nouveau site Plomberie Gauthier vient d'être mis en ligne — beau travail, c'est un vrai signal de professionnalisation.
-
-Un site refait, c'est souvent le moment où on cherche aussi à développer sa clientèle pro et à ne plus dépendre uniquement du bouche-à-oreille.
-
-Pour 79 €, je vous identifie 10 entreprises dans votre zone qui ont des besoins en plomberie en ce moment, avec les messages pour les approcher directement. Un seul contrat décroché couvre largement l'investissement.
-
-Marc Gauthier`,
-  },
-  3: {
-    company: 'Cabinet RH Nexus',
-    contact: 'Sophie Renard', role: 'Directrice Générale',
-    location: 'Paris (75)', sector: 'RH / Conseil',
-    signal: 'Expansion — 2ème bureau ouvert à Lyon',
-    score: 'warm',
-    objet: 'Cabinet RH Nexus — félicitations pour votre expansion',
-    corps: `Bonjour Sophie,
-
-L'ouverture de votre bureau lyonnais est un beau signal de croissance pour Cabinet RH Nexus.
-
-Cette phase d'expansion nécessite souvent de développer rapidement un nouveau portefeuille clients sur un marché que vous ne connaissez pas encore complètement.
-
-PipelineAI peut identifier en 30 secondes les entreprises lyonnaises en recrutement actif qui ont besoin d'un cabinet RH — avec les messages personnalisés pour les approcher. 79 € pour tester, un contrat signé et c'est rentabilisé.
-
-Sophie Renard`,
-  },
-};
-
-function demoSelect(n) {
-  // Update row highlight
-  [1,2,3].forEach(i => {
-    const row = document.getElementById('demo-p' + i);
-    if (row) {
-      row.style.background = i === n ? 'rgba(26,79,255,0.1)' : '';
-      row.style.borderLeft = i === n ? '2px solid #4f7cff' : '2px solid transparent';
-    }
-  });
-
-  const p = DEMO_DATA[n];
-  const scoreColor = p.score === 'hot' ? '#ff5c3a' : '#f5a623';
-  const scoreLabel = p.score === 'hot' ? 'HOT' : 'WARM';
-  const panel = document.getElementById('demo-panel');
-
-  panel.innerHTML = `
-    <div>
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-        <span style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:#f0ede6;">${p.company}</span>
-        <span style="font-size:0.6rem;padding:2px 7px;background:rgba(255,92,58,0.15);border:1px solid rgba(255,92,58,0.3);border-radius:10px;color:${scoreColor};font-family:monospace;">${scoreLabel}</span>
-      </div>
-      <div style="font-size:0.75rem;color:rgba(245,242,236,0.45);">${p.contact} · ${p.role} · ${p.location}</div>
-      <div style="font-size:0.72rem;color:rgba(245,242,236,0.3);margin-top:6px;padding:6px 10px;background:rgba(245,166,35,0.07);border-left:2px solid #f5a623;border-radius:0 6px 6px 0;">
-        ⚡ ${p.signal}
-      </div>
-    </div>
-
-    <div style="flex:1;background:#0a0a0a;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:1rem;overflow:auto;">
-      <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(245,242,236,0.3);font-family:monospace;margin-bottom:8px;">Message généré par IA</div>
-      <div style="font-size:0.75rem;font-weight:600;color:#f0ede6;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.06);">Objet : ${p.objet}</div>
-      <div style="font-size:0.78rem;color:rgba(245,242,236,0.7);line-height:1.65;white-space:pre-wrap;">${p.corps}</div>
-    </div>
-
-    <div style="display:flex;gap:8px;">
-      <button onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})" style="flex:1;padding:0.65rem;background:#1a4fff;border:none;border-radius:8px;color:#fff;font-size:0.78rem;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;">
-        Obtenir mes 10 prospects →
-      </button>
-      <button style="padding:0.65rem 0.875rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(245,242,236,0.6);font-size:0.78rem;cursor:default;" disabled>
-        ✉ Email
-      </button>
-    </div>
-  `;
-}
-
-// Init with first prospect selected
-document.addEventListener('DOMContentLoaded', () => demoSelect(1));
-</script>
-
-<!-- PRICING -->
-<section style="padding:5rem 1.25rem;background:#f5f2ec;" id="pricing">
-  <div style="max-width:1100px;margin:0 auto;">
-
-    <div style="text-align:center;margin-bottom:3rem;">
-      <div style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:#7a7a7a;margin-bottom:0.75rem;font-family:'Syne',sans-serif;">Tarifs</div>
-      <h2 style="font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;letter-spacing:-0.02em;color:#0e0e0e;margin-bottom:0.75rem;">Choisissez votre plan</h2>
-      <p style="color:#7a7a7a;font-size:0.95rem;max-width:480px;margin:0 auto;">Commencez avec l'offre découverte, passez au plan mensuel quand vous êtes prêt.</p>
-      <div style="margin-top:1.25rem;display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(26,79,255,0.08),rgba(123,94,167,0.06));border:1px solid rgba(26,79,255,0.2);border-radius:100px;padding:0.5rem 1.25rem;">
-        <span style="font-size:1rem;">✦</span>
-        <span style="font-size:0.82rem;color:#1a4fff;font-weight:500;">Accès Fondateur — toutes les fonctionnalités Pro débloquées jusqu'au 30 juin 2026</span>
-      </div>
-    </div>
-
-    <!-- Tooltip style -->
-    <style>
-      .feat-info { display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:#e0ddd6;color:#7a7a7a;font-size:0.6rem;font-weight:700;cursor:help;margin-left:4px;position:relative;flex-shrink:0; }
-      .feat-info:hover::after { content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#0e0e0e;color:#f5f2ec;font-size:0.72rem;padding:6px 10px;border-radius:7px;white-space:nowrap;z-index:99;font-weight:400;max-width:220px;white-space:normal;text-align:center;line-height:1.4;box-shadow:0 4px 12px rgba(0,0,0,0.2); }
-      .feat-info:hover::before { content:'';position:absolute;bottom:calc(100% + 1px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#0e0e0e;z-index:99; }
-    </style>
-
-    <!-- Comparison table -->
-    <div style="background:#fff;border-radius:20px;overflow:hidden;border:1px solid #e8e4dc;margin-bottom:2rem;">
-      <table style="width:100%;border-collapse:collapse;font-size:0.88rem;">
-        <thead>
-          <tr style="border-bottom:2px solid #e8e4dc;">
-            <th style="padding:1.25rem 1.5rem;text-align:left;font-weight:600;color:#0e0e0e;width:28%;">Fonctionnalité</th>
-            <th style="padding:1.25rem 1rem;text-align:center;color:#7a7a7a;font-weight:500;width:18%;">
-              <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Découverte</div>
-              <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:#0e0e0e;">79€</div>
-              <div style="font-size:0.72rem;color:#aaa;">paiement unique</div>
-            </th>
-            <th style="padding:1.25rem 1rem;text-align:center;color:#7a7a7a;font-weight:500;width:18%;">
-              <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Starter</div>
-              <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:#0e0e0e;">29€</div>
-              <div style="font-size:0.72rem;color:#aaa;">/mois</div>
-            </th>
-            <th style="padding:1.25rem 1rem;text-align:center;background:rgba(26,79,255,0.04);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;width:18%;">
-              <div style="font-size:0.65rem;background:#1a4fff;color:#fff;border-radius:20px;padding:2px 8px;display:inline-block;margin-bottom:6px;letter-spacing:0.05em;">⭐ POPULAIRE</div>
-              <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#7a7a7a;margin-bottom:4px;">Pro</div>
-              <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:#1a4fff;">79€</div>
-              <div style="font-size:0.72rem;color:#aaa;">/mois</div>
-            </th>
-            <th style="padding:1.25rem 1rem;text-align:center;color:#7a7a7a;font-weight:500;width:18%;">
-              <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Business</div>
-              <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:#0e0e0e;">199€</div>
-              <div style="font-size:0.72rem;color:#aaa;">/mois</div>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Prospects -->
-          <tr style="border-bottom:1px solid #f0ede6;background:#fafaf8;">
-            <td style="padding:1rem 1.5rem;font-weight:500;color:#0e0e0e;">Prospects générés</td>
-            <td style="padding:1rem;text-align:center;color:#0e0e0e;font-weight:600;">10 <span style="font-size:0.72rem;color:#aaa;font-weight:400;">(unique)</span></td>
-            <td style="padding:1rem;text-align:center;color:#0e0e0e;font-weight:600;">20 <span style="font-size:0.72rem;color:#aaa;font-weight:400;">/mois</span></td>
-            <td style="padding:1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;color:#1a4fff;font-weight:700;">100 <span style="font-size:0.72rem;color:#aaa;font-weight:400;">/mois</span></td>
-            <td style="padding:1rem;text-align:center;color:#0e0e0e;font-weight:600;">500 <span style="font-size:0.72rem;color:#aaa;font-weight:400;">/mois</span></td>
-          </tr>
-          <!-- Messages -->
-          <tr style="border-bottom:1px solid #f0ede6;">
-            <td style="padding:1rem 1.5rem;color:#3a3a3a;">Messages personnalisés IA</td>
-            <td style="padding:1rem;text-align:center;">✓</td>
-            <td style="padding:1rem;text-align:center;">✓</td>
-            <td style="padding:1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;">✓</td>
-            <td style="padding:1rem;text-align:center;">✓</td>
-          </tr>
-          <!-- Relances -->
-          <tr style="border-bottom:1px solid #f0ede6;background:#fafaf8;">
-            <td style="padding:1rem 1.5rem;color:#3a3a3a;">Relances à la demande</td>
-            <td style="padding:1rem;text-align:center;">✓</td>
-            <td style="padding:1rem;text-align:center;">✓</td>
-            <td style="padding:1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;">✓</td>
-            <td style="padding:1rem;text-align:center;">✓</td>
-          </tr>
-          <!-- Séquences auto -->
-          <tr style="border-bottom:1px solid #f0ede6;">
-            <td style="padding:1rem 1.5rem;color:#3a3a3a;display:flex;align-items:center;">
-              Séquences automatiques
-              <span class="feat-info" data-tip="Vos relances J+5, J+12 et J+20 partent automatiquement sans action de votre part. Définissez la séquence une fois, PipelineAI s'occupe du reste.">i</span>
-            </td>
-            <td style="padding:1rem;text-align:center;color:#ccc;">—</td>
-            <td style="padding:1rem;text-align:center;color:#ccc;">—</td>
-            <td style="padding:1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;color:#1a4fff;font-weight:600;">✓</td>
-            <td style="padding:1rem;text-align:center;color:#1a4fff;font-weight:600;">✓</td>
-          </tr>
-          <!-- Emails vérifiés -->
-          <tr style="border-bottom:1px solid #f0ede6;background:#fafaf8;">
-            <td style="padding:1rem 1.5rem;color:#3a3a3a;display:flex;align-items:center;">
-              Emails vérifiés
-              <span class="feat-info" data-tip="Les adresses email des prospects sont vérifiées et validées par notre partenaire. Fini les bounces — vos messages arrivent à destination.">i</span>
-            </td>
-            <td style="padding:1rem;text-align:center;color:#ccc;">—</td>
-            <td style="padding:1rem;text-align:center;color:#ccc;">—</td>
-            <td style="padding:1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;color:#1a4fff;font-weight:600;">✓</td>
-            <td style="padding:1rem;text-align:center;color:#1a4fff;font-weight:600;">✓</td>
-          </tr>
-          <!-- Tracking -->
-          <tr style="border-bottom:1px solid #f0ede6;">
-            <td style="padding:1rem 1.5rem;color:#3a3a3a;display:flex;align-items:center;">
-              Tracking des ouvertures
-              <span class="feat-info" data-tip="Savoir si votre prospect a ouvert votre email vous permet de concentrer vos relances sur les contacts vraiment intéressés. Taux d'ouverture, clics et engagement en temps réel.">i</span>
-            </td>
-            <td style="padding:1rem;text-align:center;color:#ccc;">—</td>
-            <td style="padding:1rem;text-align:center;color:#ccc;">—</td>
-            <td style="padding:1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;color:#1a4fff;font-weight:600;">✓</td>
-            <td style="padding:1rem;text-align:center;color:#1a4fff;font-weight:600;">✓</td>
-          </tr>
-          <!-- Export CSV -->
-          <tr style="border-bottom:1px solid #f0ede6;background:#fafaf8;">
-            <td style="padding:1rem 1.5rem;color:#3a3a3a;">Export CSV</td>
-            <td style="padding:1rem;text-align:center;">✓</td>
-            <td style="padding:1rem;text-align:center;">✓</td>
-            <td style="padding:1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;">✓</td>
-            <td style="padding:1rem;text-align:center;">✓</td>
-          </tr>
-          <!-- Export PDF -->
-          <tr style="border-bottom:1px solid #f0ede6;">
-            <td style="padding:1rem 1.5rem;color:#3a3a3a;">Export rapport PDF</td>
-            <td style="padding:1rem;text-align:center;color:#ccc;">—</td>
-            <td style="padding:1rem;text-align:center;">✓</td>
-            <td style="padding:1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;">✓</td>
-            <td style="padding:1rem;text-align:center;">✓</td>
-          </tr>
-          <!-- Import CSV -->
-          <tr style="border-bottom:1px solid #f0ede6;background:#fafaf8;">
-            <td style="padding:1rem 1.5rem;color:#3a3a3a;display:flex;align-items:center;">
-              Import CSV / LinkedIn
-              <span class="feat-info" data-tip="Importez vos propres contacts depuis LinkedIn ou un fichier CSV. PipelineAI génère des messages personnalisés pour chacun d'eux.">i</span>
-            </td>
-            <td style="padding:1rem;text-align:center;color:#ccc;">—</td>
-            <td style="padding:1rem;text-align:center;color:#ccc;">—</td>
-            <td style="padding:1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;color:#1a4fff;font-weight:600;">✓</td>
-            <td style="padding:1rem;text-align:center;color:#1a4fff;font-weight:600;">✓</td>
-          </tr>
-          <!-- Victor -->
-          <tr style="border-bottom:1px solid #f0ede6;">
-            <td style="padding:1rem 1.5rem;color:#3a3a3a;display:flex;align-items:center;">
-              Victor — Coach IA
-              <span class="feat-info" data-tip="Victor est votre assistant commercial IA disponible 24h/24. Il vous guide dans l'utilisation du dashboard et vous coache pour améliorer votre taux de réponse.">i</span>
-            </td>
-            <td style="padding:1rem;text-align:center;color:#ccc;">—</td>
-            <td style="padding:1rem;text-align:center;">✓</td>
-            <td style="padding:1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;">✓</td>
-            <td style="padding:1rem;text-align:center;">✓</td>
-          </tr>
-          <!-- Utilisateurs -->
-          <tr style="border-bottom:1px solid #f0ede6;background:#fafaf8;">
-            <td style="padding:1rem 1.5rem;color:#3a3a3a;">Comptes utilisateurs</td>
-            <td style="padding:1rem;text-align:center;">1</td>
-            <td style="padding:1rem;text-align:center;">1</td>
-            <td style="padding:1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;">1</td>
-            <td style="padding:1rem;text-align:center;font-weight:600;color:#0e0e0e;">3</td>
-          </tr>
-          <!-- CTA row -->
-          <tr>
-            <td style="padding:1.25rem 1.5rem;"></td>
-            <td style="padding:1.25rem 1rem;text-align:center;">
-              <button onclick="handlePlanCheckout('decouverte')" style="width:100%;padding:0.75rem;border-radius:10px;background:#f5f2ec;border:1.5px solid #0e0e0e;color:#0e0e0e;font-size:0.85rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;" onmouseover="this.style.background='#0e0e0e';this.style.color='#fff'" onmouseout="this.style.background='#f5f2ec';this.style.color='#0e0e0e'">
-                Démarrer →
-              </button>
-            </td>
-            <td style="padding:1.25rem 1rem;text-align:center;">
-              <button onclick="handlePlanCheckout('starter')" style="width:100%;padding:0.75rem;border-radius:10px;background:#f5f2ec;border:1.5px solid #0e0e0e;color:#0e0e0e;font-size:0.85rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;" onmouseover="this.style.background='#0e0e0e';this.style.color='#fff'" onmouseout="this.style.background='#f5f2ec';this.style.color='#0e0e0e'">
-                Démarrer →
-              </button>
-            </td>
-            <td style="padding:1.25rem 1rem;text-align:center;background:rgba(26,79,255,0.03);border-left:2px solid #1a4fff;border-right:2px solid #1a4fff;border-bottom:2px solid #1a4fff;border-radius:0 0 0 0;">
-              <button onclick="handlePlanCheckout('pro')" style="width:100%;padding:0.75rem;border-radius:10px;background:#1a4fff;border:none;color:#fff;font-size:0.85rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;" onmouseover="this.style.background='#3d6ae0'" onmouseout="this.style.background='#1a4fff'">
-                Démarrer →
-              </button>
-            </td>
-            <td style="padding:1.25rem 1rem;text-align:center;">
-              <button onclick="handlePlanCheckout('business')" style="width:100%;padding:0.75rem;border-radius:10px;background:#f5f2ec;border:1.5px solid #0e0e0e;color:#0e0e0e;font-size:0.85rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;" onmouseover="this.style.background='#0e0e0e';this.style.color='#fff'" onmouseout="this.style.background='#f5f2ec';this.style.color='#0e0e0e'">
-                Démarrer →
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Plan sur mesure -->
-    <div style="text-align:center;padding:1.25rem;background:#fff;border-radius:12px;border:1px solid #e8e4dc;">
-      <span style="font-size:0.88rem;color:#7a7a7a;">Vous avez des besoins spécifiques ou un volume plus important ? </span>
-      <strong style="font-size:0.88rem;color:#0e0e0e;">Un plan sur mesure est disponible.</strong>
-      <a href="mailto:julien@pipelineai.fr" style="display:inline-block;margin-left:8px;font-size:0.88rem;color:#1a4fff;text-decoration:none;font-weight:500;">Contactez-nous →</a>
-    </div>
-
-    <!-- Mobile cards (hidden on desktop) -->
-    <style>
-      @media (max-width: 640px) {
-        .pricing-table { display: none; }
-        .pricing-cards { display: flex !important; }
-      }
-    </style>
-
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <strong>PipelineAI</strong> — Votre commercial IA pour PME &amp; TPE<br>
-  <span style="margin-top:0.5rem;display:block">© 2026 · <a href="/mentions.html" style="color:rgba(245,242,236,0.4)">Mentions légales & CGV</a> · <a href="mailto:julien@pipelineai.fr" style="color:rgba(245,242,236,0.4)">Contact</a></span>
+  <div class="container">
+    <div class="footer-in">
+      <div>
+        <div class="nav-logo" style="margin-bottom:0.5rem;display:flex;align-items:center;gap:8px;text-decoration:none;">
+          <div class="nav-logo-mark" style="width:24px;height:24px;border-radius:6px;font-size:0.6rem;">P</div>
+          Pipeline<span class="ai">AI</span>
+        </div>
+        <div class="footer-copy">© 2026 PipelineAI · Julien Cambin · Angers</div>
+      </div>
+      <div class="footer-links">
+        <a href="/mentions.html">Mentions légales & CGV</a>
+        <a href="mailto:julien@pipelineai.fr">Contact</a>
+      </div>
+    </div>
+  </div>
 </footer>
 
-<script>
-function calc() {
-  const val = parseInt(document.getElementById('val').value);
-  const taux = parseInt(document.getElementById('taux').value);
-  document.getElementById('val-out').textContent = val.toLocaleString('fr-FR') + ' €';
-  document.getElementById('taux-out').textContent = taux + ' %';
-  const clients = Math.max(1, Math.round(10 * taux / 100));
-  const rev = clients * val;
-  const roi = Math.round(((rev - 79) / 79) * 100);
-  document.getElementById('r-clients').textContent = clients;
-  document.getElementById('r-rev').textContent = rev.toLocaleString('fr-FR') + ' €';
-  document.getElementById('r-roi').textContent = '+' + roi.toLocaleString('fr-FR') + ' %';
-}
-</script>
-<script src="https://js.stripe.com/v3/"></script>
-<script>
-const API_BASE = 'https://pipelineai-backend-production.up.railway.app';
-const STRIPE_PUBLISHABLE_KEY = 'pk_test_51TVtVNPdRoQBFwMnqvARm92OSx7DjHRm4MLHekzXIAiCZSoPwbuYVx6V8jqqLjMeSLVYaLh3IXFjOuxHSHtPPvUL00PkiD9Rz0';
-
-// handlePlanCheckout replaced by plan modal
-
-async function handleStripeCheckout() {
-  const prenom  = document.getElementById('f-prenom').value.trim();
-  const nom     = document.getElementById('f-nom').value.trim();
-  const email   = document.getElementById('f-email').value.trim();
-  const secteur = document.getElementById('f-secteur').value;
-  const errEl   = document.getElementById('form-error');
-  errEl.style.display = 'none';
-  if (!prenom || !nom) return showError('Merci de renseigner votre prénom et nom.');
-  if (!email || !email.includes('@')) return showError('Merci de renseigner un email valide.');
-  if (!secteur) return showError("Merci de sélectionner votre secteur d'activité.");
-  const rgpd = document.getElementById('f-rgpd');
-  if (!rgpd || !rgpd.checked) return showError("Merci d'accepter la politique de confidentialité et les CGV pour continuer.");
-  setLoading(true);
-  try {
-    const res = await fetch(API_BASE + '/create-checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, prenom, secteur }),
-    });
-    if (!res.ok) throw new Error('Erreur serveur');
-    const data = await res.json();
-    window.location.href = data.url;
-  } catch (e) {
-    setLoading(false);
-    showError('Une erreur est survenue. Veuillez réessayer.');
-  }
-}
-
-function showError(msg) {
-  const el = document.getElementById('form-error');
-  el.textContent = msg;
-  el.style.display = 'block';
-}
-
-function setLoading(on) {
-  document.getElementById('btn-label').style.display   = on ? 'none'  : 'inline';
-  document.getElementById('btn-loading').style.display = on ? 'inline': 'none';
-  document.getElementById('stripe-btn').disabled = on;
-}
-
-function showSuccessPage(prenom, email) {
-  document.body.innerHTML = `
-  <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    background:#f5f2ec;font-family:'DM Sans',sans-serif;padding:1.5rem;text-align:center">
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-    <div style="max-width:520px;width:100%">
-      <div style="width:64px;height:64px;background:#e0f5eb;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:1.8rem">✓</div>
-      <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#1a4fff;font-family:'Syne',sans-serif;font-weight:600;margin-bottom:0.75rem">Paiement confirmé</div>
-      <h1 style="font-family:'Syne',sans-serif;font-size:clamp(1.8rem,5vw,2.2rem);font-weight:800;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem">
-        Bienvenue, ${prenom} 👋
-      </h1>
-      <p style="color:#3a3a3a;font-size:1rem;line-height:1.7;font-weight:300;margin-bottom:2rem">
-        Votre commande est confirmée. Nous analysons votre secteur et vos critères de ciblage.<br>
-        <strong style="font-weight:500">Vos 10 premiers prospects arrivent dans instantané maximum.</strong>
-      </p>
-      <div style="background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:20px;padding:1.5rem;margin-bottom:2rem;text-align:left">
-        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;margin-bottom:1.25rem">Ce qui se passe maintenant</div>
-        <div style="display:flex;flex-direction:column;gap:14px">
-          <div style="display:flex;gap:14px;align-items:flex-start">
-            <div style="width:28px;height:28px;min-width:28px;border-radius:50%;background:#e8eeff;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600;color:#1a4fff">1</div>
-            <div><div style="font-weight:500;font-size:0.9rem;margin-bottom:2px">Email de confirmation envoyé</div><div style="font-size:0.82rem;color:#7a7a7a">${email ? 'À ' + email : 'Vérifiez votre boîte mail'} — pensez à vérifier vos spams</div></div>
-          </div>
-          <div style="display:flex;gap:14px;align-items:flex-start">
-            <div style="width:28px;height:28px;min-width:28px;border-radius:50%;background:#e8eeff;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600;color:#1a4fff">2</div>
-            <div><div style="font-weight:500;font-size:0.9rem;margin-bottom:2px">Paramétrage de votre profil</div><div style="font-size:0.82rem;color:#7a7a7a">Notre IA analyse votre secteur et zone géographique</div></div>
-          </div>
-          <div style="display:flex;gap:14px;align-items:flex-start">
-            <div style="width:28px;height:28px;min-width:28px;border-radius:50%;background:#e0f5eb;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600;color:#0f6e3f">3</div>
-            <div><div style="font-weight:500;font-size:0.9rem;margin-bottom:2px">Vos 10 prospects arrivent</div><div style="font-size:0.82rem;color:#7a7a7a">Avec messages personnalisés et séquences de relance prêts</div></div>
-          </div>
-        </div>
-      </div>
-      <div style="background:#0e0e0e;color:#f5f2ec;border-radius:20px;padding:1.5rem;margin-bottom:1.5rem">
-        <div style="font-size:0.8rem;color:rgba(245,242,236,0.5);margin-bottom:4px">Rappel de votre investissement</div>
-        <div style="font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:#6b9bff;margin-bottom:4px">79 €</div>
-        <div style="font-size:0.82rem;color:rgba(245,242,236,0.6)">Un seul client signé = investissement rentabilisé ×10 minimum</div>
-      </div>
-      <div style="font-size:0.82rem;color:#7a7a7a">Une question ? <a href="mailto:julien@pipelineai.fr" style="color:#1a4fff">julien@pipelineai.fr</a></div>
-    </div>
-  </div>`;
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-  const params = new URLSearchParams(window.location.search);
-  if (params.get('status') === 'success') {
-    showSuccessPage(
-      decodeURIComponent(params.get('prenom') || ''),
-      decodeURIComponent(params.get('email') || '')
-    );
-  }
-});
-</script>
-
 <!-- Modal accès dashboard -->
-<div id="access-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:1rem;" onclick="if(event.target===this)closeAccessModal()">
-  <div style="background:#fff;border-radius:20px;padding:2.5rem;max-width:420px;width:100%;position:relative;box-shadow:0 24px 64px rgba(0,0,0,0.15);">
-    <button onclick="closeAccessModal()" style="position:absolute;top:1.25rem;right:1.25rem;background:none;border:none;color:#aaa;cursor:pointer;font-size:1.1rem;">✕</button>
+<div id="access-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:1rem;" onclick="if(event.target===this)closeAccessModal()">
+  <div style="background:#111827;border:1px solid #1F2937;border-radius:20px;padding:2.5rem;max-width:420px;width:100%;position:relative;box-shadow:0 24px 64px rgba(0,0,0,0.15);">
+    <button onclick="closeAccessModal()" style="position:absolute;top:1.25rem;right:1.25rem;background:rgba(255,255,255,0.05);border:1px solid #1F2937;color:#94A3B8;border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem;">✕</button>
 
     <div style="text-align:center;margin-bottom:1.75rem;">
       <div style="width:52px;height:52px;background:#e8eeff;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.4rem;">🔑</div>
@@ -1289,9 +726,9 @@ async function requestAccessLink() {
 
 
 <!-- Modal plan mensuel -->
-<div id="plan-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:1rem;" onclick="if(event.target===this)closePlanModal()">
-  <div style="background:#fff;border-radius:20px;padding:2.5rem;max-width:420px;width:100%;position:relative;box-shadow:0 24px 64px rgba(0,0,0,0.15);">
-    <button onclick="closePlanModal()" style="position:absolute;top:1.25rem;right:1.25rem;background:none;border:none;color:#aaa;cursor:pointer;font-size:1.1rem;">✕</button>
+<div id="plan-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:1rem;" onclick="if(event.target===this)closePlanModal()">
+  <div style="background:#111827;border:1px solid #1F2937;border-radius:20px;padding:2.5rem;max-width:420px;width:100%;position:relative;box-shadow:0 24px 64px rgba(0,0,0,0.15);">
+    <button onclick="closePlanModal()" style="position:absolute;top:1.25rem;right:1.25rem;background:rgba(255,255,255,0.05);border:1px solid #1F2937;color:#94A3B8;border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem;">✕</button>
 
     <div style="text-align:center;margin-bottom:1.75rem;">
       <div id="plan-modal-badge" style="display:inline-block;background:#e8eeff;color:#1a4fff;font-size:0.75rem;font-weight:600;padding:4px 14px;border-radius:100px;margin-bottom:0.75rem;font-family:'Syne',sans-serif;"></div>
@@ -1400,5 +837,70 @@ function showPlanError(msg) {
 }
 </script>
 
+</body>
+</html>
+
+
+<script>
+// Scroll animations
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('vis'); });
+},{threshold:0.1,rootMargin:'0px 0px -60px 0px'});
+document.querySelectorAll('.fu').forEach(el => obs.observe(el));
+
+// FAQ
+function toggleFaq(btn) {
+  const it = btn.parentElement;
+  const isOpen = it.classList.contains('open');
+  document.querySelectorAll('.faq-it.open').forEach(i => i.classList.remove('open'));
+  if(!isOpen) it.classList.add('open');
+}
+
+// Demo
+const DEMO2 = {
+  1:{company:'Menuiserie Berthier',contact:'Luc Berthier',role:'Gérant',location:'Lyon (69)',signal:'Recrutement × 3 postes (charpentier, menuisier, commercial) — Indeed 14 mai',objet:'Menuiserie Berthier — vos 3 recrutements en cours',corps:`Bonjour Luc,
+
+J'ai vu que vous recrutez 3 collaborateurs en ce moment chez Menuiserie Berthier — belle dynamique de croissance.
+
+Ce type d'expansion s'accompagne souvent d'un besoin accru de nouveaux chantiers pour occuper les équipes. PipelineAI identifie en 30 secondes les donneurs d'ordres qui ont des projets en cours dans votre secteur et zone.
+
+Pour 79 € seulement, testez — un seul chantier décroché et c'est déjà rentabilisé.
+
+Luc Berthier`},
+  2:{company:'Plomberie Gauthier',contact:'Marc Gauthier',role:'PDG',location:'Bordeaux (33)',signal:'Nouveau site web lancé avec portfolio 2025 et section "nos réalisations" ajoutée',objet:'Plomberie Gauthier — votre nouveau site, et après ?',corps:`Bonjour Marc,
+
+Votre nouveau site Plomberie Gauthier vient d'être mis en ligne — beau travail, c'est un vrai signal de professionnalisation.
+
+Un site refait, c'est souvent le moment où on cherche à développer sa clientèle pro et ne plus dépendre du bouche-à-oreille.
+
+Pour 79 €, 10 entreprises dans votre zone avec des besoins en plomberie, les messages prêts. Un seul contrat couvre l'investissement.
+
+Marc Gauthier`},
+  3:{company:'Cabinet RH Nexus',contact:'Sophie Renard',role:'DG',location:'Paris (75)',signal:'Expansion — 2ème bureau ouvert à Lyon, annonce LinkedIn 3 mai',objet:'Cabinet RH Nexus — félicitations pour votre expansion',corps:`Bonjour Sophie,
+
+L'ouverture de votre bureau lyonnais est un beau signal de croissance pour Cabinet RH Nexus.
+
+Cette phase d'expansion nécessite souvent de développer rapidement un nouveau portefeuille sur un marché que vous ne connaissez pas encore complètement.
+
+PipelineAI identifie les entreprises lyonnaises en recrutement actif qui ont besoin d'un cabinet RH. 79 € pour tester, un contrat signé et c'est rentabilisé.
+
+Sophie Renard`}
+};
+function demoSel(n,row) {
+  document.querySelectorAll('.dpr').forEach(r=>r.classList.remove('on'));
+  row.classList.add('on');
+  const d=DEMO2[n];
+  const p=document.getElementById('demo-panel2');
+  p.innerHTML=`
+    <div><div style="font-size:1rem;font-weight:700;margin-bottom:3px;">${d.company}</div><div style="font-size:0.77rem;color:var(--text-2);">${d.contact} · ${d.role} · ${d.location}</div></div>
+    <div class="sig-box">⚡ ${d.signal}</div>
+    <div class="msg-box"><div class="msg-tag">Message généré par IA</div><div class="msg-ob">${d.objet}</div><div class="msg-bd">${d.corps}</div></div>
+    <div class="demo-actions">
+      <button class="da-btn pri" onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})">Obtenir mes 10 prospects →</button>
+      <button class="da-btn" disabled>✉ Email</button>
+    </div>`;
+}
+document.addEventListener('DOMContentLoaded',()=>demoSel(1,document.getElementById('dpr1')));
+</script>
 </body>
 </html>
