@@ -901,6 +901,51 @@ function demoSel(n,row) {
     </div>`;
 }
 document.addEventListener('DOMContentLoaded',()=>demoSel(1,document.getElementById('dpr1')));
+
+const API_BASE = 'https://pipelineai-backend-production.up.railway.app';
+
+async function handleStripeCheckout() {
+  const prenom  = document.getElementById('f-prenom').value.trim();
+  const nom     = document.getElementById('f-nom').value.trim();
+  const email   = document.getElementById('f-email').value.trim();
+  const secteur = document.getElementById('f-secteur').value;
+  const errEl   = document.getElementById('form-error');
+
+  errEl.style.display = 'none';
+  if (!prenom || !nom) return showFormError('Merci de renseigner votre prénom et nom.');
+  if (!email || !email.includes('@')) return showFormError('Merci de renseigner un email valide.');
+  if (!secteur) return showFormError("Merci de sélectionner votre secteur d'activité.");
+  const rgpd = document.getElementById('f-rgpd');
+  if (!rgpd || !rgpd.checked) return showFormError("Merci d'accepter la politique de confidentialité pour continuer.");
+
+  setFormLoading(true);
+  try {
+    const res = await fetch(API_BASE + '/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, prenom, secteur, plan: 'decouverte' }),
+    });
+    if (!res.ok) throw new Error('Erreur serveur');
+    const data = await res.json();
+    window.location.href = data.url;
+  } catch(e) {
+    setFormLoading(false);
+    showFormError('Une erreur est survenue. Veuillez réessayer.');
+  }
+}
+
+function showFormError(msg) {
+  const el = document.getElementById('form-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function setFormLoading(on) {
+  document.getElementById('btn-label').style.display   = on ? 'none'  : 'inline';
+  document.getElementById('btn-loading').style.display = on ? 'inline': 'none';
+  document.getElementById('stripe-btn').disabled = on;
+}
+
 </script>
 </body>
 </html>
