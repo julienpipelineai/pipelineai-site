@@ -4438,38 +4438,16 @@ async function generateOfferDetails() {
   problemeEl.classList.add('generating');
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    // Appel backend Railway — clé API protégée côté serveur
+    const res = await fetch(API_BASE + '/generate-offer-details', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 600,
-        messages: [{
-          role: 'user',
-          content: `Tu aides à rédiger un profil commercial B2B pour un outil de prospection IA.
-
-L'utilisateur vend : "${titre}"
-
-Génère UNIQUEMENT un JSON valide sans markdown :
-{
-  "services": "Liste des services/prestations détaillés, séparés par des virgules. 6 à 8 services précis et concrets. Ex pour une agence : Audit de positionnement, Stratégie de contenu, Campagnes Google Ads, Social Media Management, Email marketing automation, Refonte de site web, Identité visuelle & branding",
-  "benefices": "Liste des bénéfices client concrets, séparés par des virgules. 5 à 6 bénéfices mesurables. Ex : Augmentation du chiffre d'affaires, Réduction du coût d'acquisition, Gain de notoriété locale, Meilleur taux de conversion, Gain de temps sur la gestion marketing, Image de marque plus professionnelle"
-}
-
-Adapte précisément au secteur et à l'activité décrite. Sois spécifique, pas générique.`
-        }]
-      })
+      body: JSON.stringify({ titre })
     });
 
-    const data = await res.json();
-    const raw = data.content?.[0]?.text || '';
+    if (!res.ok) throw new Error('Erreur serveur ' + res.status);
+    const parsed = await res.json();
 
-    // Parse JSON
-    const jsonMatch = raw.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('Format invalide');
-    const parsed = JSON.parse(jsonMatch[0]);
-
-    // Remplir les champs avec animation
     servicesEl.classList.remove('generating');
     problemeEl.classList.remove('generating');
 
