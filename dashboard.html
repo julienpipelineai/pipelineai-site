@@ -2374,6 +2374,8 @@ function copyMessage(id) {
       updateStatus(id, newStatus);
     }
   }
+  // Historique avec le message copié
+  addHistory('Message copié', p.company, text);
   showToast('Message copié dans le presse-papier', '✓');
 }
 
@@ -2455,12 +2457,14 @@ function sendByEmail(id) {
   // Copie le message dans le presse-papier
   const msgKey = { initial:'initial', r1:'relance1', r2:'relance2', r3:'relance3' }[activeMsg] || 'initial';
   const msg = p.msgs[msgKey];
+  let emailText = '';
   if (msg && msg.corps) {
     navigator.clipboard.writeText(msg.corps).catch(() => {});
+    emailText = `Objet : ${msg.objet}\n\n${msg.corps}`;
   }
 
-  // Ajoute dans l'historique
-  addHistory('Email envoyé', p.company);
+  // Ajoute dans l'historique avec le contenu du message
+  addHistory('Email envoyé', p.company, emailText);
 
   openMailModal(id);
   showSendStatus(id, '✓ Message copié · Choisissez votre client mail');
@@ -2492,7 +2496,7 @@ function openLinkedin(id) {
     }
   }
   const _lp = PROSPECTS.find(x => x.id === id);
-  if (_lp) addHistory('LinkedIn ouvert', _lp.company);
+  if (_lp) addHistory('LinkedIn ouvert', _lp.company, text);
   showSendStatus(id, '✓ Message copié · Profil LinkedIn ouvert — collez dans InMail');
   return false;
 }
@@ -3276,12 +3280,23 @@ if (_mlink) {
 // ── HISTORIQUE ───────────────────────────────────────────────
 const actionHistory = [];
 
-function addHistory(action, company) {
+function addHistory(action, company, message) {
   const now = new Date();
   const time = now.toLocaleDateString('fr-FR', {weekday:'short', day:'numeric', month:'short'})
     + ' · ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
-  actionHistory.unshift({ action, company, time });
+  actionHistory.unshift({ action, company, time, message: message || null });
   renderHistory();
+}
+
+// Échappe le HTML pour affichage sûr dans l'historique
+function escapeHistoryHTML(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 function renderHistory() {
@@ -3294,7 +3309,10 @@ function renderHistory() {
   el.innerHTML = actionHistory.slice(0, 20).map(h => `
     <div class="history-item">
       <div class="history-dot"></div>
-      <div style="flex:1">${h.action} — <strong>${h.company}</strong></div>
+      <div style="flex:1; min-width:0;">
+        <div>${h.action} — <strong>${h.company}</strong></div>
+        ${h.message ? `<div style="margin-top:4px; padding:6px 8px; background:var(--bg-3); border-left:2px solid var(--accent); border-radius:4px; font-size:0.72rem; color:var(--text-2); white-space:pre-wrap; word-wrap:break-word; max-height:80px; overflow-y:auto;">${escapeHistoryHTML(h.message)}</div>` : ''}
+      </div>
       <div class="history-time">${h.time}</div>
     </div>`).join('');
 }
