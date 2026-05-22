@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PipelineAI — 10 prospects qualifiés pour 79 €</title>
+<title>PipelineAI — 10 prospects qualifiés pour 9,90 €</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -121,33 +121,74 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .demo-tag{font-family:var(--mono);font-size:0.62rem;padding:2px 8px;border-radius:20px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);color:#93C5FD;}
 .demo-dots{display:flex;gap:5px;}
 .demo-dot{width:10px;height:10px;border-radius:50%;}
+
+/* Sidebar */
+.demo-body{display:grid;grid-template-columns:180px 1fr;min-height:580px;}
+.demo-sb{background:var(--bg-3);border-right:1px solid var(--border);padding:1rem 0;}
+.demo-sb-head{padding:0 1rem 0.75rem;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);margin-bottom:0.75rem;}
+.demo-sb-logo{width:28px;height:28px;border-radius:7px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.7rem;color:#fff;}
+.demo-sb-name{font-size:0.82rem;font-weight:700;}
+.demo-sb-cat{padding:0 1rem;font-family:var(--mono);font-size:0.54rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);margin:0.75rem 0 0.4rem;}
+.demo-sb-item{padding:0.45rem 1rem;font-size:0.78rem;color:var(--text-2);display:flex;align-items:center;gap:8px;cursor:pointer;border-left:2px solid transparent;}
+.demo-sb-item.act{background:rgba(59,130,246,0.08);color:var(--text);border-left-color:var(--blue);}
+.demo-sb-item .ct{margin-left:auto;font-family:var(--mono);font-size:0.64rem;color:var(--text-3);}
+
+/* Main area */
+.demo-main{display:flex;flex-direction:column;}
+.demo-toolbar{padding:0.7rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;}
+.demo-tb-title2{font-size:0.92rem;font-weight:700;}
+.demo-tb-sub{font-size:0.66rem;color:var(--text-3);margin-left:0.25rem;}
+.demo-tb-spacer{flex:1;}
+.demo-tb-btn{padding:5px 9px;border-radius:6px;font-family:var(--mono);font-size:0.62rem;background:var(--bg-3);border:1px solid var(--border);color:var(--text-2);}
+.demo-tb-btn.cta{background:var(--grad);border:none;color:#fff;font-weight:600;}
+
+/* Progress tracker */
+.demo-prog{padding:0.85rem 1rem;border-bottom:1px solid var(--border);background:rgba(59,130,246,0.025);}
+.demo-prog-top{display:flex;justify-content:space-between;align-items:center;font-size:0.72rem;color:var(--text-2);margin-bottom:0.5rem;}
+.demo-prog-top b{color:var(--text);font-weight:600;}
+.demo-prog-bar{height:6px;border-radius:99px;background:rgba(255,255,255,0.05);overflow:hidden;margin-bottom:0.55rem;}
+.demo-prog-bar div{height:100%;width:30%;background:var(--grad);border-radius:99px;}
+.demo-prog-steps{display:flex;justify-content:space-between;font-size:0.6rem;color:var(--text-3);font-family:var(--mono);}
+.demo-prog-steps span.don{color:var(--blue);}
+.demo-prog-steps span.cur{color:var(--text);font-weight:700;}
+
+/* KPI extended */
 .demo-kpis{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border);}
-.kpi{padding:0.875rem 1.25rem;border-right:1px solid var(--border);}
+.kpi{padding:0.75rem 1rem;border-right:1px solid var(--border);}
 .kpi:last-child{border-right:none;}
-.kpi-l{font-family:var(--mono);font-size:0.58rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-3);margin-bottom:3px;}
-.kpi-v{font-family:var(--mono);font-size:1.3rem;font-weight:700;}
+.kpi-l{font-family:var(--mono);font-size:0.56rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-3);margin-bottom:3px;}
+.kpi-v{font-family:var(--mono);font-size:1.25rem;font-weight:700;line-height:1.1;}
 .kpi-v.bl{color:var(--blue);}
 .kpi-v.re{color:#F87171;}
 .kpi-v.gr{color:var(--green);}
-.demo-split{display:grid;grid-template-columns:1fr 1fr;min-height:320px;}
+.kpi-sub{font-size:0.62rem;color:var(--text-3);margin-top:2px;}
+
+/* Filters bar */
+.demo-filters{display:flex;gap:6px;padding:0.6rem 1rem;border-bottom:1px solid var(--border);overflow-x:auto;}
+.demo-flt{padding:4px 10px;border-radius:99px;font-size:0.66rem;background:var(--bg-3);border:1px solid var(--border);color:var(--text-2);white-space:nowrap;cursor:pointer;font-family:var(--mono);}
+.demo-flt.act{background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.3);color:#93C5FD;}
+.demo-flt b{margin-left:5px;color:var(--text);}
+
+.demo-split{display:grid;grid-template-columns:1fr 1fr;min-height:340px;}
 .demo-plist{border-right:1px solid var(--border);}
-.demo-plh{padding:0.55rem 1.25rem;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:0.58rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);background:var(--bg-3);}
-.dpr{padding:0.875rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.03);cursor:pointer;transition:background 0.1s;}
+.demo-plh{padding:0.5rem 1rem;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:0.58rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);background:var(--bg-3);display:flex;justify-content:space-between;}
+.dpr{padding:0.75rem 1rem;border-bottom:1px solid rgba(255,255,255,0.03);cursor:pointer;transition:background 0.1s;}
 .dpr:hover{background:rgba(255,255,255,0.02);}
 .dpr.on{background:rgba(59,130,246,0.07);border-left:2px solid var(--blue);}
 .dpr-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;}
-.dpr-co{font-size:0.84rem;font-weight:600;}
-.dpr-sc{font-size:0.6rem;padding:2px 6px;border-radius:5px;font-family:var(--mono);}
+.dpr-co{font-size:0.82rem;font-weight:600;}
+.dpr-sc{font-size:0.58rem;padding:2px 6px;border-radius:5px;font-family:var(--mono);}
 .dpr-sc.hot{background:rgba(239,68,68,0.12);color:#FCA5A5;border:1px solid rgba(239,68,68,0.18);}
 .dpr-sc.warm{background:rgba(245,158,11,0.12);color:#FCD34D;border:1px solid rgba(245,158,11,0.18);}
-.dpr-ct{font-size:0.7rem;color:var(--text-3);}
-.dpr-sig{font-size:0.67rem;color:var(--cyan);margin-top:3px;display:flex;align-items:center;gap:4px;}
-.demo-mpanel{padding:1.25rem;display:flex;flex-direction:column;gap:12px;}
-.sig-box{padding:10px 14px;border-radius:10px;background:rgba(6,182,212,0.05);border:1px solid rgba(6,182,212,0.12);border-left:3px solid var(--cyan);font-size:0.77rem;color:var(--text-2);line-height:1.5;}
-.msg-box{flex:1;padding:12px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;}
+.dpr-ct{font-size:0.68rem;color:var(--text-3);}
+.dpr-sig{font-size:0.65rem;color:var(--cyan);margin-top:3px;display:flex;align-items:center;gap:4px;}
+.dpr-score{font-family:var(--mono);font-size:0.6rem;color:var(--text-3);margin-top:3px;}
+.demo-mpanel{padding:1rem;display:flex;flex-direction:column;gap:11px;}
+.sig-box{padding:9px 13px;border-radius:10px;background:rgba(6,182,212,0.05);border:1px solid rgba(6,182,212,0.12);border-left:3px solid var(--cyan);font-size:0.76rem;color:var(--text-2);line-height:1.5;}
+.msg-box{flex:1;padding:11px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;}
 .msg-tag{font-family:var(--mono);font-size:0.58rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);margin-bottom:7px;}
-.msg-ob{font-size:0.8rem;font-weight:600;color:var(--text);padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:8px;}
-.msg-bd{font-size:0.77rem;color:var(--text-2);line-height:1.65;white-space:pre-wrap;}
+.msg-ob{font-size:0.79rem;font-weight:600;color:var(--text);padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:8px;}
+.msg-bd{font-size:0.74rem;color:var(--text-2);line-height:1.6;white-space:pre-wrap;}
 .demo-actions{display:flex;gap:7px;}
 .da-btn{flex:1;padding:8px;border-radius:8px;font-size:0.72rem;font-family:var(--sans);cursor:pointer;border:1px solid var(--border);background:var(--bg-3);color:var(--text-2);}
 .da-btn.pri{background:var(--grad);border:none;color:#fff;font-weight:600;}
@@ -160,7 +201,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .step-desc{font-size:0.87rem;color:var(--text-2);line-height:1.65;}
 
 /* ── PRICING ── */
-.pricing-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:var(--r);overflow:hidden;}
+.pricing-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border-radius:var(--r);overflow:hidden;}
+.pc{padding:1.5rem 1.25rem;}
+.pc-price{font-size:1.75rem;}
+.pc-feats li{font-size:0.78rem;}
 .pc{background:var(--bg-2);padding:1.75rem;display:flex;flex-direction:column;}
 .pc.star{background:rgba(59,130,246,0.05);position:relative;}
 .pc.star::before{content:'⭐ POPULAIRE';position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--grad);color:#fff;font-size:0.58rem;font-weight:700;padding:3px 12px;border-radius:0 0 8px 8px;letter-spacing:0.05em;font-family:var(--mono);}
@@ -178,7 +222,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .pc-btn:hover{border-color:var(--blue);color:var(--text);}
 .pc-btn.pri{background:var(--grad);border:none;color:#fff;box-shadow:var(--glow);}
 .pc-btn.pri:hover{box-shadow:0 0 36px rgba(59,130,246,0.5);}
-.founder-pill{display:inline-flex;align-items:center;gap:8px;padding:7px 18px;border-radius:100px;background:linear-gradient(135deg,rgba(59,130,246,0.08),rgba(139,92,246,0.06));border:1px solid rgba(59,130,246,0.18);font-size:0.8rem;color:#93C5FD;margin-top:1.5rem;}
+.founder-pill{display:none;}
 
 /* ── OFFER ── */
 .offer-wrap{display:grid;grid-template-columns:1fr 1fr;gap:4rem;background:var(--bg-2);border:1px solid var(--border);border-radius:24px;padding:3rem;box-shadow:var(--glow);}
@@ -247,6 +291,9 @@ footer{padding:2.5rem 0;border-top:1px solid var(--border-2);}
 .fu.vis{opacity:1;transform:translateY(0);}
 
 /* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .pricing-cards{grid-template-columns:repeat(3,1fr);}
+}
 @media(max-width:900px){
   .two-col,.offer-wrap{grid-template-columns:1fr;}
   .feat-grid{grid-template-columns:1fr 1fr;}
@@ -254,11 +301,19 @@ footer{padding:2.5rem 0;border-top:1px solid var(--border-2);}
   .steps{grid-template-columns:1fr;}
   .nav-center{display:none;}
   nav{padding:0 1.25rem;}
+  .demo-body{grid-template-columns:140px 1fr;}
+  .demo-sb-item{font-size:0.72rem;padding:0.4rem 0.7rem;}
+  .demo-sb-head{padding:0 0.7rem 0.6rem;}
+  .demo-sb-cat{padding:0 0.7rem;}
 }
 @media(max-width:640px){
   .feat-grid,.pricing-cards{grid-template-columns:1fr;}
   .demo-split{grid-template-columns:1fr;}
   .demo-mpanel{display:none;}
+  .demo-body{grid-template-columns:1fr;}
+  .demo-sb{display:none;}
+  .demo-kpis{grid-template-columns:1fr 1fr;}
+  .kpi{border-bottom:1px solid var(--border);}
   .frow{grid-template-columns:1fr;}
   .stats-grid{grid-template-columns:1fr 1fr;}
 }
@@ -279,7 +334,7 @@ footer{padding:2.5rem 0;border-top:1px solid var(--border-2);}
   </div>
   <div class="nav-right">
     <button class="btn-outline" onclick="showAccessModal()">Mon dashboard</button>
-    <button class="btn-nav-cta" onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})">Démarrer — 79 €</button>
+    <button class="btn-nav-cta" onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})">Démarrer — 9,90 €</button>
   </div>
 </nav>
 
@@ -291,10 +346,10 @@ footer{padding:2.5rem 0;border-top:1px solid var(--border-2);}
 
   <div class="hero-eyebrow">
     <div class="eyebrow-dot"></div>
-    ✦ Accès Fondateur — fonctionnalités Pro jusqu'au 30 juin 2026
+    ✦ Nouveau — Email envoyé en un clic, plus de copié-collé
   </div>
 
-  <h1>Trouvez vos 10 prochains<br><span class="grad-word">prospects qualifiés</span><br>pour 79 €</h1>
+  <h1>Trouvez vos 10 prochains<br><span class="grad-word">prospects qualifiés</span><br>pour 9,90 €</h1>
 
   <p class="hero-sub">
     Vous passez des heures à chercher des clients manuellement. PipelineAI identifie les PME qui ont besoin de vous, rédige les messages personnalisés sur leurs signaux d'intention, et gère vos relances.
@@ -302,7 +357,7 @@ footer{padding:2.5rem 0;border-top:1px solid var(--border-2);}
 
   <div class="hero-cta-row">
     <button class="btn-hero-main" onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})">
-      Démarrer ma prospection <span class="ptag">79 €</span>
+      Démarrer ma prospection <span class="ptag">9,90 €</span>
     </button>
     <a href="#demo" class="btn-hero-sec">Voir la démo →</a>
   </div>
@@ -324,7 +379,7 @@ footer{padding:2.5rem 0;border-top:1px solid var(--border-2);}
     <div class="stat-cell"><div class="stat-val">30s</div><div class="stat-label">Génération</div></div>
     <div class="stat-cell"><div class="stat-val">10</div><div class="stat-label">Prospects / session</div></div>
     <div class="stat-cell"><div class="stat-val">×4</div><div class="stat-label">Taux de réponse</div></div>
-    <div class="stat-cell"><div class="stat-val">79€</div><div class="stat-label">Paiement unique</div></div>
+    <div class="stat-cell"><div class="stat-val">9,90€</div><div class="stat-label">Paiement unique</div></div>
   </div>
 </div>
 
@@ -395,36 +450,88 @@ footer{padding:2.5rem 0;border-top:1px solid var(--border-2);}
         </div>
       </div>
       <div class="demo-kpis">
-        <div class="kpi"><div class="kpi-l">Prospects</div><div class="kpi-v">10</div></div>
-        <div class="kpi"><div class="kpi-l">Chauds</div><div class="kpi-v re">7</div></div>
-        <div class="kpi"><div class="kpi-l">Contactés</div><div class="kpi-v bl">3</div></div>
-        <div class="kpi"><div class="kpi-l">Convertis</div><div class="kpi-v gr">1</div></div>
+        <div class="kpi"><div class="kpi-l">Taux de contact</div><div class="kpi-v">0%</div><div class="kpi-sub">Moyenne secteur : 42%</div></div>
+        <div class="kpi"><div class="kpi-l">Meilleur jour</div><div class="kpi-v" style="font-size:1rem;">Mardi</div><div class="kpi-sub">Pour envoyer vos messages</div></div>
+        <div class="kpi"><div class="kpi-l">Taux conversion</div><div class="kpi-v">0%</div><div class="kpi-sub">Objectif : 10%</div></div>
+        <div class="kpi"><div class="kpi-l">ROI estimé</div><div class="kpi-v gr">×25</div><div class="kpi-sub">si 1 client signé</div></div>
       </div>
-      <div class="demo-split">
-        <div class="demo-plist">
-          <div class="demo-plh">Activité : Logiciel prospection IA · France entière</div>
-          <div class="dpr on" id="dpr1" onclick="demoSel(1,this)">
-            <div class="dpr-top"><span class="dpr-co">Menuiserie Berthier</span><span class="dpr-sc hot">HOT</span></div>
-            <div class="dpr-ct">Luc Berthier · Gérant · Lyon (69)</div>
-            <div class="dpr-sig">⚡ Recrutement × 3 postes — Indeed</div>
+      <div class="demo-body">
+        <aside class="demo-sb">
+          <div class="demo-sb-head">
+            <div class="demo-sb-logo">PA</div>
+            <div class="demo-sb-name">PipelineAI</div>
           </div>
-          <div class="dpr" id="dpr2" onclick="demoSel(2,this)">
-            <div class="dpr-top"><span class="dpr-co">Plomberie Gauthier</span><span class="dpr-sc hot">HOT</span></div>
-            <div class="dpr-ct">Marc Gauthier · PDG · Bordeaux (33)</div>
-            <div class="dpr-sig">⚡ Nouveau site web lancé</div>
+          <div class="demo-sb-cat">Principal</div>
+          <div class="demo-sb-item act">◈ Prospects <span class="ct">10</span></div>
+          <div class="demo-sb-item">⇢ Séquences</div>
+          <div class="demo-sb-item">▦ Pipeline</div>
+          <div class="demo-sb-cat">Analyse</div>
+          <div class="demo-sb-item">◉ Statistiques</div>
+          <div class="demo-sb-item">⊙ Paramètres</div>
+        </aside>
+        <div class="demo-main">
+          <div class="demo-toolbar">
+            <div>
+              <div class="demo-tb-title2">Mes prospects</div>
+              <div class="demo-tb-sub">secteur : Logiciel prospection IA · zone : France entière · TPE</div>
+            </div>
+            <div class="demo-tb-spacer"></div>
+            <div class="demo-tb-btn">↓ CSV</div>
+            <div class="demo-tb-btn">↓ HubSpot</div>
+            <div class="demo-tb-btn">↓ PDF</div>
+            <div class="demo-tb-btn cta">+ Nouvelle campagne</div>
           </div>
-          <div class="dpr" id="dpr3" onclick="demoSel(3,this)">
-            <div class="dpr-top"><span class="dpr-co">Cabinet RH Nexus</span><span class="dpr-sc warm">WARM</span></div>
-            <div class="dpr-ct">Sophie Renard · DG · Paris (75)</div>
-            <div class="dpr-sig">⚡ Expansion — 2ème bureau ouvert</div>
+          <div class="demo-prog">
+            <div class="demo-prog-top">
+              <span>📊 Progression de votre pipeline</span>
+              <b>3/10 prospects contactés</b>
+            </div>
+            <div class="demo-prog-bar"><div></div></div>
+            <div class="demo-prog-steps">
+              <span class="don">① Démarré</span>
+              <span class="cur">② 3 contactés</span>
+              <span>③ 6 contactés</span>
+              <span>④ Pipeline complet</span>
+            </div>
           </div>
-          <div style="padding:0.875rem 1.25rem;font-size:0.72rem;color:var(--text-3);font-style:italic;">+ 7 autres prospects dans votre dashboard…</div>
+          <div class="demo-filters">
+            <div class="demo-flt act">Tous <b>10</b></div>
+            <div class="demo-flt">🔴 Chauds <b>4</b></div>
+            <div class="demo-flt">🟠 Tièdes <b>4</b></div>
+            <div class="demo-flt">🔵 Froids <b>2</b></div>
+            <div class="demo-flt">✉ Contactés <b>3</b></div>
+            <div class="demo-flt">✓ Convertis <b>0</b></div>
+          </div>
+          <div class="demo-split">
+            <div class="demo-plist">
+              <div class="demo-plh"><span>Liste des prospects</span><span>Score ↓</span></div>
+              <div class="dpr on" id="dpr1" onclick="demoSel(1,this)">
+                <div class="dpr-top"><span class="dpr-co">Menuiserie Berthier</span><span class="dpr-sc hot">HOT</span></div>
+                <div class="dpr-ct">Luc Berthier · Gérant · Lyon (69)</div>
+                <div class="dpr-sig">⚡ Recrutement × 3 postes — Indeed</div>
+                <div class="dpr-score">Score : 94/100</div>
+              </div>
+              <div class="dpr" id="dpr2" onclick="demoSel(2,this)">
+                <div class="dpr-top"><span class="dpr-co">Plomberie Gauthier</span><span class="dpr-sc hot">HOT</span></div>
+                <div class="dpr-ct">Marc Gauthier · PDG · Bordeaux (33)</div>
+                <div class="dpr-sig">⚡ Nouveau site web lancé</div>
+                <div class="dpr-score">Score : 87/100</div>
+              </div>
+              <div class="dpr" id="dpr3" onclick="demoSel(3,this)">
+                <div class="dpr-top"><span class="dpr-co">Cabinet RH Nexus</span><span class="dpr-sc warm">WARM</span></div>
+                <div class="dpr-ct">Sophie Renard · DG · Paris (75)</div>
+                <div class="dpr-sig">⚡ Expansion — 2ème bureau ouvert</div>
+                <div class="dpr-score">Score : 76/100</div>
+              </div>
+              <div style="padding:0.875rem 1.25rem;font-size:0.7rem;color:var(--text-3);font-style:italic;">+ 7 autres prospects dans votre dashboard…</div>
+            </div>
+            <div class="demo-mpanel" id="demo-panel2"></div>
+          </div>
         </div>
-        <div class="demo-mpanel" id="demo-panel2"></div>
       </div>
     </div>
     <div style="text-align:center;margin-top:2rem;" class="fu">
-      <button class="btn-hero-main" onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})">Obtenir mes 10 prospects <span class="ptag">79 €</span></button>
+      <button class="btn-hero-main" onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})">Obtenir mes 10 prospects <span class="ptag">9,90 €</span></button>
     </div>
   </div>
 </section>
@@ -451,22 +558,20 @@ footer{padding:2.5rem 0;border-top:1px solid var(--border-2);}
       <div class="eyebrow blue">Tarifs</div>
       <h2 class="section-h2">Choisissez votre plan</h2>
       <p style="color:var(--text-2);font-size:0.95rem;margin-top:0.5rem;">Commencez avec l'offre découverte, passez au mensuel quand vous êtes prêt.</p>
-      <div class="founder-pill">✦ Accès Fondateur — fonctionnalités Pro jusqu'au 30 juin 2026</div>
     </div>
     <div style="margin-top:3rem;" class="fu">
       <div class="pricing-cards">
         <div class="pc">
           <div class="pc-plan">Découverte</div>
-          <div><span class="pc-price">79€</span><span class="pc-per">unique</span></div>
-          <div class="pc-desc">Pour tester et valider votre approche.</div>
+          <div><span class="pc-price">9,90€</span><span class="pc-per">unique</span></div>
+          <div class="pc-desc">Pour tester sans engagement.</div>
           <ul class="pc-feats">
             <li>10 prospects qualifiés</li>
-            <li>Messages personnalisés IA</li>
+            <li>Messages ultra-personnalisés IA</li>
+            <li>Emails vérifiés</li>
+            <li>Victor Coach IA</li>
+            <li>Export CSV + PDF</li>
             <li>Relances à la demande</li>
-            <li>Export CSV</li>
-            <li class="off">Séquences automatiques</li>
-            <li class="off">Emails vérifiés</li>
-            <li class="off">Victor Coach IA</li>
           </ul>
           <button class="pc-btn" onclick="handlePlanCheckout('decouverte')">Démarrer →</button>
         </div>
@@ -475,25 +580,23 @@ footer{padding:2.5rem 0;border-top:1px solid var(--border-2);}
           <div><span class="pc-price">29€</span><span class="pc-per">/mois</span></div>
           <div class="pc-desc">Pour les indépendants actifs.</div>
           <ul class="pc-feats">
-            <li>20 prospects/mois</li>
-            <li>Messages personnalisés</li>
-            <li>Relances à la demande</li>
-            <li>Export CSV + PDF</li>
+            <li>30 prospects/mois</li>
+            <li>Messages ultra-personnalisés IA</li>
+            <li>Emails vérifiés</li>
             <li>Victor Coach IA</li>
-            <li class="off">Séquences automatiques</li>
-            <li class="off">Emails vérifiés</li>
+            <li>Export CSV + PDF</li>
+            <li>Relances à la demande</li>
           </ul>
           <button class="pc-btn" onclick="handlePlanCheckout('starter')">Démarrer →</button>
         </div>
         <div class="pc star">
           <div class="pc-plan">Pro</div>
-          <div><span class="pc-price g">79€</span><span class="pc-per">/mois</span></div>
+          <div><span class="pc-price g">69€</span><span class="pc-per">/mois</span></div>
           <div class="pc-desc">Pour scaler votre prospection.</div>
           <ul class="pc-feats">
             <li>100 prospects/mois</li>
-            <li>Messages ultra-personnalisés</li>
+            <li>Tout le plan Starter</li>
             <li>Séquences auto J+5/12/20</li>
-            <li>Emails vérifiés</li>
             <li>Tracking ouvertures</li>
             <li>Import CSV / LinkedIn</li>
             <li>Export HubSpot natif</li>
@@ -502,21 +605,32 @@ footer{padding:2.5rem 0;border-top:1px solid var(--border-2);}
         </div>
         <div class="pc">
           <div class="pc-plan">Business</div>
-          <div><span class="pc-price">199€</span><span class="pc-per">/mois</span></div>
+          <div><span class="pc-price">109€</span><span class="pc-per">/mois</span></div>
+          <div class="pc-desc">Pour les petites équipes.</div>
+          <ul class="pc-feats">
+            <li>200 prospects/mois</li>
+            <li>Tout le plan Pro</li>
+            <li>3 accès utilisateurs</li>
+            <li>Analytics équipe</li>
+          </ul>
+          <button class="pc-btn" onclick="handlePlanCheckout('business')">Démarrer →</button>
+        </div>
+        <div class="pc">
+          <div class="pc-plan">Business Pro</div>
+          <div><span class="pc-price">259€</span><span class="pc-per">/mois</span></div>
           <div class="pc-desc">Pour les équipes commerciales.</div>
           <ul class="pc-feats">
             <li>500 prospects/mois</li>
-            <li>Tout le plan Pro</li>
-            <li>3 comptes utilisateurs</li>
-            <li>Analytics équipe</li>
-            <li>Support prioritaire</li>
+            <li>Tout le plan Business</li>
+            <li>5 accès utilisateurs</li>
+            <li>Analytics avancées</li>
           </ul>
-          <button class="pc-btn" onclick="handlePlanCheckout('business')">Démarrer →</button>
+          <button class="pc-btn" onclick="handlePlanCheckout('business_pro')">Démarrer →</button>
         </div>
       </div>
     </div>
     <p style="text-align:center;margin-top:1.75rem;font-size:0.875rem;color:var(--text-2);" class="fu">
-      Besoin d'un volume plus important ? <a href="mailto:julien@pipelineai.fr" style="color:var(--blue);text-decoration:none;">Plan sur mesure →</a>
+      Besoin de plus ? Tarif négociable — <a href="mailto:julien@pipelineai.fr" style="color:var(--blue);text-decoration:none;">julien@pipelineai.fr →</a>
     </p>
   </div>
 </section>
@@ -538,7 +652,7 @@ footer{padding:2.5rem 0;border-top:1px solid var(--border-2);}
           <li><span class="ck">✓</span>Généré en 30 secondes</li>
         </ul>
         <div class="price-box">
-          <div class="price-big">79 €</div>
+          <div class="price-big">9,90 €</div>
           <div class="price-note">Paiement unique · Sans engagement<br>Remboursé si prospects non qualifiés</div>
         </div>
       </div>
@@ -567,7 +681,7 @@ footer{padding:2.5rem 0;border-top:1px solid var(--border-2);}
           <span>J'accepte la <a href="/mentions.html" target="_blank">politique de confidentialité</a> et les <a href="/mentions.html" target="_blank">CGV</a>. Mes données sont utilisées uniquement pour générer mes prospects.</span>
         </label>
         <button class="btn-submit-main" id="stripe-btn" onclick="handleStripeCheckout()">
-          <span id="btn-label">Générer mes 10 prospects — 79 €</span>
+          <span id="btn-label">Générer mes 10 prospects — 9,90 €</span>
           <span id="btn-loading" style="display:none;">Redirection…</span>
         </button>
         <div class="form-trust">
@@ -603,9 +717,9 @@ footer{padding:2.5rem 0;border-top:1px solid var(--border-2);}
   <div class="container">
     <div class="fu">
       <h2 class="final-h2">Prêt à automatiser<br>votre <span class="grad-word">prospection</span> ?</h2>
-      <p class="final-sub">Pas d'abonnement. Pas de carte enregistrée. Juste 10 prospects qualifiés pour 79 €. Un seul client signé et c'est rentabilisé.</p>
+      <p class="final-sub">Pas d'abonnement. Pas de carte enregistrée. Juste 10 prospects qualifiés pour 9,90 € — le prix d'un café pour tester sans risque.</p>
       <button class="btn-hero-main" onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})">
-        Démarrer ma prospection <span class="ptag">79 €</span>
+        Démarrer ma prospection <span class="ptag">9,90 €</span>
       </button>
     </div>
   </div>
@@ -772,8 +886,9 @@ let _pendingPlan = null;
 
 const PLAN_LABELS = {
   starter: 'Plan Starter — 29 €/mois',
-  pro: 'Plan Pro — 79 €/mois',
-  business: 'Plan Business — 199 €/mois',
+  pro: 'Plan Pro — 69 €/mois',
+  business: 'Plan Business — 109 €/mois',
+  business_pro: 'Plan Business Pro — 259 €/mois',
 };
 
 function handlePlanCheckout(plan) {
@@ -814,10 +929,13 @@ async function submitPlanModal() {
   btn.disabled = true;
 
   try {
+    // Map frontend plan IDs to backend plan IDs
+    const planMap = { business: 'agence', business_pro: 'business_pro' };
+    const backendPlan = planMap[_pendingPlan] || _pendingPlan;
     const res = await fetch(API_BASE + '/create-checkout-session', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ email, prenom, secteur: '', plan: _pendingPlan === 'business' ? 'agence' : _pendingPlan }),
+      body: JSON.stringify({ email, prenom, secteur: '', plan: backendPlan }),
     });
     if (!res.ok) throw new Error('Erreur serveur');
     const data = await res.json();
@@ -860,31 +978,31 @@ function toggleFaq(btn) {
 const DEMO2 = {
   1:{company:'Menuiserie Berthier',contact:'Luc Berthier',role:'Gérant',location:'Lyon (69)',signal:'Recrutement × 3 postes (charpentier, menuisier, commercial) — Indeed 14 mai',objet:'Menuiserie Berthier — vos 3 recrutements en cours',corps:`Bonjour Luc,
 
-J'ai vu que vous recrutez 3 collaborateurs en ce moment chez Menuiserie Berthier — belle dynamique de croissance.
+3 recrutements en cours chez Menuiserie Berthier — c'est rarement anodin. Soit vous absorbez une charge déjà signée, soit vous misez sur des chantiers à venir.
 
-Ce type d'expansion s'accompagne souvent d'un besoin accru de nouveaux chantiers pour occuper les équipes. PipelineAI identifie en 30 secondes les donneurs d'ordres qui ont des projets en cours dans votre secteur et zone.
+Dans le second cas, c'est exactement là que nous intervenons : générer un flux régulier de demandes qualifiées pour que vos nouvelles équipes soient productives dès leur arrivée, et pas en sous-charge au bout de 3 mois.
 
-Pour 79 € seulement, testez — un seul chantier décroché et c'est déjà rentabilisé.
+Un créneau de 15 min la semaine prochaine pour voir si ça a du sens ?
 
-Luc Berthier`},
+Julien`},
   2:{company:'Plomberie Gauthier',contact:'Marc Gauthier',role:'PDG',location:'Bordeaux (33)',signal:'Nouveau site web lancé avec portfolio 2025 et section "nos réalisations" ajoutée',objet:'Plomberie Gauthier — votre nouveau site, et après ?',corps:`Bonjour Marc,
 
-Votre nouveau site Plomberie Gauthier vient d'être mis en ligne — beau travail, c'est un vrai signal de professionnalisation.
+J'ai vu votre nouveau site avec la section réalisations — le portfolio est clairement orienté chantiers pros, pas dépannage particulier. Hypothèse : vous cherchez à capter plus de B2B (entreprises, syndics, constructeurs) plutôt qu'à dépendre du bouche-à-oreille.
 
-Un site refait, c'est souvent le moment où on cherche à développer sa clientèle pro et ne plus dépendre du bouche-à-oreille.
+Si c'est le cas, PipelineAI identifie chaque semaine les entreprises bordelaises qui ont un besoin réel en plomberie (travaux d'agrandissement, nouveaux locaux, recrutements liés à un déménagement…). Vous attaquez avec un vrai motif, pas à froid.
 
-Pour 79 €, 10 entreprises dans votre zone avec des besoins en plomberie, les messages prêts. Un seul contrat couvre l'investissement.
+9€90 pour tester avec 10 entreprises de votre zone si ça vous parle.
 
-Marc Gauthier`},
+Julien`},
   3:{company:'Cabinet RH Nexus',contact:'Sophie Renard',role:'DG',location:'Paris (75)',signal:'Expansion — 2ème bureau ouvert à Lyon, annonce LinkedIn 3 mai',objet:'Cabinet RH Nexus — félicitations pour votre expansion',corps:`Bonjour Sophie,
 
-L'ouverture de votre bureau lyonnais est un beau signal de croissance pour Cabinet RH Nexus.
+Ouvrir un bureau à Lyon, c'est aussi reconstruire un pipeline commercial de zéro sur un marché où Nexus n'a pas encore de références locales à activer. La phase la plus coûteuse est généralement les 6 premiers mois.
 
-Cette phase d'expansion nécessite souvent de développer rapidement un nouveau portefeuille sur un marché que vous ne connaissez pas encore complètement.
+PipelineAI identifie en temps réel les entreprises lyonnaises en recrutement actif sur les profils que vous chassez — de quoi alimenter votre équipe lyonnaise dès son arrivée plutôt qu'après 3 mois de prospection à froid.
 
-PipelineAI identifie les entreprises lyonnaises en recrutement actif qui ont besoin d'un cabinet RH. 79 € pour tester, un contrat signé et c'est rentabilisé.
+Test à 9€90 si vous voulez voir le type de signaux qu'on remonte avant tout engagement.
 
-Sophie Renard`}
+Julien`}
 };
 function demoSel(n,row) {
   document.querySelectorAll('.dpr').forEach(r=>r.classList.remove('on'));
