@@ -627,6 +627,154 @@ body {
 .ob-step.active .ob-dot { background: var(--accent); border-color: var(--accent); animation: blink 1s ease infinite; }
 .ob-step.done .ob-dot { background: var(--green); border-color: var(--green); animation: none; }
 
+/* ── WELCOME SCREEN (premier clic mail, avant onboarding) ──────────────── */
+.welcome-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: none; align-items: center; justify-content: center;
+  padding: 2rem;
+  animation: welcomeFadeIn 0.5s ease both;
+}
+.welcome-overlay.show { display: flex; }
+
+@keyframes welcomeFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.welcome-modal {
+  background: var(--bg-2);
+  border: 1px solid var(--border-2);
+  border-radius: 20px;
+  padding: 3rem 3rem 2.5rem;
+  max-width: 560px;
+  width: 100%;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4),
+              0 0 0 1px rgba(79, 124, 255, 0.08);
+  text-align: center;
+  animation: welcomeModalIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.1s;
+  opacity: 0;
+}
+
+@keyframes welcomeModalIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.welcome-star {
+  font-size: 2.5rem;
+  display: inline-block;
+  background: linear-gradient(135deg, var(--accent), #7b5ea7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: welcomeStarTwinkle 4s ease-in-out infinite;
+  margin-bottom: 0.5rem;
+}
+
+@keyframes welcomeStarTwinkle {
+  0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  50%      { opacity: 0.75; transform: scale(1.1) rotate(180deg); }
+}
+
+.welcome-title {
+  font-family: var(--serif);
+  font-size: 2rem;
+  color: var(--text);
+  margin-bottom: 0.6rem;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.welcome-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-2);
+  margin-bottom: 1.75rem;
+  line-height: 1.55;
+}
+
+.welcome-body {
+  text-align: left;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.75rem;
+  font-size: 0.88rem;
+  color: var(--text-2);
+  line-height: 1.7;
+}
+
+.welcome-body strong { color: var(--text); font-weight: 600; }
+
+.welcome-body ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.85rem 0 0;
+}
+
+.welcome-body li {
+  position: relative;
+  padding-left: 1.4rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.86rem;
+}
+
+.welcome-body li::before {
+  content: '✦';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 0.8rem;
+  top: 1px;
+}
+
+.welcome-signature {
+  font-size: 0.85rem;
+  color: var(--text-3);
+  margin-bottom: 1.75rem;
+  font-style: italic;
+}
+
+.welcome-signature strong { color: var(--text-2); font-style: normal; font-weight: 600; }
+
+.welcome-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--accent) 0%, #3d6ae0 100%);
+  color: #fff;
+  border: none;
+  padding: 0.9rem 2.5rem;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  font-family: var(--sans);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(79, 124, 255, 0.25);
+  letter-spacing: 0.01em;
+}
+
+.welcome-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(79, 124, 255, 0.4);
+}
+
+.welcome-btn:active {
+  transform: translateY(0);
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .welcome-modal { padding: 2rem 1.5rem 1.5rem; border-radius: 16px; }
+  .welcome-title { font-size: 1.6rem; }
+  .welcome-subtitle { font-size: 0.88rem; }
+  .welcome-body { padding: 1rem 1.15rem; font-size: 0.82rem; }
+  .welcome-body li { font-size: 0.8rem; }
+}
+
 /* ── DARK/LIGHT MODE ── */
 body.light-mode {
   --bg: #f5f2ec; --bg-2: #ffffff; --bg-3: #edeae2; --bg-4: #e0ddd6;
@@ -1569,6 +1717,32 @@ body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
 </main>
 
 
+
+<!-- Welcome Screen (premier clic mail, avant onboarding) -->
+<div class="welcome-overlay" id="welcome-overlay">
+  <div class="welcome-modal">
+    <div class="welcome-star">✦</div>
+    <div class="welcome-title">Bienvenue sur PipelineAI</div>
+    <div class="welcome-subtitle">Merci de nous faire confiance pour votre prospection.</div>
+
+    <div class="welcome-body">
+      Vous tenez entre vos mains un outil <strong>puissant, propulsé par l'IA</strong>, conçu pour transformer votre prospection B2B en quelque chose de simple et efficace.
+      <ul>
+        <li><strong>Victor</strong>, votre assistant intégré, est là pour vous expliquer le fonctionnement quand vous le souhaitez.</li>
+        <li>Il vous coache sur votre prospection : taux de réponse, timing des relances, qualification…</li>
+        <li>Il fait remonter <strong>directement à notre équipe</strong> vos besoins, suggestions et améliorations.</li>
+      </ul>
+    </div>
+
+    <div class="welcome-signature">
+      Votre feedback construit l'outil de demain.<br>
+      Bonne prospection !<br>
+      <strong>Julien</strong> — fondateur de PipelineAI
+    </div>
+
+    <button class="welcome-btn" onclick="closeWelcome()">C'est parti ✦</button>
+  </div>
+</div>
 
 <!-- Onboarding Screen -->
 <div class="onboarding-overlay" id="onboarding-overlay" style="display:none">
@@ -2547,6 +2721,48 @@ function showSendStatus(id, msg) {
 
 // ── ONBOARDING ───────────────────────────────────────────────────────────────
 const OB_KEY = 'pai_onboarding_done';
+const WELCOME_KEY = 'pai_welcomed';
+
+// Pending callback to run après fermeture de l'écran de bienvenue
+let _welcomePendingCallback = null;
+
+// Affiche l'écran de bienvenue (premier clic mail uniquement).
+// Si callback fourni, exécuté à la fermeture du modal.
+function showWelcome(callback) {
+  const overlay = document.getElementById('welcome-overlay');
+  if (!overlay) {
+    // Pas d'écran de bienvenue → exécute le callback directement
+    if (typeof callback === 'function') callback();
+    return;
+  }
+  _welcomePendingCallback = callback || null;
+  overlay.classList.add('show');
+  // Empêche le scroll de la page derrière
+  document.body.style.overflow = 'hidden';
+}
+
+function closeWelcome() {
+  const overlay = document.getElementById('welcome-overlay');
+  if (overlay) overlay.classList.remove('show');
+  document.body.style.overflow = '';
+  // Marque le client comme accueilli
+  try { localStorage.setItem(WELCOME_KEY, 'yes'); } catch(e) {}
+  // Exécute le callback en attente (ex: ouvrir l'onboarding)
+  const cb = _welcomePendingCallback;
+  _welcomePendingCallback = null;
+  if (typeof cb === 'function') setTimeout(cb, 250);
+}
+
+// Lance la bienvenue puis l'onboarding, ou directement l'onboarding si déjà accueilli.
+function welcomeOrOnboarding() {
+  let welcomed = null;
+  try { welcomed = localStorage.getItem(WELCOME_KEY); } catch(e) {}
+  if (welcomed) {
+    showOnboarding();
+  } else {
+    showWelcome(showOnboarding);
+  }
+}
 
 function showOnboarding() {
   const overlay = document.getElementById('onboarding-overlay');
@@ -3032,7 +3248,7 @@ async function handleMagicLink(token) {
     // Même si token expiré, si onboarding jamais fait → nouveau client → afficher onboarding
     const done = (() => { try { return localStorage.getItem(OB_KEY); } catch { return null; } })();
     if (!done) {
-      setTimeout(showOnboarding, 400);
+      setTimeout(welcomeOrOnboarding, 400);
       showToast('Bienvenue ! Configurez vos premiers prospects.', '👋');
     } else {
       showToast('Session expirée — mode démo activé', '⚠');
@@ -3104,7 +3320,7 @@ async function loadProspects() {
       // Pas encore de prospects — afficher onboarding
       hideOverlay();
       renderList();
-      setTimeout(showOnboarding, 400);
+      setTimeout(welcomeOrOnboarding, 400);
     }
   } catch(e) {
     console.error('Erreur chargement prospects:', e);
@@ -3286,16 +3502,16 @@ if (_mlink) {
   // Exchange magic link for session, then show onboarding
   handleMagicLink(_mlink).then(() => {
     const done = (() => { try { return localStorage.getItem(OB_KEY); } catch(e) { return null; } })();
-    if (!done) setTimeout(showOnboarding, 600);
+    if (!done) setTimeout(welcomeOrOnboarding, 600);
   }).catch(() => {
     const done = (() => { try { return localStorage.getItem(OB_KEY); } catch(e) { return null; } })();
-    if (!done) setTimeout(showOnboarding, 600);
+    if (!done) setTimeout(welcomeOrOnboarding, 600);
   });
 } else if (getSession()) {
   const done = (() => { try { return localStorage.getItem(OB_KEY); } catch(e) { return null; } })();
   if (!done) {
     renderList();
-    setTimeout(showOnboarding, 400);
+    setTimeout(welcomeOrOnboarding, 400);
   } else {
     loadProspects();
   }
