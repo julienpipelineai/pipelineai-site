@@ -809,7 +809,7 @@ body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
 .btn-edit-toggle:hover { color: var(--accent); border-color: var(--accent); }
 
 /* ── HISTORIQUE ÉCHANGES ── */
-.exchange-list { display: flex; flex-direction: column; gap: 6px; max-height: 200px; overflow-y: auto; }
+.exchange-list { display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; }
 .exchange-item {
   display: flex; gap: 10px; align-items: flex-start;
   font-size: 0.78rem; color: var(--text-2);
@@ -2266,7 +2266,10 @@ function renderDetail() {
           : (prospectExchanges[p.id]||[]).slice().reverse().map(e => `
             <div class="exchange-item">
               <div class="exchange-dot ${e.type === 'reply' ? 'reply' : ''}"></div>
-              <div style="flex:1;">${e.type === 'sent' ? '📤 Envoyé' : e.type === 'reply' ? '📥 Réponse' : '📝 Note'} — ${e.text}</div>
+              <div style="flex:1; min-width:0;">
+                <div style="font-weight:600; color:var(--text);">${e.type === 'sent' ? '📤 Envoyé' : e.type === 'reply' ? '📥 Réponse' : '📝 Note'}</div>
+                <div style="margin-top:3px; white-space:pre-wrap; word-wrap:break-word; color:var(--text-2); font-size:0.74rem; line-height:1.4; max-height:120px; overflow-y:auto;">${escapeHistoryHTML(e.text)}</div>
+              </div>
               <div class="exchange-time">${e.time}</div>
             </div>`).join('')
         }
@@ -2389,8 +2392,8 @@ function copyMessage(id) {
       updateStatus(id, newStatus);
     }
   }
-  // Historique avec le message copié
-  addHistory('Message copié', p.company, text);
+  // Enregistre l'envoi dans l'historique des échanges du prospect
+  addExchangeAuto(id, 'copy', text);
   showToast('Message copié dans le presse-papier', '✓');
 }
 
@@ -2491,8 +2494,8 @@ function sendByEmail(id) {
     emailText = `Objet : ${msg.objet}\n\n${msg.corps}`;
   }
 
-  // Ajoute dans l'historique avec le contenu du message
-  addHistory('Email envoyé', p.company, emailText);
+  // Enregistre l'envoi dans l'historique des échanges du prospect
+  addExchangeAuto(id, 'email', emailText);
 
   openMailModal(id);
   showSendStatus(id, '✓ Message copié · Choisissez votre client mail');
@@ -2524,7 +2527,8 @@ function openLinkedin(id) {
     }
   }
   const _lp = PROSPECTS.find(x => x.id === id);
-  if (_lp) addHistory('LinkedIn ouvert', _lp.company, text);
+  // Enregistre l'envoi dans l'historique des échanges du prospect
+  addExchangeAuto(id, 'linkedin', text);
   showSendStatus(id, '✓ Message copié · Profil LinkedIn ouvert — collez dans InMail');
   return false;
 }
@@ -3309,12 +3313,10 @@ if (_mlink) {
 const actionHistory = [];
 
 function addHistory(action, company, message) {
-  console.log('[addHistory] APPEL action=', action, 'company=', company, 'message=', message ? message.substring(0, 60) + '...' : 'AUCUN');
   const now = new Date();
   const time = now.toLocaleDateString('fr-FR', {weekday:'short', day:'numeric', month:'short'})
     + ' · ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
   actionHistory.unshift({ action, company, time, message: message || null });
-  console.log('[addHistory] actionHistory.length =', actionHistory.length);
   renderHistory();
 }
 
@@ -3331,16 +3333,11 @@ function escapeHistoryHTML(str) {
 
 function renderHistory() {
   const el = document.getElementById('history-list');
-  console.log('[renderHistory] el =', el, '| actionHistory.length =', actionHistory.length);
-  if (!el) {
-    console.warn('[renderHistory] #history-list INTROUVABLE dans le DOM');
-    return;
-  }
+  if (!el) return;
   if (actionHistory.length === 0) {
     el.innerHTML = '<div style="font-size:0.78rem;color:var(--text-3);font-style:italic;">Aucune action pour l\'instant.</div>';
     return;
   }
-  console.log('[renderHistory] Rendu de', Math.min(20, actionHistory.length), 'entrées');
   el.innerHTML = actionHistory.slice(0, 20).map(h => `
     <div class="history-item">
       <div class="history-dot"></div>
@@ -4179,6 +4176,24 @@ function addExchange(id) {
   showToast('Échange enregistré', '✓');
 }
 
+// Enregistre automatiquement un envoi (email/copy/linkedin) dans l'historique des échanges du prospect
+function addExchangeAuto(id, channel, messageText) {
+  if (!messageText) return;
+  const now = new Date();
+  const time = now.toLocaleDateString('fr-FR', {day:'numeric',month:'short'}) + ' ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'});
+  const channelLabels = { email: '✉ Email', linkedin: 'in LinkedIn', copy: '⎘ Copié' };
+  const prefix = channelLabels[channel] || '📤';
+  // Limite le texte affiché à 500 caractères pour éviter de surcharger
+  const truncated = messageText.length > 500 ? messageText.substring(0, 500) + '…' : messageText;
+  const fullText = `${prefix} — ${truncated}`;
+
+  if (!prospectExchanges[id]) prospectExchanges[id] = [];
+  prospectExchanges[id].push({ type: 'sent', text: fullText, time });
+
+  // Re-render la fiche pour afficher le nouvel échange
+  if (typeof renderDetail === 'function') renderDetail();
+}
+
 // ── ÉDITEUR INLINE MESSAGE ────────────────────────────────────
 function toggleMsgEdit(id) {
   const view = document.getElementById('msg-view-' + id);
@@ -4304,20 +4319,9 @@ function checkRelanceDelay(id) {
   }
 }
 
-// Log debug temporaire — à retirer une fois le bug confirmé résolu
-function debugStatusChange(fnName, id) {
-  const before = prospectStatuses[id] || 'detected';
-  console.log(`[${fnName}] prospect ${id} | activeMsg=${activeMsg} | statut avant=${before}`);
-  setTimeout(() => {
-    const after = prospectStatuses[id] || 'detected';
-    console.log(`[${fnName}] prospect ${id} | statut après=${after} | changé=${before !== after}`);
-  }, 50);
-}
-
 // Hook into existing send functions
 const _origSendByEmail = sendByEmail;
 sendByEmail = function(id) {
-  debugStatusChange('sendByEmail', id);
   checkRelanceDelay(id);
   logSend(id, 'email');
   _origSendByEmail(id);
@@ -4325,7 +4329,6 @@ sendByEmail = function(id) {
 
 const _origOpenLinkedin = openLinkedin;
 openLinkedin = function(id) {
-  debugStatusChange('openLinkedin', id);
   checkRelanceDelay(id);
   logSend(id, 'linkedin');
   return _origOpenLinkedin(id);
@@ -4333,7 +4336,6 @@ openLinkedin = function(id) {
 
 const _origCopyMessage = copyMessage;
 copyMessage = function(id) {
-  debugStatusChange('copyMessage', id);
   checkRelanceDelay(id);
   logSend(id, 'copy');
   _origCopyMessage(id);
