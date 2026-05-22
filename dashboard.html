@@ -343,6 +343,17 @@ body {
 .copy-btn:hover { background: var(--bg-3); color: var(--text); }
 .copy-btn.copied { color: var(--green); border-color: var(--green); background: var(--green-dim); }
 
+.mark-responded-btn {
+  margin-top: 8px; width: 100%;
+  padding: 0.5rem; border-radius: 7px;
+  background: var(--green-dim); border: 1px solid rgba(46, 204, 113, 0.3);
+  color: var(--green); font-size: 0.78rem; font-family: var(--sans);
+  cursor: pointer; transition: all 0.15s; text-align: center;
+}
+.mark-responded-btn:hover { background: rgba(46, 204, 113, 0.2); border-color: var(--green); }
+.mark-responded-btn.is-responded { background: var(--green); color: #fff; cursor: default; }
+.mark-responded-btn.is-responded:hover { background: var(--green); }
+
 /* Status selector */
 .status-selector { display: flex; gap: 6px; flex-wrap: wrap; }
 .status-opt {
@@ -2169,6 +2180,7 @@ function renderDetail() {
     { v:'messaged',  l:'Contacté' },
     { v:'relance_1', l:'Relance 1' },
     { v:'relance_2', l:'Relance 2' },
+    { v:'relance_3', l:'Relance 3' },
     { v:'responded', l:'A répondu' },
     { v:'converted', l:'Converti ✓' },
   ];
@@ -2226,6 +2238,9 @@ function renderDetail() {
       </div>
       <button class="copy-btn" id="copy-btn-${p.id}" onclick="copyMessage(${p.id})">
         ⎘ Copier uniquement
+      </button>
+      <button class="mark-responded-btn ${prospectStatuses[p.id] === 'responded' || prospectStatuses[p.id] === 'converted' ? 'is-responded' : ''}" id="responded-btn-${p.id}" onclick="markAsResponded(${p.id})" title="Le prospect a répondu à votre message">
+        ${prospectStatuses[p.id] === 'responded' ? '✓ A déjà répondu' : prospectStatuses[p.id] === 'converted' ? '✓ Converti' : '💬 Marquer comme répondu'}
       </button>
       <div class="send-status" id="send-status-${p.id}"></div>
     </div>
@@ -2365,11 +2380,11 @@ function copyMessage(id) {
     }, 2000);
   }
   // Auto statut selon le type de message copié
-  const statusMap = { initial: 'messaged', r1: 'relance_1', r2: 'relance_2', r3: 'relance_2' };
+  const statusMap = { initial: 'messaged', r1: 'relance_1', r2: 'relance_2', r3: 'relance_3' };
   const newStatus = statusMap[activeMsg];
   if (newStatus) {
     const current = prospectStatuses[id];
-    const order = ['detected', 'messaged', 'relance_1', 'relance_2', 'responded', 'converted'];
+    const order = ['detected', 'messaged', 'relance_1', 'relance_2', 'relance_3', 'responded', 'converted'];
     if (order.indexOf(newStatus) > order.indexOf(current || 'detected')) {
       updateStatus(id, newStatus);
     }
@@ -2387,10 +2402,23 @@ function updateStatus(id, status) {
   updateFilterCounts();
   updateProgress();
   // Historique
-  const labels = {detected:'Détecté',messaged:'Message envoyé',relance_1:'Relance 1 envoyée',relance_2:'Relance 2 envoyée',responded:'A répondu',converted:'Converti ✓'};
+  const labels = {detected:'Détecté',messaged:'Message envoyé',relance_1:'Relance 1 envoyée',relance_2:'Relance 2 envoyée',relance_3:'Relance 3 envoyée',responded:'A répondu',converted:'Converti ✓'};
   if (p) addHistory(labels[status] || status, p.company);
   showToast(`Statut mis à jour : ${status}`, '◈');
 
+}
+
+// Marquer un prospect comme ayant répondu (déclenché par le bouton dédié sur la fiche)
+function markAsResponded(id) {
+  const p = PROSPECTS.find(x => x.id === id);
+  if (!p) return;
+  const current = prospectStatuses[id] || 'detected';
+  if (current === 'responded' || current === 'converted') {
+    showToast('Ce prospect a déjà répondu ✓', '💬');
+    return;
+  }
+  updateStatus(id, 'responded');
+  showToast(`${p.company} marqué comme ayant répondu`, '💬');
 }
 
 function filterProspects(filter, el) {
@@ -2439,10 +2467,10 @@ function sendByEmail(id) {
   if (!p) return;
 
   // Auto statut selon le message actif — TOUJOURS, même sans email
-  const _statusMap = { initial: 'messaged', r1: 'relance_1', r2: 'relance_2', r3: 'relance_2' };
+  const _statusMap = { initial: 'messaged', r1: 'relance_1', r2: 'relance_2', r3: 'relance_3' };
   const _newStatus = _statusMap[activeMsg];
   if (_newStatus) {
-    const _order = ['detected', 'messaged', 'relance_1', 'relance_2', 'responded', 'converted'];
+    const _order = ['detected', 'messaged', 'relance_1', 'relance_2', 'relance_3', 'responded', 'converted'];
     const _current = prospectStatuses[id] || 'detected';
     if (_order.indexOf(_newStatus) > _order.indexOf(_current)) {
       updateStatus(id, _newStatus);
@@ -2486,10 +2514,10 @@ function openLinkedin(id) {
   window.open(url, '_blank');
 
   // Auto statut selon le type de message envoyé
-  const _statusMap = { initial: 'messaged', r1: 'relance_1', r2: 'relance_2', r3: 'relance_2' };
+  const _statusMap = { initial: 'messaged', r1: 'relance_1', r2: 'relance_2', r3: 'relance_3' };
   const _newStatus = _statusMap[activeMsg];
   if (_newStatus) {
-    const _order = ['detected', 'messaged', 'relance_1', 'relance_2', 'responded', 'converted'];
+    const _order = ['detected', 'messaged', 'relance_1', 'relance_2', 'relance_3', 'responded', 'converted'];
     const _current = prospectStatuses[id] || 'detected';
     if (_order.indexOf(_newStatus) > _order.indexOf(_current)) {
       updateStatus(id, _newStatus);
@@ -3413,12 +3441,12 @@ function renderNotifications() {
 
   const notifs = PROSPECTS.filter(p => {
     const st = prospectStatuses[p.id];
-    return st === 'messaged' || st === 'relance_1' || st === 'relance_2';
+    return st === 'messaged' || st === 'relance_1' || st === 'relance_2' || st === 'relance_3';
   }).filter(p => !dismissedNotifs.has(p.id));
 
   if (notifs.length === 0) { wrap.innerHTML = ''; return; }
 
-  const labels = { messaged: 'J+5 — première relance recommandée', relance_1: 'J+12 — deuxième relance recommandée', relance_2: 'J+20 — dernière relance recommandée' };
+  const labels = { messaged: 'J+5 — première relance recommandée', relance_1: 'J+12 — deuxième relance recommandée', relance_2: 'J+20 — troisième relance recommandée', relance_3: 'J+28 — dernière chance avant abandon' };
 
   wrap.innerHTML = notifs.slice(0, 3).map(p => `
     <div class="notif-card" onclick="selectProspect(${p.id})">
@@ -3497,6 +3525,7 @@ function exportHubspot() {
       messaged: 'Open',
       relance_1: 'In Progress',
       relance_2: 'In Progress',
+      relance_3: 'In Progress',
       responded: 'Open Deal',
       converted: 'Customer',
     };
@@ -3505,6 +3534,7 @@ function exportHubspot() {
       messaged: 'Marketing Qualified Lead',
       relance_1: 'Sales Qualified Lead',
       relance_2: 'Sales Qualified Lead',
+      relance_3: 'Sales Qualified Lead',
       responded: 'Opportunity',
       converted: 'Customer',
     };
@@ -3545,7 +3575,7 @@ function exportPDF() {
 
   const rows = PROSPECTS.map(p => {
     const st = prospectStatuses[p.id] || 'detected';
-    const stLabel = {detected:'Détecté',messaged:'Contacté',relance_1:'Relance 1',relance_2:'Relance 2',responded:'A répondu',converted:'Converti ✓'}[st]||st;
+    const stLabel = {detected:'Détecté',messaged:'Contacté',relance_1:'Relance 1',relance_2:'Relance 2',relance_3:'Relance 3',responded:'A répondu',converted:'Converti ✓'}[st]||st;
     const scoreColor = p.score==='hot'?'#ff5c3a':p.score==='warm'?'#f5a623':'#4f7cff';
     return `<tr style="border-bottom:1px solid #eee">
       <td style="padding:8px 12px;font-weight:500">${p.company}</td>
@@ -3799,12 +3829,12 @@ function openMobileDetail(id) {
       <a onclick="return openLinkedin(${id})" href="#" style="flex:1;padding:0.75rem;background:rgba(10,102,194,0.1);border:1px solid rgba(10,102,194,0.3);border-radius:8px;color:#0a66c2;font-size:0.82rem;cursor:pointer;text-decoration:none;text-align:center;display:flex;align-items:center;justify-content:center;">in LinkedIn</a>
     </div>` : ''}
     <div style="display:flex;gap:6px;flex-wrap:wrap;">
-      ${['detected','messaged','relance_1','relance_2','responded','converted'].map(s => `
+      ${['detected','messaged','relance_1','relance_2','relance_3','responded','converted'].map(s => `
         <button onclick="updateStatus(${id},'${s}');closeMobileDetail();" style="padding:0.4rem 0.75rem;border-radius:6px;font-size:0.72rem;cursor:pointer;
           background:${status===s?'var(--accent)':'var(--bg-3)'};
           border:1px solid ${status===s?'var(--accent)':'var(--border-2)'};
           color:${status===s?'#fff':'var(--text-2)'};">
-          ${{ detected:'Détecté', messaged:'Contacté', relance_1:'Relance 1', relance_2:'Relance 2', responded:'A répondu', converted:'Converti ✓' }[s]}
+          ${{ detected:'Détecté', messaged:'Contacté', relance_1:'Relance 1', relance_2:'Relance 2', relance_3:'Relance 3', responded:'A répondu', converted:'Converti ✓' }[s]}
         </button>`).join('')}
     </div>
   `;
@@ -4233,7 +4263,8 @@ function applyAllFilters(prospects) {
 // ══════════════════════════════════════════════════════════════
 
 // ── TRAÇABILITÉ ENVOIS ────────────────────────────────────────
-const sendLog = {}; // { prospectId: [ {channel, msgKey, time} ] }
+const sendLog = {}; // { prospectId: [ {channel, msgKey, time, rawTime} ] }
+const MIN_DAYS_BETWEEN_RELANCES = 3; // Délai minimum entre 2 actions sur même prospect
 
 function logSend(id, channel) {
   if (!sendLog[id]) sendLog[id] = [];
@@ -4241,25 +4272,58 @@ function logSend(id, channel) {
   const now = new Date();
   const time = now.toLocaleDateString('fr-FR',{day:'numeric',month:'short'}) + ' à ' + now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
   const labels = {initial:'Message initial', r1:'Relance J+5', r2:'Relance J+12', r3:'Relance J+20'};
-  sendLog[id].push({ channel, msgKey, label: labels[msgKey] || msgKey, time });
+  sendLog[id].push({ channel, msgKey, label: labels[msgKey] || msgKey, time, rawTime: now.getTime() });
   showSendStatus(id, '✓ ' + (channel === 'email' ? 'Email envoyé' : channel === 'linkedin' ? 'LinkedIn ouvert' : 'Copié') + ' · ' + time);
+}
+
+// Vérifie si on essaye d'envoyer une relance trop tôt → toast d'avertissement (non bloquant)
+function checkRelanceDelay(id) {
+  // On ne checke que pour les relances (pas le message initial)
+  if (activeMsg === 'initial') return;
+  const log = sendLog[id];
+  if (!log || log.length === 0) return;
+  // Dernier envoi quel qu'il soit
+  const last = log[log.length - 1];
+  if (!last.rawTime) return;
+  const daysSince = (Date.now() - last.rawTime) / 86400000;
+  if (daysSince < MIN_DAYS_BETWEEN_RELANCES) {
+    const hoursSince = Math.floor((Date.now() - last.rawTime) / 3600000);
+    const timeLabel = hoursSince < 24 ? `${hoursSince}h` : `${Math.floor(daysSince)}j`;
+    showToast(`⚠ Relance envoyée il y a ${timeLabel} — recommandé : ${MIN_DAYS_BETWEEN_RELANCES}j minimum`, '⚠');
+  }
+}
+
+// Log debug temporaire — à retirer une fois le bug confirmé résolu
+function debugStatusChange(fnName, id) {
+  const before = prospectStatuses[id] || 'detected';
+  console.log(`[${fnName}] prospect ${id} | activeMsg=${activeMsg} | statut avant=${before}`);
+  setTimeout(() => {
+    const after = prospectStatuses[id] || 'detected';
+    console.log(`[${fnName}] prospect ${id} | statut après=${after} | changé=${before !== after}`);
+  }, 50);
 }
 
 // Hook into existing send functions
 const _origSendByEmail = sendByEmail;
 sendByEmail = function(id) {
+  debugStatusChange('sendByEmail', id);
+  checkRelanceDelay(id);
   logSend(id, 'email');
   _origSendByEmail(id);
 };
 
 const _origOpenLinkedin = openLinkedin;
 openLinkedin = function(id) {
+  debugStatusChange('openLinkedin', id);
+  checkRelanceDelay(id);
   logSend(id, 'linkedin');
   return _origOpenLinkedin(id);
 };
 
 const _origCopyMessage = copyMessage;
 copyMessage = function(id) {
+  debugStatusChange('copyMessage', id);
+  checkRelanceDelay(id);
   logSend(id, 'copy');
   _origCopyMessage(id);
 };
@@ -4272,6 +4336,7 @@ const KANBAN_COLS = [
   { id: 'messaged',  label: '✉ Contacté',    color: 'var(--accent)' },
   { id: 'relance_1', label: '↩ Relance 1',   color: 'var(--warm)' },
   { id: 'relance_2', label: '↩ Relance 2',   color: 'var(--warm)' },
+  { id: 'relance_3', label: '↩ Relance 3',   color: 'var(--hot)' },
   { id: 'responded', label: '💬 A répondu',  color: 'var(--green)' },
   { id: 'converted', label: '✓ Converti',    color: 'var(--green)' },
 ];
@@ -4350,7 +4415,9 @@ function renderTodayPanel() {
     } else if (st === 'relance_1' && (!lastSent || daysSince >= 7)) {
       today.push({ p, action: 'Relance J+12 recommandée', urgency: 'medium' });
     } else if (st === 'relance_2' && (!lastSent || daysSince >= 8)) {
-      today.push({ p, action: 'Dernière relance J+20', urgency: 'low' });
+      today.push({ p, action: 'Relance J+20 recommandée', urgency: 'low' });
+    } else if (st === 'relance_3' && (!lastSent || daysSince >= 8)) {
+      today.push({ p, action: 'Dernière chance avant abandon', urgency: 'low' });
     } else if (st === 'detected' && p.score === 'hot') {
       today.push({ p, action: 'Prospect chaud — à contacter', urgency: 'high' });
     }
