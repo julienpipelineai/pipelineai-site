@@ -3189,10 +3189,10 @@ async function saveRelanceToDB(pid, msgKey, msgData) {
   }).catch(() => {});
 }
 const _orig_updateStatus = updateStatus;
-function updateStatus(id, status) {
+updateStatus = function(id, status) {
   _orig_updateStatus(id, status);
   updateStatusAPI(id, status);
-}
+};
 
 // ── POLLING ──────────────────────────────────────────────────────────────────
 function startPolling(orderId, token) {
@@ -3886,8 +3886,12 @@ let victorHistory = [];
 let victorInitialized = false;
 
 function toggleVictor() {
-  victorOpen = !victorOpen;
   const panel = document.getElementById('victor-panel');
+  if (!panel) {
+    console.warn('[toggleVictor] #victor-panel introuvable dans le DOM');
+    return;
+  }
+  victorOpen = !victorOpen;
   const notif = document.getElementById('victor-notif');
   panel.classList.toggle('open', victorOpen);
   if (notif) notif.style.display = 'none';
