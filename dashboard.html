@@ -3309,10 +3309,12 @@ if (_mlink) {
 const actionHistory = [];
 
 function addHistory(action, company, message) {
+  console.log('[addHistory] APPEL action=', action, 'company=', company, 'message=', message ? message.substring(0, 60) + '...' : 'AUCUN');
   const now = new Date();
   const time = now.toLocaleDateString('fr-FR', {weekday:'short', day:'numeric', month:'short'})
     + ' · ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
   actionHistory.unshift({ action, company, time, message: message || null });
+  console.log('[addHistory] actionHistory.length =', actionHistory.length);
   renderHistory();
 }
 
@@ -3329,11 +3331,16 @@ function escapeHistoryHTML(str) {
 
 function renderHistory() {
   const el = document.getElementById('history-list');
-  if (!el) return;
+  console.log('[renderHistory] el =', el, '| actionHistory.length =', actionHistory.length);
+  if (!el) {
+    console.warn('[renderHistory] #history-list INTROUVABLE dans le DOM');
+    return;
+  }
   if (actionHistory.length === 0) {
     el.innerHTML = '<div style="font-size:0.78rem;color:var(--text-3);font-style:italic;">Aucune action pour l\'instant.</div>';
     return;
   }
+  console.log('[renderHistory] Rendu de', Math.min(20, actionHistory.length), 'entrées');
   el.innerHTML = actionHistory.slice(0, 20).map(h => `
     <div class="history-item">
       <div class="history-dot"></div>
