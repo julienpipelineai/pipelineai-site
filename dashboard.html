@@ -626,6 +626,9 @@ body {
 }
 .ob-step.active .ob-dot { background: var(--accent); border-color: var(--accent); animation: blink 1s ease infinite; }
 .ob-step.done .ob-dot { background: var(--green); border-color: var(--green); animation: none; }
+.ob-genbar-track { height: 6px; background: var(--bg-3); border-radius: 4px; overflow: hidden; margin-top: 10px; }
+.ob-genbar-fill { width: 0%; height: 100%; background: linear-gradient(90deg, var(--accent), #7b5ea7); border-radius: 4px; transition: width 0.6s ease; }
+.ob-gennote { font-size: 0.74rem; color: var(--text-3); margin-top: 8px; line-height: 1.45; }
 
 /* ── WELCOME SCREEN (premier clic mail, avant onboarding) ──────────────── */
 .welcome-overlay {
@@ -1627,10 +1630,11 @@ body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
     <div class="topbar-right">
       <div class="theme-toggle" onclick="toggleTheme()" title="Mode clair/sombre">🌙</div>
       <button class="btn" onclick="exportCSV()">↓ CSV</button>
+      <button class="btn" onclick="document.getElementById('csv-import-input').click()" title="Importer des prospects depuis un fichier CSV">↑ Importer CSV</button>
+      <input type="file" id="csv-import-input" accept=".csv,text/csv" style="display:none" onchange="importCSV(event)">
       <button class="btn" onclick="exportHubspot()" style="background:rgba(255,122,0,0.1);border-color:rgba(255,122,0,0.3);color:#ff7a00;" title="Export au format HubSpot CRM">↓ HubSpot</button>
       <button class="btn btn-pdf" onclick="exportPDF()">↓ PDF</button>
-      <button class="btn" onclick="openSettings()" style="gap:6px">⊙ Paramètres</button>
-      <button class="btn btn-accent" onclick="showToast('Génération en cours…', '⚡')">+ Nouvelle campagne</button>
+      <button class="btn btn-accent" onclick="openSettings()">+ Nouvelle campagne</button>
     </div>
   </div>
 
@@ -1644,7 +1648,7 @@ body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
       <span class="upsell-icon">🚀</span>
       <div class="upsell-text">
         <div class="upsell-title" id="upsell-title">Vous progressez bien !</div>
-        <div class="upsell-sub" id="upsell-sub">Passez au plan Starter pour recevoir 20 prospects/mois et ne jamais manquer d'opportunités.</div>
+        <div class="upsell-sub" id="upsell-sub">Passez au plan Starter pour recevoir 30 prospects/mois et ne jamais manquer d'opportunités.</div>
       </div>
       <button class="upsell-cta" onclick="handleUpgrade()">Passer au Pro −20 % →</button>
       <button class="upsell-close" onclick="dismissUpsell()">✕</button>
@@ -1915,6 +1919,8 @@ body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
       <div class="ob-step" id="ob-s3"><span class="ob-dot"></span>Scoring des meilleurs prospects…</div>
       <div class="ob-step" id="ob-s4"><span class="ob-dot"></span>Génération des messages IA…</div>
       <div class="ob-step" id="ob-s5"><span class="ob-dot"></span>Mise à jour du dashboard…</div>
+      <div class="ob-genbar-track"><div class="ob-genbar-fill" id="ob-genbar"></div></div>
+      <div class="ob-gennote" id="ob-gennote">⏱ La première génération peut prendre jusqu'à une minute — l'IA analyse le web en temps réel pour vous, merci de patienter.</div>
     </div>
 
     <div class="onboarding-footer">
@@ -2010,6 +2016,8 @@ body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
       <div class="progress-step" id="step-3"><span class="step-dot"></span>Scoring et sélection des 10 meilleurs…</div>
       <div class="progress-step" id="step-4"><span class="step-dot"></span>Génération des messages IA…</div>
       <div class="progress-step" id="step-5"><span class="step-dot"></span>Mise à jour du dashboard…</div>
+      <div class="ob-genbar-track"><div class="ob-genbar-fill" id="gen-genbar"></div></div>
+      <div class="ob-gennote">⏱ La génération peut prendre jusqu'à une minute — l'IA analyse le web en temps réel, merci de patienter.</div>
     </div>
 
     <div class="settings-footer">
@@ -2380,6 +2388,35 @@ function selectProspect(id) {
   renderDetail();
 }
 
+async function verifyEmail(id) {
+  const btn = document.getElementById('verify-btn-' + id);
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Vérification…'; }
+  try {
+    const res = await fetch(API_BASE + '/prospects/' + id + '/verify-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (getSession()?.access_token || '') },
+    });
+    const data = await res.json();
+    if (data.verified) {
+      const p = PROSPECTS.find(x => x.id === id);
+      if (p) { p.email = data.email; p.email_verified = true; p.email_qualification = data.qualification || ''; }
+      renderDetail();
+      return;
+    }
+    const reasons = {
+      no_key: "La vérification d'emails n'est pas encore activée.",
+      not_found: "Aucun email vérifié trouvé pour ce contact.",
+      timeout: "La vérification a pris trop de temps, réessayez.",
+      error: "Service de vérification indisponible, réessayez plus tard.",
+    };
+    if (btn) { btn.disabled = false; btn.textContent = "🔍 Vérifier l'email"; }
+    alert(reasons[data.reason] || "Email non vérifié.");
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = "🔍 Vérifier l'email"; }
+    alert("Erreur lors de la vérification, réessayez.");
+  }
+}
+
 function renderDetail() {
   const panel = document.getElementById('detail-panel');
   const p = PROSPECTS.find(x => x.id === selectedId);
@@ -2411,7 +2448,8 @@ function renderDetail() {
       <div class="detail-contact">${p.contact} · ${p.role}</div>
       <div class="detail-tags">
         <span class="detail-tag">📍 ${p.location}</span>
-        ${p.email ? `<span class="detail-tag">✉ ${p.email}</span>` : ''}
+        ${p.email ? `<span class="detail-tag">✉ ${p.email} ${p.email_verified ? '✅' : '⚠️ non vérifié'}</span>` : ''}
+        ${!p.email_verified ? `<button class="detail-tag" id="verify-btn-${p.id}" style="cursor:pointer;border:none;font:inherit;" onclick="verifyEmail(${p.id})">🔍 Vérifier l'email</button>` : ''}
         ${p.website ? `<span class="detail-tag">🌐 ${p.website}</span>` : ''}
       </div>
     </div>
@@ -2549,7 +2587,7 @@ async function generateRelance(p, relanceNum, msgKey) {
   try {
     const res = await fetch(API_BASE + '/generate-relance', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (getSession()?.access_token || '') },
       body: JSON.stringify({
         prenom: document.querySelector('.user-name')?.textContent || 'Julien',
         activite: window._clientActivite || 'Aide les entreprises à développer leur activité',
@@ -2935,6 +2973,41 @@ async function animateObStep(i, delayMs) {
   el.classList.add('done');
 }
 
+let _genTimer = null, _genMsgTimer = null;
+const _GEN_MSGS = [
+  'Analyse des entreprises de votre zone…',
+  'Détection des signaux d\'intention (recrutement, levée de fonds…)',
+  'Vérification des décideurs et de leurs coordonnées…',
+  'Rédaction des messages personnalisés par IA…',
+  'Scoring et derniers ajustements…',
+];
+function startGenProgress(barId, stepId, dotClass) {
+  barId = barId || 'ob-genbar'; stepId = stepId || 'ob-s4'; dotClass = dotClass || 'ob-dot';
+  if (_genTimer) clearInterval(_genTimer);
+  if (_genMsgTimer) clearInterval(_genMsgTimer);
+  const bar = document.getElementById(barId);
+  const step = document.getElementById(stepId);
+  let pct = 0;
+  if (bar) bar.style.width = '0%';
+  _genTimer = setInterval(() => {
+    pct += (90 - pct) * 0.04;
+    if (bar) bar.style.width = pct.toFixed(1) + '%';
+  }, 600);
+  let mi = 0;
+  if (step) step.innerHTML = '<span class="' + dotClass + '"></span>' + _GEN_MSGS[0];
+  _genMsgTimer = setInterval(() => {
+    mi = (mi + 1) % _GEN_MSGS.length;
+    if (step) step.innerHTML = '<span class="' + dotClass + '"></span>' + _GEN_MSGS[mi];
+  }, 6000);
+}
+function stopGenProgress(barId) {
+  barId = barId || 'ob-genbar';
+  if (_genTimer) { clearInterval(_genTimer); _genTimer = null; }
+  if (_genMsgTimer) { clearInterval(_genMsgTimer); _genMsgTimer = null; }
+  const bar = document.getElementById(barId);
+  if (bar) bar.style.width = '100%';
+}
+
 async function launchOnboarding() {
   const prenom   = document.getElementById('ob-prenom').value.trim() || 'Vous';
   const activite = document.getElementById('ob-activite').value.trim();
@@ -2969,9 +3042,10 @@ async function launchOnboarding() {
   let newProspects = [];
   try {
     document.getElementById('ob-s4').classList.add('active');
+    startGenProgress();
     const res = await fetch(API_BASE + '/generate-prospects', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (getSession()?.access_token || '') },
       body: JSON.stringify({
         prenom,
         activite: activite_complete,
@@ -3013,10 +3087,13 @@ async function launchOnboarding() {
       }
     }));
     document.getElementById('ob-s4').classList.remove('active');
+    stopGenProgress();
+    document.getElementById('ob-s4').innerHTML = '<span class="ob-dot"></span>Messages générés';
     document.getElementById('ob-s4').classList.add('done');
   } catch(e) {
     console.error('Erreur complète:', e, e.stack);
     document.getElementById('ob-s4') && document.getElementById('ob-s4').classList.remove('active');
+    stopGenProgress();
     showToast('Erreur: ' + e.message, '❌');
     btn.disabled = false;
     btn.textContent = '⚡ Générer mes 10 premiers prospects';
@@ -3099,6 +3176,15 @@ async function animateStep(i, delayMs) {
   el.classList.add('done');
 }
 
+function blockForSubscription(message) {
+  const btn = document.getElementById('gen-btn');
+  if (btn) { btn.disabled = false; btn.textContent = '⚡ Générer mes 10 prospects'; }
+  const prog = document.getElementById('gen-progress');
+  if (prog) prog.style.display = 'none';
+  showToast(message || 'Abonnement requis pour générer de nouveaux prospects', '🔒');
+  if (typeof handleUpgrade === 'function') setTimeout(handleUpgrade, 1200);
+}
+
 async function generateProspects() {
   const secteurs = getSelected('chips-secteur');
   const tailles  = getSelected('chips-taille');
@@ -3112,228 +3198,106 @@ async function generateProspects() {
     return;
   }
 
-  // Show progress
+  // Authentification requise (et support de la future vérification d'abonnement backend)
+  const session = getSession();
+  if (!session || !session.access_token) {
+    showToast('Connectez-vous pour générer de nouveaux prospects', '⚠');
+    return;
+  }
+
   const btn = document.getElementById('gen-btn');
   btn.disabled = true;
   btn.textContent = 'Génération en cours…';
   document.getElementById('gen-progress').style.display = 'flex';
   resetSteps();
 
-  // Animate steps
   await animateStep(1, 200);
   await animateStep(2, 800);
   await animateStep(3, 700);
   await animateStep(4, 900);
 
-  // Generate new prospects based on settings
-  const newProspects = buildProspects({ secteurs, tailles, zones, signaux, prenom, activite });
+  let newProspects = [];
+  try {
+    document.getElementById('step-4').classList.add('active');
+    startGenProgress('gen-genbar', 'step-4', 'step-dot');
+    const res = await fetch(API_BASE + '/generate-prospects', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+      body: JSON.stringify({
+        prenom,
+        activite: activite || (window._clientActivite || ''),
+        secteurs, tailles, zones,
+        signaux: signaux.length ? signaux : ['recrutement', 'nouveau site', 'expansion', 'levée de fonds'],
+      }),
+    });
+
+    // -- Vérification d'abonnement : source de vérité = backend --
+    // Quand Stripe sera branché, le backend renverra 402/403 ou
+    // { subscription_required: true } si pas d'abonnement actif.
+    let data = null;
+    try { data = await res.clone().json(); } catch (e) {}
+    if (res.status === 402 || res.status === 403 || (data && (data.subscription_required || data.allowed === false))) {
+      stopGenProgress('gen-genbar');
+      blockForSubscription(data && data.message);
+      return;
+    }
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error('Erreur API ' + res.status + ': ' + errText.slice(0, 200));
+    }
+    if (!data) data = await res.json();
+
+    newProspects = (data.prospects || []).map((p, i) => ({
+      id: Date.now() + i,
+      score: i < 9 ? 'hot' : (p.score || 'warm'),
+      company: p.company, contact: p.contact, role: p.role, location: p.location,
+      sector: p.sector, signal: p.signal, signal_source: p.signal_source || 'Web',
+      email: p.email || '',
+      linkedin: 'https://linkedin.com/search/results/people/?keywords=' + encodeURIComponent(p.contact + ' ' + p.company),
+      seq: 'Étape 1/4', status: 'detected',
+      msgs: {
+        initial: (p.msgs && p.msgs.initial) ? { objet: p.msgs.initial.objet, corps: p.msgs.initial.corps } : { objet: 'Prise de contact', corps: 'Message initial' },
+        relance1: null, relance2: null, relance3: null,
+      },
+    }));
+
+    if (newProspects.length === 0) throw new Error('Aucun prospect renvoyé par le serveur');
+
+    stopGenProgress('gen-genbar');
+    document.getElementById('step-4').innerHTML = '<span class="step-dot"></span>Messages générés';
+    document.getElementById('step-4').classList.add('done');
+  } catch (e) {
+    stopGenProgress('gen-genbar');
+    console.error('Erreur génération:', e);
+    showToast('Erreur: ' + e.message, '❌');
+    btn.disabled = false;
+    btn.textContent = '⚡ Générer mes 10 prospects';
+    document.getElementById('gen-progress').style.display = 'none';
+    return;
+  }
 
   await animateStep(5, 600);
   await new Promise(r => setTimeout(r, 400));
 
-  // Update dashboard
   PROSPECTS.length = 0;
   newProspects.forEach(p => PROSPECTS.push(p));
   prospectStatuses = {};
   PROSPECTS.forEach(p => prospectStatuses[p.id] = p.status);
   selectedId = null;
+  if (activite) window._clientActivite = activite;
+
+  await saveProspectsToDB(newProspects);
 
   closeSettings();
   renderList();
   document.getElementById('detail-panel').innerHTML =
     '<div class="detail-empty"><div class="detail-empty-icon">◈</div><div>Sélectionnez un prospect<br>pour voir ses messages</div></div>';
 
-  // Update topbar
   const sub = document.querySelector('.topbar-sub');
-  if (sub) sub.innerHTML = '<span class="live-dot"></span>10 prospects · ' +
-    secteurs.slice(0,2).join(', ') + ' · ' + zones[0];
+  if (sub) sub.innerHTML = '<span class="live-dot"></span>10 prospects · ' + secteurs.slice(0, 2).join(', ');
 
   showToast('10 nouveaux prospects générés !', '⚡');
-  setTimeout(() => selectProspect(1), 400);
-}
-
-// ── PROSPECT BUILDER ─────────────────────────────────────────────────────────
-function buildProspects({ secteurs, tailles, zones, signaux, prenom, activite }) {
-  const pitch = activite || 'PipelineAI vous aide à trouver vos prochains clients';
-
-  const pool = [
-    // BTP
-    { company:'Rénovation Dupont & Fils', contact:'Jean Dupont', role:'Gérant', location:'Lyon (69)', email:'j.dupont@renovation-dupont.fr', linkedin:'https://linkedin.com/in/jean-dupont-renovation', sector:'BTP / Construction', signal:'recrutement', signalText:'Recrute 2 chefs de chantier sur Indeed', score:'hot' },
-    { company:'Isolation Thermique Pro', contact:'Alain Favre', role:'Directeur', location:'Grenoble (38)', email:'a.favre@itp-isolation.fr', linkedin:'https://linkedin.com/in/alain-favre-isolation', sector:'BTP / Construction', signal:'certification', signalText:'Certification RGE obtenue ce mois', score:'hot' },
-    // Commerce
-    { company:'Réseau Optique Vision+', contact:'Sylvie Morel', role:'Directrice réseau', location:'Paris (75)', email:'s.morel@visionplus.fr', linkedin:'https://linkedin.com/in/sylvie-morel-optique', sector:'Commerce / Distribution', signal:'expansion', signalText:'Ouverture du 4e magasin annoncée', score:'hot' },
-    { company:'Grossiste Alimentaire Léon', contact:'Robert Léon', role:'PDG', location:'Marseille (13)', email:'r.leon@grossiste-leon.fr', linkedin:'https://linkedin.com/in/robert-leon-grossiste', sector:'Commerce / Distribution', signal:'investissement', signalText:'Nouveau entrepôt frigorifique inauguré', score:'warm' },
-    // Services B2B
-    { company:'Cabinet RH Partners', contact:'Lucie Verne', role:'Associée', location:'Bordeaux (33)', email:'l.verne@rh-partners.fr', linkedin:'https://linkedin.com/in/lucie-verne-rh', sector:'Services aux entreprises', signal:'recrutement', signalText:'Recrute 3 consultants RH — offre LinkedIn', score:'hot' },
-    { company:'Fiduciaire Atlantique', contact:'Pierre Gauthier', role:'Expert-comptable', location:'Nantes (44)', email:'p.gauthier@fiduciaire-atlantique.fr', linkedin:'https://linkedin.com/in/pierre-gauthier-expert', sector:'Services aux entreprises', signal:'nouveau site', signalText:'Nouveau site B2B lancé il y a 1 semaine', score:'warm' },
-    // Santé
-    { company:'Centre Médical Pluridisciplinaire', contact:'Dr Anne Blanc', role:'Directrice médicale', location:'Toulouse (31)', email:'a.blanc@cmptoulouse.fr', linkedin:'https://linkedin.com/in/anne-blanc-medecin', sector:'Santé / Médical', signal:'expansion', signalText:'Ouverture 2e antenne annoncee', score:'hot' },
-    { company:'Pharmacie des Halles', contact:'François Renaud', role:'Pharmacien titulaire', location:'Strasbourg (67)', email:'f.renaud@pharmacie-halles.fr', linkedin:'https://linkedin.com/in/francois-renaud-pharmacien', sector:'Santé / Médical', signal:'investissement', signalText:'Investissement dans un automate de délivrance', score:'warm' },
-    // Transport
-    { company:'Logistique Express Sud', contact:'Éric Castel', role:'Directeur opérations', location:'Montpellier (34)', email:'e.castel@logistique-sud.fr', linkedin:'https://linkedin.com/in/eric-castel-logistique', sector:'Transport / Logistique', signal:'recrutement', signalText:'Recrute 5 chauffeurs + 1 responsable exploitation', score:'hot' },
-    { company:'Messagerie Rapide Bretagne', contact:'Yann Kerven', role:'Gérant', location:'Rennes (35)', email:'y.kerven@mrb-transport.fr', linkedin:'https://linkedin.com/in/yann-kerven-transport', sector:'Transport / Logistique', signal:'investissement', signalText:'Achat de 6 nouveaux véhicules électriques', score:'warm' },
-    // Formation
-    { company:'Institut Formation Continue', contact:'Claire Aubert', role:'Directrice pédagogique', location:'Lille (59)', email:'c.aubert@ifc-formation.fr', linkedin:'https://linkedin.com/in/claire-aubert-formation', sector:'Formation / Conseil', signal:'certification', signalText:'Certif. Qualiopi etendue 3 nouveaux domaines', score:'warm' },
-    { company:'Conseil & Stratégie PME', contact:'Bruno Lemaire', role:'Associé fondateur', location:'Lyon (69)', email:'b.lemaire@cs-pme.fr', linkedin:'https://linkedin.com/in/bruno-lemaire-conseil', sector:'Formation / Conseil', signal:'presse', signalText:'Interview dans Les Échos sur leur méthode', score:'warm' },
-    // Restauration
-    { company:'Groupe Brasseries du Sud', contact:'Michel Arnaud', role:'PDG', location:'Nice (06)', email:'m.arnaud@brasseries-sud.fr', linkedin:'https://linkedin.com/in/michel-arnaud-brasseries', sector:'Restauration / Hôtellerie', signal:'expansion', signalText:'Ouverture de la 5e brasserie en mars', score:'hot' },
-    { company:'Hôtel Logis des Pins', contact:'Sandrine Petit', role:'Directrice', location:'Bordeaux (33)', email:'s.petit@logis-des-pins.fr', linkedin:'https://linkedin.com/in/sandrine-petit-hotel', sector:'Restauration / Hôtellerie', signal:'investissement', signalText:'Rénovation complète + label 4 étoiles visé', score:'warm' },
-    // Tech
-    { company:'Éditeur ERP MadeInFrance', contact:'Thomas Garnier', role:'CEO', location:'Paris (75)', email:'t.garnier@erp-mif.fr', linkedin:'https://linkedin.com/in/thomas-garnier-erp', sector:'Tech / Digital', signal:'levée de fonds', signalText:'Levée de 800K€ annoncée sur Maddyness', score:'hot' },
-    { company:'Agence Digitale Créative', contact:'Emma Roux', role:'Directrice', location:'Nantes (44)', email:'e.roux@agence-creative.fr', linkedin:'https://linkedin.com/in/emma-roux-agence', sector:'Tech / Digital', signal:'recrutement', signalText:'3 offres emploi actives dont 1 commercial', score:'warm' },
-  ];
-
-  // Filter by selected sectors
-  let filtered = pool.filter(p => secteurs.some(s => p.sector.includes(s.split(' /')[0])));
-  if (filtered.length < 10) filtered = [...pool]; // fallback to all if not enough
-
-  // Sort: hot first, then warm
-  filtered.sort((a,b) => (a.score === 'hot' ? -1 : 1));
-
-  // Take 10
-  const selected = filtered.slice(0, 10);
-
-  // Build full prospect objects with messages
-  return selected.map((p, i) => ({
-    id: i + 1,
-    score: i < 9 ? 'hot' : 'warm', // 90% chauds
-    company: p.company,
-    contact: p.contact,
-    role: p.role,
-    location: p.location,
-    email: p.email,
-    website: '',
-    linkedin: p.linkedin,
-    signal: p.signalText,
-    signal_source: getSignalSource(p.signal),
-    seq: 'Étape 1/4',
-    status: 'detected',
-    msgs: buildMsgs(p, prenom, pitch),
-  }));
-}
-
-function getSignalSource(signal) {
-  const map = { recrutement:'LinkedIn / Indeed', 'nouveau site':'Web', 'levée de fonds':'Maddyness', expansion:'LinkedIn', certification:'Site web', investissement:'LinkedIn', presse:'Presse' };
-  return map[signal] || 'Web';
-}
-
-function buildMsgs(p, prenom, pitch) {
-  const nom = p.contact.split(' ')[0];
-  const accroche = buildAccroche(p);
-  const douleur  = buildDouleur(p);
-  // pitch = activité du client, ex: "J'aide les PME à optimiser leur logistique"
-  const pitchLine = pitch ? pitch : "Je serais ravi d'echanger sur comment je pourrais vous aider.";
-
-  return {
-    initial: {
-      objet: buildObjet(p),
-      corps: `Bonjour ${nom},
-
-${accroche}
-
-${douleur}
-
-${pitchLine}
-
-Seriez-vous disponible pour un échange de 15 minutes cette semaine ?
-
-Cordialement,
-${prenom}`
-    },
-    relance1: {
-      objet: `Suite — ${p.company}`,
-      corps: `Bonjour ${nom},
-
-Je reviens vers vous rapidement — ${buildRelance1(p)}
-
-${pitchLine}
-
-Seriez-vous disponible pour un échange de 15 minutes cette semaine ?
-
-Cordialement,
-${prenom}`
-    },
-    relance2: {
-      objet: `${p.company} — une dernière idée`,
-      corps: `Bonjour ${nom},
-
-Je voulais partager une réflexion avec vous — des entreprises dans votre situation ont souvent trouvé de la valeur dans ce que je propose.
-
-${pitchLine}
-
-Si le timing n'est pas bon maintenant, pas de souci. Je reste disponible.
-
-${prenom}`
-    },
-    relance3: {
-      objet: `Dernier message, ${nom}`,
-      corps: `Bonjour ${nom},
-
-Ce sera mon dernier message — je ne veux pas vous solliciter davantage.
-
-Si la question du développement commercial se pose dans les prochains mois, PipelineAI sera là : pipelineai.fr/decouverte
-
-Bonne continuation,
-${prenom}`
-    }
-  };
-}
-
-function buildDouleur(p) {
-  const map = {
-    recrutement: "Recruter c'est bien — mais si le carnet de commandes ne suit pas, les nouveaux collaborateurs arrivent avant les nouveaux clients. C'est souvent là que le développement commercial prend du retard.",
-    'nouveau site': "Un beau site attire des visiteurs, mais il ne prospecte pas à votre place. Les clients qui ont vraiment besoin de vous en ce moment, ils ne savent pas encore que vous existez.",
-    'levée de fonds': "Avec de l'argent frais, chaque semaine sans nouveaux clients coûte cher. La prospection manuelle prend du temps — du temps que vous n'avez pas forcément.",
-    expansion: "Une expansion, c'est de nouveaux coûts fixes dès le premier jour. Le pipeline commercial doit suivre immédiatement — pas dans 3 mois quand le bouche-à-oreille décolle.",
-    certification: "Votre certification est un argument de vente puissant — mais seulement si vos prospects en entendent parler. La plupart des entreprises sous-exploitent leurs certifications faute de prospection active.",
-    investissement: "Un investissement matériel se rentabilise par les contrats qu'il génère. Mais les clients ne viennent pas seuls — il faut aller les chercher.",
-    presse: "Une mention presse crée une fenêtre d'opportunité courte. Les prospects qui vous lisent aujourd'hui oublieront demain si vous ne les contactez pas maintenant.",
-  };
-  return map[p.signal] || "Le vrai frein à la croissance des PME, ce n'est pas le produit — c'est le pipeline commercial qui ne se remplit pas assez vite.";
-}
-
-function buildROI(p) {
-  return "PipelineAI détecte les entreprises qui ont un signal d'achat en ce moment, rédige un message personnalisé pour chacune, et suit les relances automatiquement. 10 prospects qualifiés livrés en 48h pour 79 €. Si un seul devient client, vous êtes rentable — souvent ×10 ou plus.";
-}
-
-
-function buildObjet(p) {
-  const map = {
-    recrutement: `Votre recrutement chez ${p.company} — et vos prochains clients ?`,
-    'nouveau site': `Votre nouveau site — comment remplir le pipeline ?`,
-    'levée de fonds': `Félicitations pour votre levée — et maintenant ?`,
-    expansion: `Votre expansion — les nouveaux clients suivent ?`,
-    certification: `Votre certification — un argument commercial sous-exploité`,
-    investissement: `Votre investissement — et les nouveaux contrats ?`,
-    presse: `Votre article — transformer la visibilité en clients`,
-  };
-  return map[p.signal] || `${p.company} — une question rapide`;
-}
-
-function buildAccroche(p) {
-  const map = {
-    recrutement: `J'ai vu que ${p.company} recrute en ce moment — c'est souvent le signe d'une belle dynamique de croissance.`,
-    'nouveau site': `J'ai repéré le lancement de votre nouveau site — le positionnement est bien travaillé.`,
-    'levée de fonds': `Félicitations pour votre levée — c'est une belle validation de votre projet.`,
-    expansion: `J'ai vu votre annonce d'expansion chez ${p.company} — belle étape.`,
-    certification: `J'ai vu votre nouvelle certification — c'est un vrai différenciateur commercial.`,
-    investissement: `J'ai vu votre investissement récent chez ${p.company} — ça appelle de nouveaux contrats pour le rentabiliser.`,
-    presse: `J'ai lu votre article dans la presse — belle visibilité pour ${p.company}.`,
-  };
-  return map[p.signal] || `J'ai repéré ${p.company} et je voulais vous contacter directement.`;
-}
-
-function buildRelance1(p) {
-  const map = {
-    recrutement: 'votre nouveau collaborateur est bien intégré ?',
-    'nouveau site': 'votre site commence à générer des demandes ?',
-    'levée de fonds': 'votre pipeline commercial suit le rythme de votre levée ?',
-    expansion: 'votre expansion se passe bien ?',
-    certification: 'votre certification génère déjà de nouveaux contrats ?',
-    investissement: 'votre investissement est rentabilisé ?',
-    presse: "l'article a généré des contacts commerciaux concrets ?",
-  };
-  return map[p.signal] || 'comment avancent vos projets ?';
+  if (PROSPECTS.length > 0) setTimeout(() => selectProspect(PROSPECTS[0].id), 400);
 }
 
 // ── TOAST ───────────────────────────────────────────────────────────────────
@@ -3764,7 +3728,7 @@ function checkUpsell(contacted, converted) {
     banner.classList.add('show');
   } else if (contacted >= 5) {
     title.textContent = '⚡ Vous êtes actif — passez à la vitesse supérieure';
-    sub.textContent = 'Vous avez contacté ' + contacted + ' prospects. Le plan Starter vous donne 20 prospects/mois pour 29 €.';
+    sub.textContent = 'Vous avez contacté ' + contacted + ' prospects. Le plan Starter vous donne 30 prospects/mois pour 29 €.';
     banner.classList.add('show');
   } else if (contacted >= 3) {
     title.textContent = '👍 Bon démarrage — encore 7 prospects à contacter';
@@ -3854,6 +3818,116 @@ function exportCSV() {
   const a = document.createElement('a'); a.href=url; a.download='pipelineai-prospects.csv'; a.click();
   showToast('Export CSV téléchargé', '↓');
   addHistory('Export CSV', 'Tous les prospects');
+}
+
+// ── IMPORT CSV ────────────────────────────────────────────────
+function parseCSV(text) {
+  const rows = [];
+  let row = [], field = '', inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQuotes) {
+      if (c === '"') {
+        if (text[i + 1] === '"') { field += '"'; i++; }
+        else inQuotes = false;
+      } else field += c;
+    } else if (c === '"') {
+      inQuotes = true;
+    } else if (c === ',' || c === ';') {
+      row.push(field); field = '';
+    } else if (c === '\n' || c === '\r') {
+      if (c === '\r' && text[i + 1] === '\n') i++;
+      row.push(field); rows.push(row); row = []; field = '';
+    } else field += c;
+  }
+  if (field !== '' || row.length) { row.push(field); rows.push(row); }
+  return rows;
+}
+
+function normalizeHeader(h) {
+  return (h || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+}
+
+async function importCSV(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  event.target.value = '';  // permet de réimporter le même fichier
+
+  let text;
+  try { text = await file.text(); }
+  catch (e) { showToast('Lecture du fichier impossible', '⚠'); return; }
+
+  const rows = parseCSV(text).filter(r => r.some(c => c.trim() !== ''));
+  if (rows.length < 2) { showToast('CSV vide ou sans données', '⚠'); return; }
+
+  const headers = rows[0].map(normalizeHeader);
+  const findCol = (names) => headers.findIndex(h => names.includes(h));
+  const cols = {
+    company:  findCol(['entreprise', 'company', 'societe']),
+    contact:  findCol(['contact', 'nom', 'name']),
+    role:     findCol(['role', 'poste', 'fonction']),
+    location: findCol(['localisation', 'location', 'ville', 'lieu']),
+    email:    findCol(['email', 'e-mail', 'mail', 'courriel']),
+    sector:   findCol(['secteur', 'sector', 'industrie']),
+    signal:   findCol(['signal']),
+  };
+  if (cols.company === -1 && cols.contact === -1) {
+    showToast("En-tête 'Entreprise' ou 'Contact' introuvable", '⚠');
+    return;
+  }
+
+  const cell = (r, i) => (i >= 0 && i < r.length) ? r[i].trim() : '';
+  const imported = rows.slice(1).map(r => ({
+    company: cell(r, cols.company) || 'Sans nom',
+    contact: cell(r, cols.contact),
+    role: cell(r, cols.role),
+    location: cell(r, cols.location),
+    email: cell(r, cols.email),
+    sector: cell(r, cols.sector),
+    signal: cell(r, cols.signal),
+    signal_source: 'Import CSV',
+    score: 'warm',
+    linkedin: '',
+    msgs: {},
+  }));
+
+  const session = getSession();
+  const payload = session && parseJwt(session.access_token);
+  if (!payload) { showToast('Session expirée, reconnectez-vous', '⚠'); return; }
+
+  showToast('Import en cours…', '↑');
+  try {
+    const res = await fetch(API_BASE + '/prospects/order/' + payload.order_id + '/batch', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+      body: JSON.stringify({ prospects: imported }),
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const saved = data.prospects || [];
+    // Le serveur renvoie les prospects avec leur ID de base : source de vérité
+    saved.forEach(dbP => {
+      const p = {
+        id: dbP.id,
+        company: dbP.company, contact: dbP.contact, role: dbP.role, location: dbP.location,
+        email: dbP.email || '', email_verified: !!dbP.email_verified,
+        sector: dbP.sector || '', signal: dbP.signal || '',
+        signal_source: dbP.signal_source || 'Import CSV',
+        score: dbP.score || 'warm', linkedin: dbP.linkedin || '',
+        status: dbP.status || 'detected',
+        msgs: (dbP.msgs && Object.keys(dbP.msgs).length)
+          ? dbP.msgs
+          : { initial: { objet: '', corps: '' }, relance1: null, relance2: null, relance3: null },
+      };
+      PROSPECTS.push(p);
+      prospectStatuses[p.id] = p.status;
+    });
+    renderList();
+    showToast(saved.length + ' prospects importés ✓', '✓');
+    addHistory('Import CSV', saved.length + ' prospects');
+  } catch (e) {
+    showToast("Échec de l'import, réessayez", '⚠');
+  }
 }
 
 // ── EXPORT PDF ────────────────────────────────────────────────
@@ -4260,6 +4334,18 @@ async function victorSend() {
   const input = document.getElementById('victor-input');
   const text = input.value.trim();
   if (!text) return;
+
+  // Limite de questions par jour : évite une consommation de tokens incontrôlée
+  // si un utilisateur enchaîne les messages avec Victor.
+  const VICTOR_MAX_Q = 25;
+  const qKey = 'victor_q_' + new Date().toISOString().slice(0, 10);
+  const qCount = parseInt(localStorage.getItem(qKey) || '0', 10);
+  if (qCount >= VICTOR_MAX_Q) {
+    victorAddMessage('victor', "Vous avez atteint la limite de questions pour aujourd'hui. Pour continuer, écrivez-moi à julien@pipelineai.fr 🙂");
+    return;
+  }
+  localStorage.setItem(qKey, String(qCount + 1));
+
   input.value = '';
 
   // Clear suggestions
@@ -4274,7 +4360,7 @@ async function victorSend() {
   try {
     const response = await fetch(API_BASE + '/victor/chat', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (getSession()?.access_token || '') },
       body: JSON.stringify({
         system: getVictorSystem(),
         messages: victorHistory.slice(-10),
@@ -4816,7 +4902,7 @@ async function generateOfferDetails() {
     // Appel backend Railway — clé API protégée côté serveur
     const res = await fetch(API_BASE + '/generate-offer-details', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (getSession()?.access_token || '') },
       body: JSON.stringify({ titre })
     });
 
