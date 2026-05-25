@@ -2360,6 +2360,8 @@ let activeFilter   = 'all';
 let activeMsg      = 'initial';
 let prospectStatuses = {};
 PROSPECTS.forEach(p => prospectStatuses[p.id] = p.status);
+// Déclaré tôt pour éviter un TDZ : renderList() peut être appelé au chargement (avant la section filtres).
+let activeAdvancedFilters = { search: '', score: '', sector: '', city: '' };
 
 // ── RENDER PROSPECT LIST ────────────────────────────────────────────────────
 function renderList() {
@@ -4727,7 +4729,7 @@ function cancelMsgEdit(id) {
 
 // ── FILTRES AVANCÉS ───────────────────────────────────────────
 let advancedFiltersOpen = false;
-let activeAdvancedFilters = { search: '', score: '', sector: '', city: '' };
+// activeAdvancedFilters est déclaré en haut du script (évite le TDZ au chargement)
 
 function toggleAdvancedFilters() {
   advancedFiltersOpen = !advancedFiltersOpen;
