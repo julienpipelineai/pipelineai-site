@@ -1889,30 +1889,42 @@ body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
       </div>
 
       <div class="onboarding-group">
-        <div class="onboarding-label">Zone géographique</div>
-        <div style="margin-bottom:10px;">
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;" id="zone-precision-btns">
-            <button class="zone-prec-btn active" data-prec="pays" onclick="setZonePrecision('pays')">🇫🇷 France entière</button>
-            <button class="zone-prec-btn" data-prec="region" onclick="setZonePrecision('region')">Par région</button>
-            <button class="zone-prec-btn" data-prec="departement" onclick="setZonePrecision('departement')">Par département</button>
-            <button class="zone-prec-btn" data-prec="ville" onclick="setZonePrecision('ville')">Par ville</button>
+        <!-- ancien sélecteur masqué (le moteur utilise le champ "Zone géographique — départements" ci-dessous) -->
+        <div style="display:none;">
+          <div style="margin-bottom:10px;">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;" id="zone-precision-btns">
+              <button class="zone-prec-btn active" data-prec="pays" onclick="setZonePrecision('pays')">🇫🇷 France entière</button>
+              <button class="zone-prec-btn" data-prec="region" onclick="setZonePrecision('region')">Par région</button>
+              <button class="zone-prec-btn" data-prec="departement" onclick="setZonePrecision('departement')">Par département</button>
+              <button class="zone-prec-btn" data-prec="ville" onclick="setZonePrecision('ville')">Par ville</button>
+            </div>
+            <div id="zone-select-wrap" style="display:none;">
+              <select id="zone-select" class="zone-select-input" onchange="updateZoneChip()">
+                <option value="">Sélectionnez…</option>
+              </select>
+            </div>
           </div>
-          <div id="zone-select-wrap" style="display:none;">
-            <select id="zone-select" class="zone-select-input" onchange="updateZoneChip()">
-              <option value="">Sélectionnez…</option>
-            </select>
+          <div id="ob-chips-zone" style="display:none;">
+            <div class="chip selected" data-val="France entière">🇫🇷 France entière</div>
           </div>
-        </div>
-        <div id="ob-chips-zone" style="display:none;">
-          <div class="chip selected" data-val="France entière">🇫🇷 France entière</div>
-        </div>
-        <div id="zone-display" style="min-height:36px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;">
-          <div class="chip selected" data-val="France entière" style="pointer-events:none;">🇫🇷 France entière</div>
+          <div id="zone-display" style="min-height:36px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;">
+            <div class="chip selected" data-val="France entière" style="pointer-events:none;">🇫🇷 France entière</div>
+          </div>
         </div>
         <div style="margin-top:14px;">
-          <div class="onboarding-label" style="font-size:0.85rem;">Départements ciblés <span style="color:#888;font-weight:400;">(codes, ex : 69, 01, 38)</span></div>
+          <div class="onboarding-label">Zone géographique <span style="color:#888;font-weight:400;font-size:0.85rem;">— départements ciblés (codes, ex : 69, 01, 38)</span></div>
           <input id="ob-departements" type="text" placeholder="69, 01, 38" value="69" style="width:100%;padding:0.6rem 0.8rem;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.9rem;outline:none;">
         </div>
+      </div>
+
+      <div class="onboarding-group">
+        <div class="onboarding-label">Style de prospection</div>
+        <select id="ob-style" style="width:100%;padding:0.6rem 0.8rem;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.9rem;outline:none;">
+          <option value="A">Bienveillant &amp; humain</option>
+          <option value="B">Direct &amp; cash</option>
+          <option value="C">Curieux &amp; question ouverte</option>
+          <option value="D">Provocateur &amp; dialogue</option>
+        </select>
       </div>
 
     </div>
@@ -1975,16 +1987,18 @@ body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
 
       <div class="settings-group">
         <div class="settings-label">Zone géographique</div>
-        <div class="chip-grid" id="chips-zone">
+        <div class="chip-grid" id="chips-zone" style="display:none;">
           <div class="chip selected" data-val="France entière">🇫🇷 France entière</div>
-          <div class="chip" data-val="Île-de-France">Paris / IDF</div>
-          <div class="chip" data-val="Auvergne-Rhône-Alpes">Lyon / AuRA</div>
-          <div class="chip" data-val="Nouvelle-Aquitaine">Bordeaux / NA</div>
-          <div class="chip" data-val="Occitanie">Toulouse / Occitanie</div>
-          <div class="chip" data-val="Hauts-de-France">Lille / HDF</div>
-          <div class="chip" data-val="PACA">Marseille / PACA</div>
-          <div class="chip" data-val="Bretagne">Rennes / Bretagne</div>
         </div>
+        <div class="settings-desc">Codes département, ex : 69, 01, 38</div>
+        <input class="settings-input" id="gen-departements" type="text" placeholder="69, 01, 38" value="69">
+        <div class="settings-label" style="margin-top:16px;">Style de prospection</div>
+        <select class="settings-input" id="gen-style">
+          <option value="A">Bienveillant &amp; humain</option>
+          <option value="B">Direct &amp; cash</option>
+          <option value="C">Curieux &amp; question ouverte</option>
+          <option value="D">Provocateur &amp; dialogue</option>
+        </select>
       </div>
 
       <div class="settings-group">
@@ -3026,7 +3040,9 @@ async function launchOnboarding() {
   const SECTEUR_KEYS = {
     'BTP / Construction':'btp','Commerce / Distribution':'commerce','Services aux entreprises':'services',
     'Santé / Médical':'sante','Transport / Logistique':'transport','Restauration / Hôtellerie':'restauration',
-    'Tech / Digital':'tech','Immobilier':'immobilier','Industrie / Fabrication':'industrie','Beauté / Bien-être':'beaute'
+    'Tech / Digital':'tech','Immobilier':'immobilier','Industrie / Fabrication':'industrie','Beauté / Bien-être':'beaute',
+    'Formation / Conseil':'formation','Juridique / Comptabilité':'juridique','Énergie / Environnement':'energie',
+    'Finance / Assurance':'finance','Événementiel / Communication':'evenementiel','Agriculture / Agroalimentaire':'agriculture'
   };
   const secteurLabels = getObSelected('ob-chips-secteur');
   const secteurs = [...new Set(secteurLabels.map(l => SECTEUR_KEYS[l]).filter(Boolean))];
@@ -3067,6 +3083,7 @@ async function launchOnboarding() {
         secteurs,
         departements: deps,
         signaux: ['recrutement', 'creation'],
+        style: (document.getElementById('ob-style')?.value || 'A'),
         max_prospects: 10
       }),
     });
@@ -3208,15 +3225,31 @@ function blockForSubscription(message) {
 }
 
 async function generateProspects() {
-  const secteurs = getSelected('chips-secteur');
-  const tailles  = getSelected('chips-taille');
-  const zones    = getSelected('chips-zone');
-  const signaux  = getSelected('chips-signal');
+  const SECTEUR_KEYS = {
+    'BTP / Construction':'btp','Commerce / Distribution':'commerce','Services aux entreprises':'services',
+    'Santé / Médical':'sante','Transport / Logistique':'transport','Restauration / Hôtellerie':'restauration',
+    'Tech / Digital':'tech','Immobilier':'immobilier','Industrie / Fabrication':'industrie','Beauté / Bien-être':'beaute',
+    'Formation / Conseil':'formation','Juridique / Comptabilité':'juridique','Énergie / Environnement':'energie',
+    'Finance / Assurance':'finance','Événementiel / Communication':'evenementiel','Agriculture / Agroalimentaire':'agriculture'
+  };
+  const secteurs = [...new Set(getSelected('chips-secteur').map(l => SECTEUR_KEYS[l]).filter(Boolean))];
+  const sigSel = getSelected('chips-signal');
+  const signaux = [];
+  if (sigSel.includes('recrutement')) signaux.push('recrutement');
+  if (sigSel.includes('expansion')) signaux.push('creation');
+  if (!signaux.length) signaux.push('recrutement', 'creation');
+  const deps = (document.getElementById('gen-departements')?.value || '')
+    .split(/[,;\s]+/).map(s => s.trim()).filter(s => /^\d{2,3}$/.test(s));
   const prenom   = document.getElementById('input-prenom').value.trim() || 'Votre prénom';
   const activite = document.getElementById('input-activite').value.trim();
 
-  if (!secteurs.length || !tailles.length) {
-    showToast('Sélectionnez au moins 1 secteur et 1 taille', '⚠');
+  if (!secteurs.length) {
+    showToast('Sélectionnez au moins 1 secteur pris en charge', '⚠');
+    return;
+  }
+  if (!deps.length) {
+    showToast('Indiquez au moins un département (ex : 69)', '⚠');
+    document.getElementById('gen-departements')?.focus();
     return;
   }
 
@@ -3242,14 +3275,17 @@ async function generateProspects() {
   try {
     document.getElementById('step-4').classList.add('active');
     startGenProgress('gen-genbar', 'step-4', 'step-dot');
-    const res = await fetch(API_BASE + '/generate-prospects', {
+    const res = await fetch(API_BASE + '/source-prospects', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
       body: JSON.stringify({
         prenom,
         activite: activite || (window._clientActivite || ''),
-        secteurs, tailles, zones,
-        signaux: signaux.length ? signaux : ['recrutement', 'nouveau site', 'expansion', 'levée de fonds'],
+        secteurs,
+        departements: deps,
+        signaux,
+        style: (document.getElementById('gen-style')?.value || 'A'),
+        max_prospects: 10
       }),
     });
 
@@ -3271,7 +3307,7 @@ async function generateProspects() {
 
     newProspects = (data.prospects || []).map((p, i) => ({
       id: Date.now() + i,
-      score: i < 9 ? 'hot' : (p.score || 'warm'),
+      score: p.score || 'warm',
       company: p.company, contact: p.contact, role: p.role, location: p.location,
       sector: p.sector, signal: p.signal, signal_source: p.signal_source || 'Web',
       email: p.email || '',
@@ -3283,7 +3319,13 @@ async function generateProspects() {
       },
     }));
 
-    if (newProspects.length === 0) throw new Error('Aucun prospect renvoyé par le serveur');
+    if (newProspects.length === 0) {
+      stopGenProgress('gen-genbar');
+      showToast(data.info || "Aucun prospect trouvé pour ces critères", 'ℹ');
+      btn.disabled = false; btn.textContent = '⚡ Générer mes 10 prospects';
+      document.getElementById('gen-progress').style.display = 'none';
+      return;
+    }
 
     stopGenProgress('gen-genbar');
     document.getElementById('step-4').innerHTML = '<span class="step-dot"></span>Messages générés';
