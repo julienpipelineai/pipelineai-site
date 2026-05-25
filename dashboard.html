@@ -3545,10 +3545,10 @@ async function saveProspectsToDB(prospects) {
   try {
     const body = {
       prospects: prospects.map(p => ({
-        company: p.company,
-        contact: p.contact,
-        role: p.role,
-        location: p.location,
+        company: p.company || '',
+        contact: p.contact || '',
+        role: p.role || '',
+        location: p.location || '',
         email: p.email || '',
         linkedin: p.linkedin || '',
         sector: p.sector || '',
