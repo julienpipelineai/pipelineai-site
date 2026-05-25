@@ -3127,10 +3127,14 @@ async function launchOnboarding() {
       throw new Error('Erreur API ' + res.status + ': ' + errText.slice(0,200));
     }
     const data = await res.json();
+    console.log('[source-prospects] réponse:', data, 'debug:', data.debug);
     if (data.subscription_required || data.allowed === false || !data.prospects || data.prospects.length === 0) {
       stopGenProgress();
       document.getElementById('ob-s4') && document.getElementById('ob-s4').classList.remove('active');
-      showToast(data.message || data.info || "Aucun prospect trouvé pour ces critères", 'ℹ');
+      const msg = data.message || data.info || "Aucun prospect trouvé pour ces critères";
+      showToast(msg, 'ℹ');
+      alert("Génération terminée — aucun prospect retenu.\n\n" + msg +
+            (data.debug ? "\n\nDétail technique : " + JSON.stringify(data.debug) : ""));
       btn.disabled = false; btn.textContent = '⚡ Générer mes premiers prospects';
       document.getElementById('ob-progress').style.display = 'none';
       return;
