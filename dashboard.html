@@ -1909,6 +1909,10 @@ body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
         <div id="zone-display" style="min-height:36px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;">
           <div class="chip selected" data-val="France entière" style="pointer-events:none;">🇫🇷 France entière</div>
         </div>
+        <div style="margin-top:14px;">
+          <div class="onboarding-label" style="font-size:0.85rem;">Départements ciblés <span style="color:#888;font-weight:400;">(codes, ex : 69, 01, 38)</span></div>
+          <input id="ob-departements" type="text" placeholder="69, 01, 38" value="69" style="width:100%;padding:0.6rem 0.8rem;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.9rem;outline:none;">
+        </div>
       </div>
 
     </div>
@@ -3019,12 +3023,23 @@ async function launchOnboarding() {
     return;
   }
   const activite_complete = activite + (services ? ' | Services : ' + services : '') + (probleme ? ' | Benefices clients : ' + probleme : '');
-  const secteurs = getObSelected('ob-chips-secteur');
-  const tailles  = getObSelected('ob-chips-taille');
-  const zones    = getSelectedZones();
+  const SECTEUR_KEYS = {
+    'BTP / Construction':'btp','Commerce / Distribution':'commerce','Services aux entreprises':'services',
+    'Santé / Médical':'sante','Transport / Logistique':'transport','Restauration / Hôtellerie':'restauration',
+    'Tech / Digital':'tech','Immobilier':'immobilier','Industrie / Fabrication':'industrie','Beauté / Bien-être':'beaute'
+  };
+  const secteurLabels = getObSelected('ob-chips-secteur');
+  const secteurs = [...new Set(secteurLabels.map(l => SECTEUR_KEYS[l]).filter(Boolean))];
+  const deps = (document.getElementById('ob-departements')?.value || '')
+    .split(/[,;\s]+/).map(s => s.trim()).filter(s => /^\d{2,3}$/.test(s));
 
-  if (!secteurs.length || !tailles.length) {
-    showToast('Sélectionnez au moins 1 secteur et 1 taille', '⚠');
+  if (!secteurs.length) {
+    showToast("Sélectionnez au moins 1 secteur pris en charge", '⚠');
+    return;
+  }
+  if (!deps.length) {
+    showToast("Indiquez au moins un département (ex : 69)", '⚠');
+    document.getElementById('ob-departements')?.focus();
     return;
   }
 
@@ -3043,16 +3058,16 @@ async function launchOnboarding() {
   try {
     document.getElementById('ob-s4').classList.add('active');
     startGenProgress();
-    const res = await fetch(API_BASE + '/generate-prospects', {
+    const res = await fetch(API_BASE + '/source-prospects', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (getSession()?.access_token || '') },
       body: JSON.stringify({
         prenom,
         activite: activite_complete,
         secteurs,
-        tailles,
-        zones,
-        signaux: ['recrutement', 'nouveau site', 'expansion', 'levée de fonds']
+        departements: deps,
+        signaux: ['recrutement', 'creation'],
+        max_prospects: 10
       }),
     });
     if (!res.ok) {
@@ -3060,11 +3075,18 @@ async function launchOnboarding() {
       throw new Error('Erreur API ' + res.status + ': ' + errText.slice(0,200));
     }
     const data = await res.json();
-    console.log('API response ok, prospects:', data.prospects?.length);
+    if (data.subscription_required || data.allowed === false || !data.prospects || data.prospects.length === 0) {
+      stopGenProgress();
+      document.getElementById('ob-s4') && document.getElementById('ob-s4').classList.remove('active');
+      showToast(data.message || data.info || "Aucun prospect trouvé pour ces critères", 'ℹ');
+      btn.disabled = false; btn.textContent = '⚡ Générer mes premiers prospects';
+      document.getElementById('ob-progress').style.display = 'none';
+      return;
+    }
     // Map API response to dashboard format
     newProspects = (data.prospects || []).map((p, i) => ({
       id: Date.now() + i,
-      score: i < 9 ? 'hot' : (p.score || 'warm'), // 90% chauds
+      score: p.score || 'warm', // score réel (plus de "hot" forcé)
       company: p.company,
       contact: p.contact,
       role: p.role,

@@ -597,7 +597,6 @@ footer{padding:2.5rem 0;border-top:1px solid var(--border-2);}
             <li>100 prospects/mois</li>
             <li>Tout le plan Starter</li>
             <li>Séquences auto J+5/12/20</li>
-            <li>Tracking ouvertures</li>
             <li>Import CSV / LinkedIn</li>
             <li>Export HubSpot natif</li>
           </ul>
@@ -929,13 +928,10 @@ async function submitPlanModal() {
   btn.disabled = true;
 
   try {
-    // Map frontend plan IDs to backend plan IDs
-    const planMap = { business: 'agence', business_pro: 'business_pro' };
-    const backendPlan = planMap[_pendingPlan] || _pendingPlan;
     const res = await fetch(API_BASE + '/create-checkout-session', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ email, prenom, secteur: '', plan: backendPlan }),
+      body: JSON.stringify({ email, prenom, secteur: '', plan: _pendingPlan }),
     });
     if (!res.ok) throw new Error('Erreur serveur');
     const data = await res.json();
