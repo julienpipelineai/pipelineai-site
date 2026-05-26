@@ -1915,7 +1915,8 @@ body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
         </div>
         <div style="margin-top:14px;">
           <div class="onboarding-label">Zone géographique <span style="color:#888;font-weight:400;font-size:0.85rem;">— départements ciblés (codes, ex : 69, 01, 38)</span></div>
-          <input id="ob-departements" type="text" placeholder="69, 01, 38" value="69" style="width:100%;padding:0.6rem 0.8rem;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.9rem;outline:none;">
+          <input id="ob-departements" type="text" placeholder="69, 01, 38" value="69" oninput="scheduleGisementEstimate()" style="width:100%;padding:0.6rem 0.8rem;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.9rem;outline:none;">
+          <div id="ob-gisement" style="margin-top:10px;display:none;font-size:0.82rem;line-height:1.45;padding:9px 11px;border-radius:8px;border:1px solid var(--border);background:var(--bg-2);"></div>
         </div>
       </div>
 
@@ -3002,9 +3003,11 @@ function showOnboarding() {
       chip.parentNode.replaceChild(fresh, chip);
       fresh.addEventListener('click', () => {
         fresh.classList.toggle('selected');
+        scheduleGisementEstimate();
       });
     });
   });
+  estimateGisement();  // estimation initiale selon l'état courant des critères
 }
 
 function hideOnboarding() {
@@ -3061,6 +3064,56 @@ function stopGenProgress(barId) {
   if (bar) bar.style.width = '100%';
 }
 
+// Mapping libellé secteur (chips) -> clé backend SECTEURS. Partagé onboarding + estimation.
+const SECTEUR_KEYS = {
+  'BTP / Construction':'btp','Commerce / Distribution':'commerce','Services aux entreprises':'services',
+  'Santé / Médical':'sante','Transport / Logistique':'transport','Restauration / Hôtellerie':'restauration',
+  'Tech / Digital':'tech','Immobilier':'immobilier','Industrie / Fabrication':'industrie','Beauté / Bien-être':'beaute',
+  'Formation / Conseil':'formation','Juridique / Comptabilité':'juridique','Énergie / Environnement':'energie',
+  'Finance / Assurance':'finance','Événementiel / Communication':'evenementiel','Agriculture / Agroalimentaire':'agriculture'
+};
+
+// Lit les critères courants de l'onboarding (secteurs + départements valides).
+function obCriteria() {
+  const secteurs = [...new Set(getObSelected('ob-chips-secteur').map(l => SECTEUR_KEYS[l]).filter(Boolean))];
+  const deps = (document.getElementById('ob-departements')?.value || '')
+    .split(/[,;\s]+/).map(s => s.trim()).filter(s => /^\d{2,3}$/.test(s));
+  return { secteurs, deps };
+}
+
+// ── ESTIMATION DU GISEMENT (avant génération) ────────────────────────────────
+let _gisementTimer = null;
+function scheduleGisementEstimate() {
+  clearTimeout(_gisementTimer);
+  _gisementTimer = setTimeout(estimateGisement, 600);  // debounce
+}
+
+async function estimateGisement() {
+  const box = document.getElementById('ob-gisement');
+  if (!box) return;
+  const { secteurs, deps } = obCriteria();
+  if (!secteurs.length || !deps.length) { box.style.display = 'none'; return; }
+  box.style.display = 'block';
+  box.style.borderColor = 'var(--border)';
+  box.innerHTML = '⏳ Estimation du gisement sur cette zone…';
+  try {
+    const res = await fetch(API_BASE + '/sourcing/estimate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (getSession()?.access_token || '') },
+      body: JSON.stringify({ secteurs, departements: deps, signaux: ['recrutement','creation','potentiel_embauche','annonce_legale','marche_public'] })
+    });
+    if (!res.ok) { box.style.display = 'none'; return; }
+    const d = await res.json();
+    const couleur = d.niveau === 'bon' ? '#22c55e' : (d.niveau === 'moyen' ? '#eab308' : '#ef4444');
+    const label   = d.niveau === 'bon' ? 'Bon gisement' : (d.niveau === 'moyen' ? 'Gisement moyen' : 'Gisement faible');
+    box.style.borderColor = couleur;
+    box.innerHTML =
+      '<span style="color:' + couleur + ';font-weight:600;">● ' + label + '</span> — ~' +
+      (d.total_signaux || 0) + ' signaux détectés (≈ ' + (d.estimation_leads || 0) + ' leads qualifiés estimés).' +
+      '<br><span style="color:#aaa;">' + (d.conseil || '') + '</span>';
+  } catch (e) { box.style.display = 'none'; }
+}
+
 async function launchOnboarding() {
   const prenom   = document.getElementById('ob-prenom').value.trim() || 'Vous';
   const activite = document.getElementById('ob-activite').value.trim();
@@ -3072,17 +3125,7 @@ async function launchOnboarding() {
     return;
   }
   const activite_complete = activite + (services ? ' | Services : ' + services : '') + (probleme ? ' | Benefices clients : ' + probleme : '');
-  const SECTEUR_KEYS = {
-    'BTP / Construction':'btp','Commerce / Distribution':'commerce','Services aux entreprises':'services',
-    'Santé / Médical':'sante','Transport / Logistique':'transport','Restauration / Hôtellerie':'restauration',
-    'Tech / Digital':'tech','Immobilier':'immobilier','Industrie / Fabrication':'industrie','Beauté / Bien-être':'beaute',
-    'Formation / Conseil':'formation','Juridique / Comptabilité':'juridique','Énergie / Environnement':'energie',
-    'Finance / Assurance':'finance','Événementiel / Communication':'evenementiel','Agriculture / Agroalimentaire':'agriculture'
-  };
-  const secteurLabels = getObSelected('ob-chips-secteur');
-  const secteurs = [...new Set(secteurLabels.map(l => SECTEUR_KEYS[l]).filter(Boolean))];
-  const deps = (document.getElementById('ob-departements')?.value || '')
-    .split(/[,;\s]+/).map(s => s.trim()).filter(s => /^\d{2,3}$/.test(s));
+  const { secteurs, deps } = obCriteria();
 
   if (!secteurs.length) {
     showToast("Sélectionnez au moins 1 secteur pris en charge", '⚠');
@@ -3106,6 +3149,7 @@ async function launchOnboarding() {
 
   // Appel Claude API via le backend
   let newProspects = [];
+  let elargissementInfo = null;
   try {
     document.getElementById('ob-s4').classList.add('active');
     startGenProgress();
@@ -3117,7 +3161,7 @@ async function launchOnboarding() {
         activite: activite_complete,
         secteurs,
         departements: deps,
-        signaux: ['recrutement', 'creation'],
+        signaux: ['recrutement', 'creation', 'potentiel_embauche', 'annonce_legale', 'marche_public'],
         style: (document.getElementById('ob-style')?.value || 'A'),
         max_prospects: 10
       }),
@@ -3128,6 +3172,7 @@ async function launchOnboarding() {
     }
     const data = await res.json();
     console.log('[source-prospects] réponse:', data, 'debug:', data.debug);
+    elargissementInfo = data.elargissement || null;
     if (data.subscription_required || data.allowed === false || !data.prospects || data.prospects.length === 0) {
       stopGenProgress();
       document.getElementById('ob-s4') && document.getElementById('ob-s4').classList.remove('active');
@@ -3202,15 +3247,22 @@ async function launchOnboarding() {
   renderList();
 
   // Update topbar
+  const nb = PROSPECTS.length;
   const sub = document.querySelector('.topbar-sub');
-  if (sub) sub.innerHTML = '<span class="live-dot"></span>10 prospects générés · ' + secteurs.slice(0,2).join(', ');
+  if (sub) sub.innerHTML = '<span class="live-dot"></span>' + nb + ' prospect' + (nb > 1 ? 's' : '') + ' généré' + (nb > 1 ? 's' : '') + ' · ' + secteurs.slice(0,2).join(', ');
 
   // Update sidebar user name
   const userEl = document.querySelector('.user-row div:last-child div:first-child');
   if (userEl && prenom) userEl.textContent = prenom;
   document.title = prenom + ' — PipelineAI Dashboard';
 
-  showToast('Vos 10 premiers prospects sont prêts !', '⚡');
+  showToast(nb + ' prospect' + (nb > 1 ? 's' : '') + ' prêt' + (nb > 1 ? 's' : '') + ' !', '⚡');
+
+  // Élargissement géographique automatique : on prévient le client en toute transparence.
+  if (elargissementInfo && elargissementInfo.applique) {
+    setTimeout(() => showToast(elargissementInfo.message, '🌍', 9000), 900);
+  }
+
   if (PROSPECTS.length > 0) setTimeout(() => selectProspect(PROSPECTS[0].id), 400);
 }
 
@@ -3278,6 +3330,8 @@ async function generateProspects() {
   if (sigSel.includes('recrutement')) signaux.push('recrutement');
   if (sigSel.includes('expansion')) signaux.push('creation');
   if (!signaux.length) signaux.push('recrutement', 'creation');
+  // Sources complémentaires toujours activées : potentiel d'embauche (LBB), annonces légales (BODACC), marchés publics (DECP)
+  signaux.push('potentiel_embauche', 'annonce_legale', 'marche_public');
   const deps = (document.getElementById('gen-departements')?.value || '')
     .split(/[,;\s]+/).map(s => s.trim()).filter(s => /^\d{2,3}$/.test(s));
   const prenom   = document.getElementById('input-prenom').value.trim() || 'Votre prénom';
@@ -3312,6 +3366,7 @@ async function generateProspects() {
   await animateStep(4, 900);
 
   let newProspects = [];
+  let elargissementInfo = null;
   try {
     document.getElementById('step-4').classList.add('active');
     startGenProgress('gen-genbar', 'step-4', 'step-dot');
@@ -3344,6 +3399,7 @@ async function generateProspects() {
       throw new Error('Erreur API ' + res.status + ': ' + errText.slice(0, 200));
     }
     if (!data) data = await res.json();
+    elargissementInfo = data.elargissement || null;
 
     newProspects = (data.prospects || []).map((p, i) => ({
       id: Date.now() + i,
@@ -3397,22 +3453,26 @@ async function generateProspects() {
   document.getElementById('detail-panel').innerHTML =
     '<div class="detail-empty"><div class="detail-empty-icon">◈</div><div>Sélectionnez un prospect<br>pour voir ses messages</div></div>';
 
+  const nb = PROSPECTS.length;
   const sub = document.querySelector('.topbar-sub');
-  if (sub) sub.innerHTML = '<span class="live-dot"></span>10 prospects · ' + secteurs.slice(0, 2).join(', ');
+  if (sub) sub.innerHTML = '<span class="live-dot"></span>' + nb + ' prospect' + (nb > 1 ? 's' : '') + ' · ' + secteurs.slice(0, 2).join(', ');
 
-  showToast('10 nouveaux prospects générés !', '⚡');
+  showToast(nb + ' nouveau' + (nb > 1 ? 'x' : '') + ' prospect' + (nb > 1 ? 's' : '') + ' généré' + (nb > 1 ? 's' : '') + ' !', '⚡');
+  if (elargissementInfo && elargissementInfo.applique) {
+    setTimeout(() => showToast(elargissementInfo.message, '🌍', 9000), 900);
+  }
   if (PROSPECTS.length > 0) setTimeout(() => selectProspect(PROSPECTS[0].id), 400);
 }
 
 // ── TOAST ───────────────────────────────────────────────────────────────────
 let toastTimer;
-function showToast(msg, icon = '✓') {
+function showToast(msg, icon = '✓', duration = 2500) {
   const el = document.getElementById('toast');
   document.getElementById('toast-msg').textContent  = msg;
   document.getElementById('toast-icon').textContent = icon;
   el.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+  toastTimer = setTimeout(() => el.classList.remove('show'), duration);
 }
 
 // ── API CONFIG ───────────────────────────────────────────────────────────────
