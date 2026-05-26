@@ -3073,6 +3073,20 @@ const SECTEUR_KEYS = {
   'Finance / Assurance':'finance','Événementiel / Communication':'evenementiel','Agriculture / Agroalimentaire':'agriculture'
 };
 
+// Libellé taille (chip data-val) -> tranches d'effectif INSEE.
+const TAILLE_CODES = {
+  'TPE (5-10 sal.)':        ['00','01','02','03'],   // 0 à 9 salariés
+  'Petite PME (10-50 sal.)':['11','12'],             // 10 à 49 salariés
+  'PME (50-250 sal.)':      ['21','22','31'],         // 50 à 249 salariés
+};
+
+// Effectifs INSEE sélectionnés (union des tailles cochées). [] = pas de filtre taille.
+function obEffectifs() {
+  const codes = [];
+  getObSelected('ob-chips-taille').forEach(l => (TAILLE_CODES[l] || []).forEach(c => codes.push(c)));
+  return [...new Set(codes)];
+}
+
 // Lit les critères courants de l'onboarding (secteurs + départements valides).
 function obCriteria() {
   const secteurs = [...new Set(getObSelected('ob-chips-secteur').map(l => SECTEUR_KEYS[l]).filter(Boolean))];
@@ -3082,10 +3096,28 @@ function obCriteria() {
 }
 
 // ── ESTIMATION DU GISEMENT (avant génération) ────────────────────────────────
+// Le gisement compte des SIGNAUX (avant résolution) -> il dépend du secteur + de la
+// zone, mais PAS de la taille (l'effectif n'est connu qu'après résolution de chaque
+// entreprise). On met donc le résultat en cache par (secteurs|départements) : basculer
+// une taille n'entraîne plus de re-calcul ni de chiffres incohérents.
 let _gisementTimer = null;
+const _gisementCache = {};
 function scheduleGisementEstimate() {
   clearTimeout(_gisementTimer);
   _gisementTimer = setTimeout(estimateGisement, 600);  // debounce
+}
+
+function renderGisement(d) {
+  const box = document.getElementById('ob-gisement');
+  if (!box) return;
+  const couleur = d.niveau === 'bon' ? '#22c55e' : (d.niveau === 'moyen' ? '#eab308' : '#ef4444');
+  const label   = d.niveau === 'bon' ? 'Bon gisement' : (d.niveau === 'moyen' ? 'Gisement moyen' : 'Gisement faible');
+  box.style.display = 'block';
+  box.style.borderColor = couleur;
+  box.innerHTML =
+    '<span style="color:' + couleur + ';font-weight:600;">● ' + label + '</span> — ~' +
+    (d.total_signaux || 0) + ' signaux détectés sur la zone (≈ ' + (d.estimation_leads || 0) + ' leads qualifiés estimés).' +
+    '<br><span style="color:#aaa;">' + (d.conseil || '') + ' La taille d\'entreprise affine les résultats générés, pas ce comptage de signaux.</span>';
 }
 
 async function estimateGisement() {
@@ -3093,6 +3125,8 @@ async function estimateGisement() {
   if (!box) return;
   const { secteurs, deps } = obCriteria();
   if (!secteurs.length || !deps.length) { box.style.display = 'none'; return; }
+  const key = secteurs.slice().sort().join(',') + '|' + deps.slice().sort().join(',');
+  if (_gisementCache[key]) { renderGisement(_gisementCache[key]); return; }  // stable, pas de jitter
   box.style.display = 'block';
   box.style.borderColor = 'var(--border)';
   box.innerHTML = '⏳ Estimation du gisement sur cette zone…';
@@ -3107,13 +3141,8 @@ async function estimateGisement() {
     console.log('[gisement] détail par source →', 'FT:', d.ft, '| Sirene:', d.sirene,
                 '| LBB:', d.lbb, '| BODACC:', d.bodacc, '| DECP:', d.decp,
                 '| total:', d.total_signaux, '| niveau:', d.niveau, d);
-    const couleur = d.niveau === 'bon' ? '#22c55e' : (d.niveau === 'moyen' ? '#eab308' : '#ef4444');
-    const label   = d.niveau === 'bon' ? 'Bon gisement' : (d.niveau === 'moyen' ? 'Gisement moyen' : 'Gisement faible');
-    box.style.borderColor = couleur;
-    box.innerHTML =
-      '<span style="color:' + couleur + ';font-weight:600;">● ' + label + '</span> — ~' +
-      (d.total_signaux || 0) + ' signaux détectés (≈ ' + (d.estimation_leads || 0) + ' leads qualifiés estimés).' +
-      '<br><span style="color:#aaa;">' + (d.conseil || '') + '</span>';
+    _gisementCache[key] = d;
+    renderGisement(d);
   } catch (e) { box.style.display = 'none'; }
 }
 
@@ -3165,6 +3194,7 @@ async function launchOnboarding() {
         secteurs,
         departements: deps,
         signaux: ['recrutement', 'creation', 'potentiel_embauche', 'annonce_legale', 'marche_public'],
+        effectifs: obEffectifs(),
         style: (document.getElementById('ob-style')?.value || 'A'),
         max_prospects: 10
       }),
