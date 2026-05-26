@@ -3104,6 +3104,9 @@ async function estimateGisement() {
     });
     if (!res.ok) { box.style.display = 'none'; return; }
     const d = await res.json();
+    console.log('[gisement] détail par source →', 'FT:', d.ft, '| Sirene:', d.sirene,
+                '| LBB:', d.lbb, '| BODACC:', d.bodacc, '| DECP:', d.decp,
+                '| total:', d.total_signaux, '| niveau:', d.niveau, d);
     const couleur = d.niveau === 'bon' ? '#22c55e' : (d.niveau === 'moyen' ? '#eab308' : '#ef4444');
     const label   = d.niveau === 'bon' ? 'Bon gisement' : (d.niveau === 'moyen' ? 'Gisement moyen' : 'Gisement faible');
     box.style.borderColor = couleur;
