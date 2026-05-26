@@ -565,9 +565,15 @@ footer{padding:2.5rem 0;border-top:1px solid var(--border-2);}
     <div style="text-align:center;" class="fu">
       <div class="eyebrow blue">Tarifs</div>
       <h2 class="section-h2">Choisissez votre plan</h2>
-      <p style="color:var(--text-2);font-size:0.95rem;margin-top:0.5rem;">Commencez avec l'offre découverte, passez au mensuel quand vous êtes prêt.</p>
+      <p style="color:var(--text-2);font-size:0.95rem;margin-top:0.5rem;">Commencez avec l'offre découverte, passez à l'abonnement quand vous êtes prêt.</p>
     </div>
-    <div style="margin-top:3rem;" class="fu">
+    <div class="fu" style="display:flex;justify-content:center;margin-top:1.75rem;">
+      <div style="display:inline-flex;background:#111827;border:1px solid #1F2937;border-radius:100px;padding:4px;">
+        <button id="tg-mensuel" onclick="setPeriode('mensuel')" style="border:none;background:#1a4fff;color:#fff;padding:0.55rem 1.2rem;border-radius:100px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all .15s;">Mensuel</button>
+        <button id="tg-annuel" onclick="setPeriode('annuel')" style="border:none;background:transparent;color:#94A3B8;padding:0.55rem 1.2rem;border-radius:100px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all .15s;">Annuel <span style="color:#10B981;font-weight:700;">· 2 mois offerts</span></button>
+      </div>
+    </div>
+    <div style="margin-top:2rem;" class="fu">
       <div class="pricing-cards">
         <div class="pc">
           <div class="pc-plan">Découverte</div>
@@ -584,7 +590,7 @@ footer{padding:2.5rem 0;border-top:1px solid var(--border-2);}
         </div>
         <div class="pc">
           <div class="pc-plan">Starter</div>
-          <div><span class="pc-price">29€</span><span class="pc-per">/mois</span></div>
+          <div><span class="pc-price" id="px-starter">29€</span><span class="pc-per" id="pe-starter">/mois</span></div>
           <div class="pc-desc">Pour les indépendants actifs.</div>
           <ul class="pc-feats">
             <li><strong>50 leads qualifiés</strong>/mois</li>
@@ -597,7 +603,7 @@ footer{padding:2.5rem 0;border-top:1px solid var(--border-2);}
         </div>
         <div class="pc star">
           <div class="pc-plan">Pro</div>
-          <div><span class="pc-price g">69€</span><span class="pc-per">/mois</span></div>
+          <div><span class="pc-price g" id="px-pro">69€</span><span class="pc-per" id="pe-pro">/mois</span></div>
           <div class="pc-desc">Pour scaler votre prospection.</div>
           <ul class="pc-feats">
             <li><strong>150 leads qualifiés</strong>/mois</li>
@@ -610,7 +616,7 @@ footer{padding:2.5rem 0;border-top:1px solid var(--border-2);}
         </div>
         <div class="pc">
           <div class="pc-plan">Business</div>
-          <div><span class="pc-price">109€</span><span class="pc-per">/mois</span></div>
+          <div><span class="pc-price" id="px-business">109€</span><span class="pc-per" id="pe-business">/mois</span></div>
           <div class="pc-desc">Pour les petites équipes.</div>
           <ul class="pc-feats">
             <li><strong>300 leads qualifiés</strong>/mois</li>
@@ -623,7 +629,7 @@ footer{padding:2.5rem 0;border-top:1px solid var(--border-2);}
         </div>
         <div class="pc">
           <div class="pc-plan">Business Pro</div>
-          <div><span class="pc-price">259€</span><span class="pc-per">/mois</span></div>
+          <div><span class="pc-price" id="px-business_pro">259€</span><span class="pc-per" id="pe-business_pro">/mois</span></div>
           <div class="pc-desc">Pour les équipes commerciales.</div>
           <ul class="pc-feats">
             <li><strong>700 leads qualifiés</strong>/mois</li>
@@ -890,24 +896,42 @@ async function requestAccessLink() {
 
 <script>
 let _pendingPlan = null;
+let _periode = 'mensuel';   // 'mensuel' | 'annuel'
 
-const PLAN_LABELS = {
-  starter: 'Plan Starter — 29 €/mois',
-  pro: 'Plan Pro — 69 €/mois',
-  business: 'Plan Business — 109 €/mois',
-  business_pro: 'Plan Business Pro — 259 €/mois',
+const PLAN_NAMES = { starter:'Starter', pro:'Pro', business:'Business', business_pro:'Business Pro' };
+// [prix, suffixe] par plan et par période. Annuel = 2 mois offerts (prix mensuel x10).
+const PLAN_PRICES = {
+  starter:      { mensuel:['29€','/mois'],  annuel:['290€','/an'] },
+  pro:          { mensuel:['69€','/mois'],  annuel:['690€','/an'] },
+  business:     { mensuel:['109€','/mois'], annuel:['1090€','/an'] },
+  business_pro: { mensuel:['259€','/mois'], annuel:['2590€','/an'] },
 };
+
+function setPeriode(p) {
+  _periode = p;
+  const onM = (p === 'mensuel');
+  const bm = document.getElementById('tg-mensuel'), ba = document.getElementById('tg-annuel');
+  if (bm) { bm.style.background = onM ? '#1a4fff' : 'transparent'; bm.style.color = onM ? '#fff' : '#94A3B8'; }
+  if (ba) { ba.style.background = onM ? 'transparent' : '#1a4fff'; ba.style.color = onM ? '#94A3B8' : '#fff'; }
+  for (const k in PLAN_PRICES) {
+    const [px, pe] = PLAN_PRICES[k][p] || PLAN_PRICES[k].mensuel;
+    const ex = document.getElementById('px-' + k), ep = document.getElementById('pe-' + k);
+    if (ex) ex.textContent = px;
+    if (ep) ep.textContent = pe;
+  }
+}
 
 function handlePlanCheckout(plan) {
   if (plan === 'decouverte') {
-    // Scroll to main form
+    // Offre unique : on envoie vers le formulaire principal (pas d'annuel).
     document.getElementById('offer').scrollIntoView({behavior:'smooth'});
     return;
   }
-  // Open modal for monthly plans
+  // Ouvre la modale pour les abonnements (mensuel ou annuel selon le toggle).
   _pendingPlan = plan;
+  const [px, pe] = (PLAN_PRICES[plan] || {})[_periode] || ['', ''];
   const badge = document.getElementById('plan-modal-badge');
-  if (badge) badge.textContent = PLAN_LABELS[plan] || plan;
+  if (badge) badge.textContent = `Plan ${PLAN_NAMES[plan] || plan} — ${px}${pe}`;
   document.getElementById('plan-modal').style.display = 'flex';
   document.getElementById('plan-error').style.display = 'none';
   setTimeout(() => document.getElementById('plan-prenom').focus(), 100);
@@ -939,7 +963,7 @@ async function submitPlanModal() {
     const res = await fetch(API_BASE + '/create-checkout-session', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ email, prenom, secteur: '', plan: _pendingPlan }),
+      body: JSON.stringify({ email, prenom, secteur: '', plan: _pendingPlan, periode: _periode }),
     });
     if (!res.ok) throw new Error('Erreur serveur');
     const data = await res.json();
