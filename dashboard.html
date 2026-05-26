@@ -1862,22 +1862,24 @@ body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
       <div class="onboarding-group">
         <div class="onboarding-label">Secteurs à cibler</div>
         <div class="chip-grid" id="ob-chips-secteur">
-          <div class="chip selected" data-val="BTP / Construction">🏗 BTP</div>
-          <div class="chip selected" data-val="Commerce / Distribution">🛒 Commerce</div>
-          <div class="chip selected" data-val="Services aux entreprises">💼 Services B2B</div>
-          <div class="chip selected" data-val="Santé / Médical">🏥 Santé</div>
-          <div class="chip selected" data-val="Transport / Logistique">🚛 Transport</div>
-          <div class="chip selected" data-val="Formation / Conseil">📚 Formation</div>
+          <div class="chip selected" data-val="Commerce de détail">🛒 Commerce détail</div>
+          <div class="chip selected" data-val="Commerce de gros">📦 Commerce gros</div>
+          <div class="chip selected" data-val="BTP gros œuvre">🏗 BTP gros œuvre</div>
+          <div class="chip selected" data-val="BTP second œuvre">🔧 BTP second œuvre</div>
           <div class="chip selected" data-val="Restauration / Hôtellerie">🍽 Restauration</div>
+          <div class="chip selected" data-val="Santé cliniques">🏥 Santé cliniques</div>
+          <div class="chip" data-val="Médico-social">🛏 Médico-social</div>
+          <div class="chip" data-val="Pharmacie / Parapharmacie">💊 Pharmacie</div>
+          <div class="chip selected" data-val="Services aux entreprises">💼 Services B2B</div>
+          <div class="chip" data-val="Transport / Logistique">🚛 Transport</div>
           <div class="chip selected" data-val="Tech / Digital">💻 Tech</div>
           <div class="chip" data-val="Immobilier">🏢 Immobilier</div>
           <div class="chip" data-val="Industrie / Fabrication">⚙️ Industrie</div>
-          <div class="chip" data-val="Juridique / Comptabilité">⚖️ Juridique</div>
-          <div class="chip" data-val="Énergie / Environnement">🌱 Énergie</div>
-          <div class="chip" data-val="Finance / Assurance">💰 Finance</div>
-          <div class="chip" data-val="Événementiel / Communication">🎯 Événementiel</div>
           <div class="chip" data-val="Beauté / Bien-être">✨ Beauté</div>
-          <div class="chip" data-val="Agriculture / Agroalimentaire">🌾 Agriculture</div>
+          <div class="chip" data-val="Formation / Conseil">📚 Formation</div>
+          <div class="chip" data-val="Juridique / Comptabilité">⚖️ Juridique</div>
+          <div class="chip" data-val="Finance / Assurance">💰 Finance</div>
+          <div class="chip" data-val="Divers / Autres">🔁 Divers</div>
         </div>
       </div>
 
@@ -1963,18 +1965,24 @@ body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
         <div class="settings-label">Secteurs à cibler</div>
         <div class="settings-desc">Sélectionnez un ou plusieurs secteurs</div>
         <div class="chip-grid" id="chips-secteur">
-          <div class="chip selected" data-val="BTP / Construction">🏗 BTP / Construction</div>
-          <div class="chip selected" data-val="Industrie / Fabrication">⚙ Industrie</div>
-          <div class="chip selected" data-val="Commerce / Distribution">🛒 Commerce</div>
-          <div class="chip selected" data-val="Services aux entreprises">💼 Services B2B</div>
-          <div class="chip selected" data-val="Santé / Médical">🏥 Santé</div>
-          <div class="chip selected" data-val="Transport / Logistique">🚛 Transport</div>
-          <div class="chip selected" data-val="Formation / Conseil">📚 Formation</div>
+          <div class="chip selected" data-val="Commerce de détail">🛒 Commerce détail</div>
+          <div class="chip selected" data-val="Commerce de gros">📦 Commerce gros</div>
+          <div class="chip selected" data-val="BTP gros œuvre">🏗 BTP gros œuvre</div>
+          <div class="chip selected" data-val="BTP second œuvre">🔧 BTP second œuvre</div>
           <div class="chip selected" data-val="Restauration / Hôtellerie">🍽 Restauration</div>
+          <div class="chip selected" data-val="Santé cliniques">🏥 Santé cliniques</div>
+          <div class="chip" data-val="Médico-social">🛏 Médico-social</div>
+          <div class="chip" data-val="Pharmacie / Parapharmacie">💊 Pharmacie</div>
+          <div class="chip selected" data-val="Services aux entreprises">💼 Services B2B</div>
+          <div class="chip" data-val="Transport / Logistique">🚛 Transport</div>
           <div class="chip selected" data-val="Tech / Digital">💻 Tech</div>
           <div class="chip" data-val="Immobilier">🏢 Immobilier</div>
+          <div class="chip" data-val="Industrie / Fabrication">⚙ Industrie</div>
           <div class="chip" data-val="Beauté / Bien-être">✨ Beauté</div>
-          <div class="chip" data-val="Agriculture / Agroalimentaire">🌾 Agriculture</div>
+          <div class="chip" data-val="Formation / Conseil">📚 Formation</div>
+          <div class="chip" data-val="Juridique / Comptabilité">⚖️ Juridique</div>
+          <div class="chip" data-val="Finance / Assurance">💰 Finance</div>
+          <div class="chip" data-val="Divers / Autres">🔁 Divers</div>
         </div>
       </div>
 
@@ -3066,11 +3074,14 @@ function stopGenProgress(barId) {
 
 // Mapping libellé secteur (chips) -> clé backend SECTEURS. Partagé onboarding + estimation.
 const SECTEUR_KEYS = {
-  'BTP / Construction':'btp','Commerce / Distribution':'commerce','Services aux entreprises':'services',
-  'Santé / Médical':'sante','Transport / Logistique':'transport','Restauration / Hôtellerie':'restauration',
-  'Tech / Digital':'tech','Immobilier':'immobilier','Industrie / Fabrication':'industrie','Beauté / Bien-être':'beaute',
-  'Formation / Conseil':'formation','Juridique / Comptabilité':'juridique','Énergie / Environnement':'energie',
-  'Finance / Assurance':'finance','Événementiel / Communication':'evenementiel','Agriculture / Agroalimentaire':'agriculture'
+  'Commerce de détail':'commerce_detail','Commerce de gros':'commerce_gros',
+  'BTP gros œuvre':'btp_gros','BTP second œuvre':'btp_second',
+  'Restauration / Hôtellerie':'restauration',
+  'Santé cliniques':'sante_clinique','Médico-social':'sante_medico','Pharmacie / Parapharmacie':'pharmacie',
+  'Services aux entreprises':'services','Transport / Logistique':'transport','Tech / Digital':'tech',
+  'Immobilier':'immobilier','Industrie / Fabrication':'industrie','Beauté / Bien-être':'beaute',
+  'Formation / Conseil':'formation','Juridique / Comptabilité':'juridique','Finance / Assurance':'finance',
+  'Divers / Autres':'divers'
 };
 
 // Libellé taille (chip data-val) -> tranches d'effectif INSEE.
@@ -3350,13 +3361,7 @@ function blockForSubscription(message) {
 }
 
 async function generateProspects() {
-  const SECTEUR_KEYS = {
-    'BTP / Construction':'btp','Commerce / Distribution':'commerce','Services aux entreprises':'services',
-    'Santé / Médical':'sante','Transport / Logistique':'transport','Restauration / Hôtellerie':'restauration',
-    'Tech / Digital':'tech','Immobilier':'immobilier','Industrie / Fabrication':'industrie','Beauté / Bien-être':'beaute',
-    'Formation / Conseil':'formation','Juridique / Comptabilité':'juridique','Énergie / Environnement':'energie',
-    'Finance / Assurance':'finance','Événementiel / Communication':'evenementiel','Agriculture / Agroalimentaire':'agriculture'
-  };
+  // Utilise le mapping global SECTEUR_KEYS (defini plus haut) — source unique de verite.
   const secteurs = [...new Set(getSelected('chips-secteur').map(l => SECTEUR_KEYS[l]).filter(Boolean))];
   const sigSel = getSelected('chips-signal');
   const signaux = [];
