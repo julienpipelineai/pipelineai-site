@@ -2051,9 +2051,9 @@ body.light-mode .prospect-row.selected { background: rgba(26,79,255,0.07); }
 
     <div class="settings-footer">
       <button class="btn" onclick="closeSettings()">Annuler</button>
-      <button class="btn-generate" id="gen-btn" onclick="generateProspects()">
-        ⚡ Générer mes 10 prospects
-      </button>
+      <button class="btn-generate" id="gen-btn" onclick="generateProspects(10)">⚡ Générer 10 prospects</button>
+      <button class="btn-generate gen-batch-extra" onclick="generateProspects(25)" style="display:none;">⚡ 25</button>
+      <button class="btn-generate gen-batch-extra" onclick="generateProspects(50)" style="display:none;">⚡ 50</button>
     </div>
   </div>
 </div>
@@ -3316,12 +3316,13 @@ async function launchOnboarding() {
 // ── SETTINGS ─────────────────────────────────────────────────────────────────
 function openSettings() {
   document.getElementById('settings-overlay').classList.add('open');
+  if (typeof updateBatchButtons === 'function') updateBatchButtons();
 }
 function closeSettings() {
   document.getElementById('settings-overlay').classList.remove('open');
   document.getElementById('gen-progress').style.display = 'none';
-  document.getElementById('gen-btn').disabled = false;
-  document.getElementById('gen-btn').textContent = '⚡ Générer mes 10 prospects';
+  document.querySelectorAll('#gen-btn, .gen-batch-extra').forEach(b => b.disabled = false);
+  document.getElementById('gen-btn').textContent = '⚡ Générer 10 prospects';
   resetSteps();
 }
 function handleOverlayClick(e) {
@@ -3355,15 +3356,23 @@ async function animateStep(i, delayMs) {
 }
 
 function blockForSubscription(message) {
+  document.querySelectorAll('#gen-btn, .gen-batch-extra').forEach(b => b.disabled = false);
   const btn = document.getElementById('gen-btn');
-  if (btn) { btn.disabled = false; btn.textContent = '⚡ Générer mes 10 prospects'; }
+  if (btn) btn.textContent = '⚡ Générer 10 prospects';
   const prog = document.getElementById('gen-progress');
   if (prog) prog.style.display = 'none';
   showToast(message || 'Abonnement requis pour générer de nouveaux prospects', '🔒');
   if (typeof handleUpgrade === 'function') setTimeout(handleUpgrade, 1200);
 }
 
-async function generateProspects() {
+// Affiche les boutons 25/50 pour les plans pro et au-dessus (lots plus gros).
+function updateBatchButtons() {
+  const big = ['pro', 'business', 'business_pro'].includes(window._clientPlan);
+  document.querySelectorAll('.gen-batch-extra').forEach(b => b.style.display = big ? '' : 'none');
+}
+
+async function generateProspects(maxN) {
+  maxN = [10, 25, 50].includes(maxN) ? maxN : 10;   // taille de lot choisie par le client
   // Utilise le mapping global SECTEUR_KEYS (defini plus haut) — source unique de verite.
   const secteurs = [...new Set(getSelected('chips-secteur').map(l => SECTEUR_KEYS[l]).filter(Boolean))];
   const sigSel = getSelected('chips-signal');
@@ -3396,8 +3405,8 @@ async function generateProspects() {
   }
 
   const btn = document.getElementById('gen-btn');
-  btn.disabled = true;
-  btn.textContent = 'Génération en cours…';
+  document.querySelectorAll('#gen-btn, .gen-batch-extra').forEach(b => b.disabled = true);
+  btn.textContent = 'Génération en cours… (' + maxN + ')';
   document.getElementById('gen-progress').style.display = 'flex';
   resetSteps();
 
@@ -3420,8 +3429,9 @@ async function generateProspects() {
         secteurs,
         departements: deps,
         signaux,
+        effectifs: [],                       // pas de filtre taille en "Nouvelle campagne" (max volume)
         style: (document.getElementById('gen-style')?.value || 'A'),
-        max_prospects: 10
+        max_prospects: maxN
       }),
     });
 
@@ -3459,7 +3469,8 @@ async function generateProspects() {
     if (newProspects.length === 0) {
       stopGenProgress('gen-genbar');
       showToast(data.info || "Aucun prospect trouvé pour ces critères", 'ℹ');
-      btn.disabled = false; btn.textContent = '⚡ Générer mes 10 prospects';
+      document.querySelectorAll('#gen-btn, .gen-batch-extra').forEach(b => b.disabled = false);
+      btn.textContent = '⚡ Générer 10 prospects';
       document.getElementById('gen-progress').style.display = 'none';
       return;
     }
@@ -3471,8 +3482,8 @@ async function generateProspects() {
     stopGenProgress('gen-genbar');
     console.error('Erreur génération:', e);
     showToast('Erreur: ' + e.message, '❌');
-    btn.disabled = false;
-    btn.textContent = '⚡ Générer mes 10 prospects';
+    document.querySelectorAll('#gen-btn, .gen-batch-extra').forEach(b => b.disabled = false);
+    btn.textContent = '⚡ Générer 10 prospects';
     document.getElementById('gen-progress').style.display = 'none';
     return;
   }
@@ -3613,6 +3624,8 @@ async function loadProspects() {
         const userEl = document.querySelector('.user-row div:last-child div:first-child');
         if (userEl && prenom) userEl.textContent = prenom;
         document.title = prenom + ' — PipelineAI Dashboard';
+        window._clientPlan = data.client.plan || 'decouverte';
+        updateBatchButtons();
       }
 
       hideOverlay();
