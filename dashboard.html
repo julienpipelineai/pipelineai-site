@@ -4227,14 +4227,16 @@ async function importCSV(event) {
   const headers = rows[0].map(normalizeHeader);
   const findCol = (names) => headers.findIndex(h => names.includes(h));
   const cols = {
-    company:  findCol(['entreprise', 'company', 'societe']),
-    contact:  findCol(['contact', 'nom', 'name']),
-    role:     findCol(['role', 'poste', 'fonction']),
-    location: findCol(['localisation', 'location', 'ville', 'lieu']),
-    email:    findCol(['email', 'e-mail', 'mail', 'courriel']),
-    sector:   findCol(['secteur', 'sector', 'industrie']),
+    company:  findCol(['entreprise', 'company', 'societe', 'raison sociale', 'denomination',
+                       'denomination sociale', 'nom entreprise', "nom de l'entreprise"]),
+    contact:  findCol(['contact', 'nom', 'name', 'dirigeant', 'gerant', 'responsable',
+                       'representant', 'nom du dirigeant', 'prenom nom', 'nom contact']),
+    role:     findCol(['role', 'poste', 'fonction', 'titre', 'qualite']),
+    location: findCol(['localisation', 'location', 'ville', 'lieu', 'commune']),
+    email:    findCol(['email', 'e-mail', 'mail', 'courriel', 'e mail', 'adresse email']),
+    sector:   findCol(['secteur', 'sector', 'industrie', 'activite']),
     signal:   findCol(['signal']),
-    siren:    findCol(['siren', 'siret', 'sirensiret', 'siretsiren']),
+    siren:    findCol(['siren', 'siret', 'sirensiret', 'siretsiren', 'siren/siret', 'siren / siret']),
   };
   if (cols.company === -1 && cols.contact === -1) {
     showToast("En-tête 'Entreprise' ou 'Contact' introuvable", '⚠');
