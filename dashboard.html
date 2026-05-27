@@ -1763,6 +1763,7 @@ body {
       <button class="btn" onclick="exportCSV()">↓ CSV</button>
       <button class="btn" onclick="document.getElementById('csv-import-input').click()" title="Importer des prospects depuis un fichier CSV">↑ Importer CSV</button>
       <input type="file" id="csv-import-input" accept=".csv,text/csv" style="display:none" onchange="importCSV(event)">
+      <button class="btn" onclick="enrichImports()" title="Analyser vos contacts importés pour détecter des signaux d'achat (création, marché public…) et générer les messages. 1 quota consommé uniquement si un signal est trouvé.">✦ Détecter les signaux</button>
       <span id="verif-counter" style="font-size:0.78rem;color:var(--text-2);align-self:center;" title="Quota de vérifications email du plan"></span>
       <button class="btn" onclick="verifyAllEmails()" title="Vérifier les emails de tous les prospects (dans la limite de votre plan)">✉ Vérifier les emails</button>
       <button class="btn" onclick="exportHubspot()" style="background:rgba(255,122,0,0.1);border-color:rgba(255,122,0,0.3);color:#ff7a00;" title="Export au format HubSpot CRM">↓ HubSpot</button>
@@ -4233,6 +4234,7 @@ async function importCSV(event) {
     email:    findCol(['email', 'e-mail', 'mail', 'courriel']),
     sector:   findCol(['secteur', 'sector', 'industrie']),
     signal:   findCol(['signal']),
+    siren:    findCol(['siren', 'siret', 'sirensiret', 'siretsiren']),
   };
   if (cols.company === -1 && cols.contact === -1) {
     showToast("En-tête 'Entreprise' ou 'Contact' introuvable", '⚠');
@@ -4248,6 +4250,8 @@ async function importCSV(event) {
     email: cell(r, cols.email),
     sector: cell(r, cols.sector),
     signal: cell(r, cols.signal),
+    // SIREN (9 chiffres) extrait d'une colonne SIREN ou SIRET (14 chiffres) -> enrichissement direct, fiable
+    siren: (cell(r, cols.siren).replace(/\D/g, '')).slice(0, 9),
     signal_source: 'Import CSV',
     score: 'cold',  // import brut = pas encore de signal -> froid (deviendra warm/hot apres enrichissement)
     linkedin: '',
@@ -4290,6 +4294,48 @@ async function importCSV(event) {
     addHistory('Import CSV', saved.length + ' prospects');
   } catch (e) {
     showToast("Échec de l'import, réessayez", '⚠');
+  }
+}
+
+// ── ENRICHISSEMENT DES IMPORTS (détection de signaux d'achat) ─────────────────
+async function enrichImports() {
+  const session = getSession();
+  if (!session || !session.access_token) { showToast('Connectez-vous pour enrichir vos contacts', '⚠'); return; }
+  const payload = parseJwt(session.access_token);
+  if (!payload) { showToast('Session expirée, reconnectez-vous', '⚠'); return; }
+
+  // Contacts importés sans signal = candidats à l'enrichissement.
+  const aEnrichir = PROSPECTS.filter(p =>
+    (!p.signal || !p.signal.trim()) && (p.signal_source === 'Import CSV' || p.score === 'cold')).length;
+  if (!aEnrichir) { showToast("Aucun contact importé à enrichir", 'ℹ'); return; }
+
+  if (!confirm("Détecter les signaux d'achat sur vos " + aEnrichir + " contact(s) importé(s) ?\n\n"
+    + "Chaque contact où un signal est trouvé consomme 1 prospect de votre quota. "
+    + "Les contacts sans signal restent gratuits.")) return;
+
+  const prenom   = (document.getElementById('input-prenom')?.value || '').trim();
+  const activite = (document.getElementById('input-activite')?.value || '').trim();
+  const style    = (document.getElementById('input-style')?.value
+                    || document.getElementById('ob-style')?.value || 'A');
+
+  showOverlay('Détection des signaux en cours… (jusqu’à 1 minute)');
+  try {
+    const res = await fetch(API_BASE + '/prospects/order/' + payload.order_id + '/enrich', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+      body: JSON.stringify({ prenom, activite, style }),
+    });
+    if (res.status === 401) { hideOverlay(); clearSession(); showLoginScreen(); return; }
+    const data = await res.json();
+    hideOverlay();
+    if (!res.ok) { showToast('⚠ ' + (data.detail || data.message || 'Erreur'), '⚠'); return; }
+    // Recharge depuis la base : renderList re-trie automatiquement (Hot en haut).
+    await loadProspects();
+    showToast(data.message || ((data.enriched || 0) + ' signal(aux) détecté(s)'), '✦');
+    addHistory('Détection de signaux', (data.enriched || 0) + ' signal(aux) sur ' + (data.scanned || 0) + ' contact(s)');
+  } catch (e) {
+    hideOverlay();
+    showToast("Échec de la détection, réessayez", '⚠');
   }
 }
 
