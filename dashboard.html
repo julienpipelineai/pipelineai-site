@@ -1735,8 +1735,8 @@ body {
         <div style="font-size:0.7rem">Tech / SaaS — France</div>
       </div>
     </div>
-    <button class="upgrade-btn" onclick="showToast('Redirection vers le plan Pro…', '⚡')">
-      Passer au Pro — −20 % →
+    <button class="upgrade-btn" onclick="handleUpgrade()">
+      Passer au Pro →
     </button>
   </div>
 </aside>
@@ -1781,9 +1781,9 @@ body {
       <span class="upsell-icon">🚀</span>
       <div class="upsell-text">
         <div class="upsell-title" id="upsell-title">Vous progressez bien !</div>
-        <div class="upsell-sub" id="upsell-sub">Passez au plan Starter pour recevoir 30 prospects/mois et ne jamais manquer d'opportunités.</div>
+        <div class="upsell-sub" id="upsell-sub">Passez au plan Starter pour recevoir 50 prospects/mois et ne jamais manquer d'opportunités.</div>
       </div>
-      <button class="upsell-cta" onclick="handleUpgrade()">Passer au Pro −20 % →</button>
+      <button class="upsell-cta" onclick="handleUpgrade()">Passer au Pro →</button>
       <button class="upsell-close" onclick="dismissUpsell()">✕</button>
     </div>
 
@@ -2513,6 +2513,9 @@ function renderList() {
       : PROSPECTS.filter(p => prospectStatuses[p.id] === activeFilter);
   // Apply advanced filters
   filtered = applyAllFilters(filtered);
+  // Tri par signal : Hot en haut, puis Warm, puis Cold (les convertis/contactés gardent leur score)
+  const _scoreRank = { hot: 0, warm: 1, cold: 2 };
+  filtered = [...filtered].sort((a, b) => (_scoreRank[a.score] ?? 3) - (_scoreRank[b.score] ?? 3));
   updateFilterCounts();
   updateProgress();
 
@@ -4082,11 +4085,11 @@ function checkUpsell(contacted, converted) {
 
   if (converted >= 1) {
     title.textContent = '🎉 Félicitations — vous avez converti un prospect !';
-    sub.textContent = 'Passez au plan Pro pour recevoir 100 prospects/mois et maximiser vos revenus.';
+    sub.textContent = 'Passez au plan Pro pour recevoir 150 prospects/mois et maximiser vos revenus.';
     banner.classList.add('show');
   } else if (contacted >= 5) {
     title.textContent = '⚡ Vous êtes actif — passez à la vitesse supérieure';
-    sub.textContent = 'Vous avez contacté ' + contacted + ' prospects. Le plan Starter vous donne 30 prospects/mois pour 29 €.';
+    sub.textContent = 'Vous avez contacté ' + contacted + ' prospects. Le plan Starter vous donne 50 prospects/mois pour 29 €.';
     banner.classList.add('show');
   } else if (contacted >= 3) {
     title.textContent = '👍 Bon démarrage — encore 7 prospects à contacter';
