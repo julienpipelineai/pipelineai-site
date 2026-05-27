@@ -2523,8 +2523,10 @@ function renderList() {
     const av = p.company.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
     const sel = selectedId === p.id ? ' selected' : '';
     const st  = prospectStatuses[p.id];
-    const stLabel = { detected:'détecté', messaged:'contacté', relance_1:'relance 1',
+    let stLabel = { detected:'détecté', messaged:'contacté', relance_1:'relance 1',
       relance_2:'relance 2', relance_3:'relance 3', responded:'répondu', converted:'converti' }[st] || st;
+    // Import brut non enrichi (aucun signal) : "importé" plutot que "détecté"
+    if (st === 'detected' && (!p.signal || !p.signal.trim())) stLabel = 'importé';
     const badgeClass = st === 'converted' ? 'badge-conv' : `badge-${p.score}`;
 
     return `<div class="prospect-row${sel}" onclick="selectProspect(${p.id})">
@@ -4247,7 +4249,7 @@ async function importCSV(event) {
     sector: cell(r, cols.sector),
     signal: cell(r, cols.signal),
     signal_source: 'Import CSV',
-    score: 'warm',
+    score: 'cold',  // import brut = pas encore de signal -> froid (deviendra warm/hot apres enrichissement)
     linkedin: '',
     msgs: {},
   }));
