@@ -1863,6 +1863,30 @@ body {
             <button class="btn" style="font-size:0.75rem;padding:0.3rem 0.7rem" onclick="showToast('Tri par score activé', '◈')">Score ↓</button>
           </div>
         </div>
+        <!-- Toggle de vue : Prospects générés vs Mes contacts importés -->
+        <style>
+          .view-toggle { display:flex; gap:.5rem; padding:.75rem 1rem 0; }
+          .view-btn { flex:1; display:inline-flex; align-items:center; justify-content:center; gap:.55rem;
+                      padding:.6rem .9rem; border:1px solid var(--border); background:var(--bg-3);
+                      color:var(--text-2); border-radius:10px; font-family:var(--sans); font-size:.82rem;
+                      font-weight:500; cursor:pointer; transition:all .15s ease; }
+          .view-btn:hover { color:var(--text); border-color:var(--accent); }
+          .view-btn.active { background:var(--grad); color:#fff; border-color:transparent;
+                             font-weight:600; box-shadow:var(--glow); }
+          .view-btn .view-count { font-family:var(--mono); font-size:.74rem; padding:1px 7px;
+                                   border-radius:99px; background:var(--bg); color:var(--text-3); }
+          .view-btn.active .view-count { background:rgba(255,255,255,.18); color:#fff; }
+        </style>
+        <div class="view-toggle">
+          <button class="view-btn active" data-view="genere" onclick="setActiveView('genere', this)">
+            <span>✦ Prospects générés</span>
+            <span class="view-count" id="view-count-genere">0</span>
+          </button>
+          <button class="view-btn" data-view="import" onclick="setActiveView('import', this)">
+            <span>↑ Mes contacts importés</span>
+            <span class="view-count" id="view-count-import">0</span>
+          </button>
+        </div>
         <div class="filter-tabs">
           <div class="filter-tab active" data-filter="all" onclick="filterProspects('all', this)">Tous <span class="tab-count" style="color:var(--text-3)">10</span></div>
           <div class="filter-tab" data-filter="hot" onclick="filterProspects('hot', this)">🔴 Chauds <span class="tab-count" style="color:var(--text-3)">4</span></div>
@@ -2160,7 +2184,7 @@ body {
 
       <div class="settings-group">
         <div class="settings-label">Votre prénom (pour signer les messages)</div>
-        <input class="settings-input" id="input-prenom" type="text" placeholder="ex : Marie" value="Votre prénom">
+        <input class="settings-input" id="input-prenom" type="text" placeholder="ex : Marie">
       </div>
 
       <div class="settings-group">
@@ -2507,11 +2531,13 @@ let activeAdvancedFilters = { search: '', score: '', sector: '', city: '' };
 // ── RENDER PROSPECT LIST ────────────────────────────────────────────────────
 function renderList() {
   const list = document.getElementById('prospect-list');
+  // FILTRE VUE : on ne montre que les prospects de la vue active (Générés ou Imports)
+  const viewProspects = PROSPECTS.filter(p => (p.origin || 'genere') === activeView);
   let filtered = activeFilter === 'all'
-    ? PROSPECTS
+    ? viewProspects
     : activeFilter === 'hot' || activeFilter === 'warm' || activeFilter === 'cold'
-      ? PROSPECTS.filter(p => p.score === activeFilter)
-      : PROSPECTS.filter(p => prospectStatuses[p.id] === activeFilter);
+      ? viewProspects.filter(p => p.score === activeFilter)
+      : viewProspects.filter(p => prospectStatuses[p.id] === activeFilter);
   // Apply advanced filters
   filtered = applyAllFilters(filtered);
   // Tri par signal : Hot en haut, puis Warm, puis Cold (les convertis/contactés gardent leur score)
@@ -2888,15 +2914,50 @@ function filterProspects(filter, el) {
   renderList();
 }
 
+// ── VUES SÉPARÉES (Générés vs Mes contacts importés) ──────────────────────
+let activeView = 'genere';  // 'genere' | 'import'
+
+function setActiveView(view, el) {
+  if (view === activeView) return;
+  activeView = view;
+  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+  if (el) el.classList.add('active');
+  else document.querySelector('.view-btn[data-view="' + view + '"]')?.classList.add('active');
+  // Reset du filtre score à "Tous" en changeant de vue (plus naturel)
+  activeFilter = 'all';
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('.filter-tab[data-filter="all"]')?.classList.add('active');
+  renderList();
+  // Sélectionne le 1er prospect de la nouvelle vue (pour rafraîchir le détail)
+  const first = PROSPECTS.find(p => (p.origin || 'genere') === activeView);
+  if (first) selectProspect(first.id);
+}
+
+function updateViewCounts() {
+  let g = 0, i = 0;
+  PROSPECTS.forEach(p => {
+    if ((p.origin || 'genere') === 'import') i++;
+    else g++;
+  });
+  const eg = document.getElementById('view-count-genere');
+  const ei = document.getElementById('view-count-import');
+  if (eg) eg.textContent = g;
+  if (ei) ei.textContent = i;
+}
+
 function updateFilterCounts() {
+  // Compte uniquement dans la vue active (sinon les badges ne correspondraient pas à la liste affichée)
+  const viewProspects = PROSPECTS.filter(p => (p.origin || 'genere') === activeView);
   const counts = {
-    all: PROSPECTS.length,
-    hot: PROSPECTS.filter(p => p.score === 'hot').length,
-    warm: PROSPECTS.filter(p => p.score === 'warm').length,
-    cold: PROSPECTS.filter(p => p.score === 'cold').length,
-    messaged: PROSPECTS.filter(p => prospectStatuses[p.id] === 'messaged').length,
-    converted: PROSPECTS.filter(p => prospectStatuses[p.id] === 'converted').length,
+    all: viewProspects.length,
+    hot: viewProspects.filter(p => p.score === 'hot').length,
+    warm: viewProspects.filter(p => p.score === 'warm').length,
+    cold: viewProspects.filter(p => p.score === 'cold').length,
+    messaged: viewProspects.filter(p => prospectStatuses[p.id] === 'messaged').length,
+    converted: viewProspects.filter(p => prospectStatuses[p.id] === 'converted').length,
   };
+  // En + : compteurs des 2 vues elles-mêmes
+  updateViewCounts();
   const tabs = document.querySelectorAll('.filter-tab');
   tabs.forEach(tab => {
     const filter = tab.dataset.filter;
@@ -3762,9 +3823,24 @@ async function loadProspects() {
         if (userEl && prenom) userEl.textContent = prenom;
         document.title = prenom + ' — PipelineAI Dashboard';
         window._clientPlan = data.client.plan || 'decouverte';
+        window._clientPrenom = prenom || '';
+        // Préremplit Réglages > Prénom si vide / placeholder -> les messages IA s'adresseront au bon expéditeur
+        const _inpPrenom = document.getElementById('input-prenom');
+        if (_inpPrenom && prenom) {
+          const cur = (_inpPrenom.value || '').trim();
+          if (!cur || cur === 'Votre prénom') _inpPrenom.value = prenom;
+        }
         updateBatchButtons();
       }
 
+      // Vue par défaut : si pas de prospects générés mais des imports → bascule auto sur Imports
+      const hasGen = PROSPECTS.some(p => (p.origin || 'genere') === 'genere');
+      const hasImp = PROSPECTS.some(p => p.origin === 'import');
+      if (!hasGen && hasImp) {
+        activeView = 'import';
+        document.querySelectorAll('.view-btn').forEach(b => b.classList.toggle('active', b.dataset.view === 'import'));
+      }
+      updateViewCounts();
       hideOverlay();
       renderList();
       updateTopbar(payload.sub, payload.order_id);
@@ -4259,15 +4335,18 @@ function showImportGuideModal() {
 
         <!-- Règle 3 : SIRET TEXTE -->
         <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:12px;padding:.85rem 1rem;margin-bottom:1rem;">
-          <div style="display:flex;align-items:center;gap:.5rem;font-weight:700;font-size:.92rem;margin-bottom:.3rem;">
-            <span>💡</span> 3. Astuce SIRET dans Excel
+          <div style="display:flex;align-items:center;gap:.5rem;font-weight:700;font-size:.92rem;margin-bottom:.4rem;">
+            <span>💡</span> 3. Garder les 14 chiffres du SIRET dans Excel
           </div>
-          <p style="margin:0;font-size:.82rem;color:var(--text-2);line-height:1.55;">
-            Formate la colonne SIRET en <strong style="color:var(--text);">Texte</strong> avant d'y coller tes données
-            (clic droit → Format de cellule → Texte). Sinon Excel l'affiche en notation scientifique
-            <code style="background:var(--bg);padding:1px 6px;border-radius:4px;color:var(--hot);font-size:.78rem;">3,07E+13</code>
-            et corrompt le numéro.
+          <p style="margin:0 0 .45rem;font-size:.82rem;color:var(--text-2);line-height:1.55;">
+            Excel affiche les longs nombres en notation scientifique
+            (<code style="background:var(--bg);padding:1px 6px;border-radius:4px;color:var(--hot);font-size:.78rem;">3,07E+13</code>)
+            ce qui peut corrompre les SIRET. Selon ton cas :
           </p>
+          <div style="font-size:.8rem;color:var(--text-2);line-height:1.55;padding-left:.2rem;">
+            <div style="margin-bottom:.3rem;"><strong style="color:var(--text);">✅ Avant de coller tes SIRET</strong> — formate la colonne en <strong style="color:var(--text);">Texte</strong> (clic droit → Format de cellule → Texte). Les nombres restent intacts.</div>
+            <div><strong style="color:var(--text);">🛠 Si Excel les affiche déjà en notation scientifique</strong> — sélectionne la colonne → <strong style="color:var(--text);">Nombre → 0 décimale</strong>. Le format Texte ne récupère plus rien à ce stade ; il faut repasser en Nombre pour réafficher les 14 chiffres.</div>
+          </div>
         </div>
 
         <!-- Visuel CSV (anime) -->
@@ -4317,6 +4396,42 @@ function showImportGuideModal() {
       </div>
     </div>`;
   document.body.insertAdjacentHTML('beforeend', html);
+}
+
+// ── BARRE DE PROGRESSION (import par lots) ─────────────────────
+function showImportProgressOverlay(total) {
+  document.getElementById('overlay')?.remove();
+  const html = `
+    <div id="overlay" style="position:fixed;inset:0;z-index:9999;background:rgba(11,17,32,.85);
+         backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;font-family:var(--sans);">
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:16px;padding:1.5rem 1.75rem;
+                  min-width:360px;max-width:440px;color:var(--text);box-shadow:0 20px 60px rgba(0,0,0,.5);">
+        <div style="font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;color:var(--accent);
+                    text-transform:uppercase;margin-bottom:.5rem;">↑ Import en cours</div>
+        <div id="overlay-msg" style="font-size:.95rem;color:var(--text);margin-bottom:.85rem;">Envoi de vos contacts au serveur…</div>
+        <div style="display:flex;justify-content:space-between;font-size:.82rem;color:var(--text-2);margin-bottom:.4rem;font-family:var(--mono);">
+          <span><strong id="overlay-count" style="color:var(--text);">0</strong> / ${total} contacts</span>
+          <span id="overlay-pct" style="color:var(--accent);font-weight:700;">0%</span>
+        </div>
+        <div style="height:8px;background:var(--bg-3);border-radius:99px;overflow:hidden;">
+          <div id="overlay-bar" style="height:100%;width:0%;background:var(--grad);transition:width .3s ease;border-radius:99px;box-shadow:0 0 12px rgba(59,130,246,.5);"></div>
+        </div>
+        <div style="font-size:.74rem;color:var(--text-3);margin-top:.7rem;text-align:center;">
+          Envoi par lots — ne ferme pas cette page
+        </div>
+      </div>
+    </div>`;
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function updateImportProgress(current, total) {
+  const c = document.getElementById('overlay-count');
+  const p = document.getElementById('overlay-pct');
+  const b = document.getElementById('overlay-bar');
+  if (c) c.textContent = current;
+  const pct = total > 0 ? Math.round((current / total) * 100) : 0;
+  if (p) p.textContent = pct + '%';
+  if (b) b.style.width = pct + '%';
 }
 
 // ── IMPORT CSV ────────────────────────────────────────────────
@@ -4399,18 +4514,27 @@ async function importCSV(event) {
   const payload = session && parseJwt(session.access_token);
   if (!payload) { showToast('Session expirée, reconnectez-vous', '⚠'); return; }
 
-  showToast('Import en cours…', '↑');
+  // Envoi par lots de 100 lignes pour : (1) eviter le timeout proxy 499 sur gros fichiers,
+  // (2) afficher une vraie barre de progression au client.
+  const CHUNK_SIZE = 100;
+  const total = imported.length;
+  showImportProgressOverlay(total);
+  let allSaved = [];
   try {
-    const res = await fetch(API_BASE + '/prospects/order/' + payload.order_id + '/batch', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
-      body: JSON.stringify({ prospects: imported }),
-    });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    const saved = data.prospects || [];
+    for (let i = 0; i < total; i += CHUNK_SIZE) {
+      const chunk = imported.slice(i, i + CHUNK_SIZE);
+      const res = await fetch(API_BASE + '/prospects/order/' + payload.order_id + '/batch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+        body: JSON.stringify({ prospects: chunk }),
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status + ' au lot ' + (Math.floor(i / CHUNK_SIZE) + 1));
+      const data = await res.json();
+      allSaved = allSaved.concat(data.prospects || []);
+      updateImportProgress(Math.min(i + chunk.length, total), total);
+    }
     // Le serveur renvoie les prospects avec leur ID de base : source de vérité
-    saved.forEach(dbP => {
+    allSaved.forEach(dbP => {
       const p = {
         id: dbP.id,
         company: dbP.company, contact: dbP.contact, role: dbP.role, location: dbP.location,
@@ -4426,11 +4550,13 @@ async function importCSV(event) {
       PROSPECTS.push(p);
       prospectStatuses[p.id] = p.status;
     });
+    hideOverlay();
     renderList();
-    showToast(saved.length + ' prospects importés ✓', '✓');
-    addHistory('Import CSV', saved.length + ' prospects');
+    showToast(allSaved.length + ' prospects importés ✓', '✓');
+    addHistory('Import CSV', allSaved.length + ' prospects');
   } catch (e) {
-    showToast("Échec de l'import, réessayez", '⚠');
+    hideOverlay();
+    showToast("Échec de l'import à " + allSaved.length + "/" + total + " — réessayez", '⚠');
   }
 }
 
@@ -4514,7 +4640,7 @@ async function enrichImports() {
   const batchSize = await showEnrichModal(aEnrichir);
   if (!batchSize) return;  // annulation
 
-  const prenom   = (document.getElementById('input-prenom')?.value || '').trim();
+  const prenom   = (document.getElementById('input-prenom')?.value || window._clientPrenom || '').trim();
   const activite = (document.getElementById('input-activite')?.value || '').trim();
   const style    = (document.getElementById('input-style')?.value
                     || document.getElementById('ob-style')?.value || 'A');
