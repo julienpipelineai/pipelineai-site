@@ -1761,7 +1761,7 @@ body {
     <div class="topbar-right">
       <div class="theme-toggle" onclick="toggleTheme()" title="Mode clair/sombre">🌙</div>
       <button class="btn" onclick="exportCSV()">↓ CSV</button>
-      <button class="btn" onclick="document.getElementById('csv-import-input').click()" title="Importer des prospects depuis un fichier CSV">↑ Importer CSV</button>
+      <button class="btn" onclick="showImportGuideModal()" title="Préparer et importer un fichier CSV">↑ Importer CSV</button>
       <input type="file" id="csv-import-input" accept=".csv,text/csv" style="display:none" onchange="importCSV(event)">
       <button class="btn" onclick="enrichImports()" title="Analyser vos contacts importés pour détecter des signaux d'achat (création, marché public…) et générer les messages. 1 quota consommé uniquement si un signal est trouvé.">✦ Détecter les signaux</button>
       <span id="verif-counter" style="font-size:0.78rem;color:var(--text-2);align-self:center;" title="Quota de vérifications email du plan"></span>
@@ -4184,6 +4184,141 @@ function exportCSV() {
   addHistory('Export CSV', 'Tous les prospects');
 }
 
+// ── GUIDE PRE-IMPORT (modal stylise + apercu CSV anime) ──────
+function showImportGuideModal() {
+  document.getElementById('import-guide-modal')?.remove();
+  const html = `
+    <div id="import-guide-modal" onclick="if(event.target===this)this.remove()"
+         style="position:fixed;inset:0;z-index:9999;background:rgba(11,17,32,.85);backdrop-filter:blur(4px);
+                display:flex;align-items:center;justify-content:center;font-family:var(--sans);padding:1rem;overflow-y:auto;">
+      <style>
+        @keyframes igm-shimmer { 0%,100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); transform: scale(1); } 50% { box-shadow: 0 0 14px 2px rgba(59,130,246,.55); transform: scale(1.02); } }
+        @keyframes igm-fadein { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+        #import-guide-modal .igm-cell { animation: igm-fadein .35s ease both; }
+        #import-guide-modal .igm-r1 .igm-cell:nth-child(1) { animation-delay: .05s; }
+        #import-guide-modal .igm-r1 .igm-cell:nth-child(2) { animation-delay: .10s; }
+        #import-guide-modal .igm-r1 .igm-cell:nth-child(3) { animation-delay: .15s; }
+        #import-guide-modal .igm-r1 .igm-cell:nth-child(4) { animation-delay: .20s; }
+        #import-guide-modal .igm-r1 .igm-cell:nth-child(5) { animation-delay: .25s; }
+        #import-guide-modal .igm-r2 .igm-cell { animation-delay: .35s; }
+        #import-guide-modal .igm-r3 .igm-cell { animation-delay: .50s; }
+        #import-guide-modal .igm-siret { animation: igm-fadein .35s ease both .10s, igm-shimmer 2.6s ease-in-out 1s infinite; border-radius:4px; }
+      </style>
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:18px;padding:1.75rem;
+                  max-width:640px;width:100%;color:var(--text);box-shadow:0 20px 60px rgba(0,0,0,.5);
+                  max-height:92vh;overflow-y:auto;">
+        <div style="font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;color:var(--accent);
+                    text-transform:uppercase;margin-bottom:.5rem;">↑ Préparer l'import</div>
+        <h3 style="margin:0 0 .4rem;font-size:1.25rem;font-weight:700;">Préparez votre fichier CSV</h3>
+        <p style="margin:0 0 1.1rem;color:var(--text-2);font-size:.875rem;line-height:1.55;">
+          3 règles simples pour des résultats optimaux. PipelineAI accepte la plupart des structures,
+          mais ces réglages garantissent la meilleure détection des signaux.
+        </p>
+
+        <!-- Règle 1 : format -->
+        <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:12px;padding:.85rem 1rem;margin-bottom:.6rem;">
+          <div style="display:flex;align-items:center;gap:.5rem;font-weight:700;font-size:.92rem;margin-bottom:.3rem;">
+            <span>💾</span> 1. Format d'enregistrement
+          </div>
+          <p style="margin:0;font-size:.82rem;color:var(--text-2);line-height:1.55;">
+            Dans Excel : <strong style="color:var(--text);">Fichier → Enregistrer sous → CSV UTF-8 (délimité par des virgules) (*.csv)</strong>.
+            Préserve les accents et tous les caractères spéciaux.
+          </p>
+        </div>
+
+        <!-- Règle 2 : colonnes -->
+        <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:12px;padding:.85rem 1rem;margin-bottom:.6rem;">
+          <div style="display:flex;align-items:center;gap:.5rem;font-weight:700;font-size:.92rem;margin-bottom:.55rem;">
+            <span>📋</span> 2. Colonnes reconnues
+          </div>
+          <div style="display:grid;grid-template-columns:1fr auto 1.1fr;gap:.45rem .8rem;font-size:.78rem;align-items:center;">
+            <div style="font-family:var(--mono);color:var(--accent);">Raison sociale · Entreprise · Société</div>
+            <div style="color:var(--text-3);">→</div>
+            <div style="color:var(--text-2);">Nom <strong style="color:var(--hot);">obligatoire</strong></div>
+
+            <div style="font-family:var(--mono);color:var(--accent);">SIRET · SIREN</div>
+            <div style="color:var(--text-3);">→</div>
+            <div style="color:var(--text-2);">Identifiant <strong style="color:var(--green);">★ fortement recommandé</strong></div>
+
+            <div style="font-family:var(--mono);color:var(--accent);">Dirigeant · Contact · Gérant</div>
+            <div style="color:var(--text-3);">→</div>
+            <div style="color:var(--text-2);">Personne à contacter</div>
+
+            <div style="font-family:var(--mono);color:var(--accent);">Email · Mail · Courriel</div>
+            <div style="color:var(--text-3);">→</div>
+            <div style="color:var(--text-2);">Adresse mail</div>
+
+            <div style="font-family:var(--mono);color:var(--accent);">Ville · Commune</div>
+            <div style="color:var(--text-3);">→</div>
+            <div style="color:var(--text-2);">Localisation</div>
+          </div>
+          <p style="margin:.7rem 0 0;font-size:.74rem;color:var(--text-3);line-height:1.5;">
+            ★ Avec le SIRET, on détecte <strong style="color:var(--text-2);">3× plus de signaux</strong> (marchés publics, créations, modifications) — c'est la colonne la plus importante.
+          </p>
+        </div>
+
+        <!-- Règle 3 : SIRET TEXTE -->
+        <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:12px;padding:.85rem 1rem;margin-bottom:1rem;">
+          <div style="display:flex;align-items:center;gap:.5rem;font-weight:700;font-size:.92rem;margin-bottom:.3rem;">
+            <span>💡</span> 3. Astuce SIRET dans Excel
+          </div>
+          <p style="margin:0;font-size:.82rem;color:var(--text-2);line-height:1.55;">
+            Formate la colonne SIRET en <strong style="color:var(--text);">Texte</strong> avant d'y coller tes données
+            (clic droit → Format de cellule → Texte). Sinon Excel l'affiche en notation scientifique
+            <code style="background:var(--bg);padding:1px 6px;border-radius:4px;color:var(--hot);font-size:.78rem;">3,07E+13</code>
+            et corrompt le numéro.
+          </p>
+        </div>
+
+        <!-- Visuel CSV (anime) -->
+        <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:12px;padding:.85rem 1rem;margin-bottom:1.25rem;">
+          <div style="font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;color:var(--text-3);text-transform:uppercase;margin-bottom:.5rem;">Aperçu d'un CSV propre</div>
+          <div style="overflow-x:auto;">
+            <div style="display:grid;grid-template-columns:repeat(5,minmax(95px,1fr));font-size:.72rem;border-radius:8px;overflow:hidden;border:1px solid var(--border);min-width:500px;">
+              <div class="igm-r1" style="display:contents;">
+                <div class="igm-cell" style="background:var(--accent-dim);color:var(--accent);padding:7px 9px;font-family:var(--mono);font-weight:700;border-bottom:1px solid var(--border);">Raison sociale</div>
+                <div class="igm-cell igm-siret" style="background:var(--accent-dim);color:var(--accent);padding:7px 9px;font-family:var(--mono);font-weight:700;border-bottom:1px solid var(--border);">SIRET</div>
+                <div class="igm-cell" style="background:var(--accent-dim);color:var(--accent);padding:7px 9px;font-family:var(--mono);font-weight:700;border-bottom:1px solid var(--border);">Ville</div>
+                <div class="igm-cell" style="background:var(--accent-dim);color:var(--accent);padding:7px 9px;font-family:var(--mono);font-weight:700;border-bottom:1px solid var(--border);">Dirigeant</div>
+                <div class="igm-cell" style="background:var(--accent-dim);color:var(--accent);padding:7px 9px;font-family:var(--mono);font-weight:700;border-bottom:1px solid var(--border);">Email</div>
+              </div>
+              <div class="igm-r2" style="display:contents;">
+                <div class="igm-cell" style="padding:7px 9px;color:var(--text);border-bottom:1px solid var(--border);">Menuiserie Berthier</div>
+                <div class="igm-cell" style="padding:7px 9px;color:var(--text-2);font-family:var(--mono);border-bottom:1px solid var(--border);">39847562100018</div>
+                <div class="igm-cell" style="padding:7px 9px;color:var(--text-2);border-bottom:1px solid var(--border);">Lyon</div>
+                <div class="igm-cell" style="padding:7px 9px;color:var(--text-2);border-bottom:1px solid var(--border);">Luc Berthier</div>
+                <div class="igm-cell" style="padding:7px 9px;color:var(--text-2);border-bottom:1px solid var(--border);">l.berthier@…</div>
+              </div>
+              <div class="igm-r3" style="display:contents;">
+                <div class="igm-cell" style="padding:7px 9px;color:var(--text);">Cabinet Léger</div>
+                <div class="igm-cell" style="padding:7px 9px;color:var(--text-2);font-family:var(--mono);">74028391500024</div>
+                <div class="igm-cell" style="padding:7px 9px;color:var(--text-2);">Nantes</div>
+                <div class="igm-cell" style="padding:7px 9px;color:var(--text-2);">Paul Léger</div>
+                <div class="igm-cell" style="padding:7px 9px;color:var(--text-2);">p.leger@…</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTAs -->
+        <div style="display:flex;gap:.6rem;">
+          <button onclick="document.getElementById('import-guide-modal')?.remove();"
+                  style="flex:0 0 auto;padding:.75rem 1.1rem;background:transparent;border:1px solid var(--border);color:var(--text-2);border-radius:10px;font-family:var(--sans);font-size:.85rem;cursor:pointer;transition:all .15s;"
+                  onmouseover="this.style.background='var(--bg-3)';this.style.color='var(--text)'"
+                  onmouseout="this.style.background='transparent';this.style.color='var(--text-2)'">
+            Plus tard
+          </button>
+          <button onclick="document.getElementById('import-guide-modal')?.remove();document.getElementById('csv-import-input').click();"
+                  style="flex:1;padding:.75rem;background:var(--grad);border:none;color:#fff;border-radius:10px;font-family:var(--sans);font-size:.9rem;font-weight:700;cursor:pointer;box-shadow:var(--glow);transition:transform .15s;"
+                  onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
+            ✓ J'ai compris, choisir mon fichier
+          </button>
+        </div>
+      </div>
+    </div>`;
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
 // ── IMPORT CSV ────────────────────────────────────────────────
 function parseCSV(text) {
   const rows = [];
@@ -4300,6 +4435,70 @@ async function importCSV(event) {
 }
 
 // ── ENRICHISSEMENT DES IMPORTS (détection de signaux d'achat) ─────────────────
+// Modal stylisé : choix du lot (20/40/60) avec temps estimés. Renvoie la taille
+// choisie via promesse ; 0 = annule.
+function showEnrichModal(aEnrichir) {
+  return new Promise((resolve) => {
+    document.getElementById('enrich-modal')?.remove();
+    const opts = [
+      { n: 20, t: '~30 s',       hint: 'Rapide' },
+      { n: 40, t: '~1 min',      hint: 'Equilibre' },
+      { n: 60, t: '~1 min 30 s', hint: 'Volume' },
+    ];
+    const tiles = opts.map(o => {
+      const disabled = aEnrichir < o.n;
+      const op = disabled ? '0.4' : '1';
+      const cursor = disabled ? 'not-allowed' : 'pointer';
+      const hoverHandlers = disabled ? '' :
+        `onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-2px)'" `
+      + `onmouseout="this.style.borderColor='var(--border)';this.style.transform='translateY(0)'"`;
+      return `
+        <button onclick="${disabled ? '' : 'window._enrichPick(' + o.n + ')'}" ${disabled ? 'disabled' : ''} ${hoverHandlers}
+          style="background:var(--bg-3);border:1px solid var(--border);border-radius:14px;padding:1rem .85rem;
+                 color:var(--text);font-family:var(--sans);cursor:${cursor};opacity:${op};
+                 transition:all .15s ease;display:flex;flex-direction:column;gap:4px;text-align:center;">
+          <div style="font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;color:var(--text-3);text-transform:uppercase;">${o.hint}</div>
+          <div style="font-size:1.5rem;font-weight:800;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;">${o.n}</div>
+          <div style="font-size:.75rem;color:var(--text-2);">contacts</div>
+          <div style="font-size:.72rem;color:var(--text-3);margin-top:2px;">⏱ ${o.t}</div>
+        </button>`;
+    }).join('');
+    const html = `
+      <div id="enrich-modal" style="position:fixed;inset:0;z-index:9999;background:rgba(11,17,32,.85);
+           backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;font-family:var(--sans);padding:1rem;">
+        <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:18px;padding:1.75rem;
+                    max-width:480px;width:100%;color:var(--text);box-shadow:0 20px 60px rgba(0,0,0,.5);">
+          <div style="font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;color:var(--accent);
+                      text-transform:uppercase;margin-bottom:.5rem;">✦ Détection de signaux</div>
+          <h3 style="margin:0 0 .5rem;font-size:1.25rem;font-weight:700;">Combien de contacts analyser ?</h3>
+          <p style="margin:0 0 1.25rem;color:var(--text-2);font-size:.875rem;line-height:1.55;">
+            Sur tes <strong style="color:var(--text);">${aEnrichir}</strong> contact${aEnrichir > 1 ? 's' : ''} importé${aEnrichir > 1 ? 's' : ''}, choisis la taille du lot à analyser.
+          </p>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1rem;">
+            ${tiles}
+          </div>
+          <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:10px;padding:.7rem .85rem;
+                      font-size:.78rem;color:var(--text-2);line-height:1.5;margin-bottom:1rem;">
+            <strong style="color:var(--green);">Facturation transparente</strong> — 1 quota consommé <em>uniquement</em> quand un signal est trouvé. Les contacts sans signal restent gratuits.
+          </div>
+          <button onclick="window._enrichPick(0)" style="width:100%;padding:.7rem;background:transparent;
+                  border:1px solid var(--border);color:var(--text-2);border-radius:10px;font-family:var(--sans);
+                  font-size:.85rem;cursor:pointer;transition:all .15s;"
+                  onmouseover="this.style.background='var(--bg-3)';this.style.color='var(--text)'"
+                  onmouseout="this.style.background='transparent';this.style.color='var(--text-2)'">
+            Annuler
+          </button>
+        </div>
+      </div>`;
+    document.body.insertAdjacentHTML('beforeend', html);
+    window._enrichPick = (n) => {
+      document.getElementById('enrich-modal')?.remove();
+      delete window._enrichPick;
+      resolve(n);
+    };
+  });
+}
+
 async function enrichImports() {
   const session = getSession();
   if (!session || !session.access_token) { showToast('Connectez-vous pour enrichir vos contacts', '⚠'); return; }
@@ -4311,21 +4510,22 @@ async function enrichImports() {
     (!p.signal || !p.signal.trim()) && (p.signal_source === 'Import CSV' || p.score === 'cold')).length;
   if (!aEnrichir) { showToast("Aucun contact importé à enrichir", 'ℹ'); return; }
 
-  if (!confirm("Détecter les signaux d'achat sur vos " + aEnrichir + " contact(s) importé(s) ?\n\n"
-    + "Chaque contact où un signal est trouvé consomme 1 prospect de votre quota. "
-    + "Les contacts sans signal restent gratuits.")) return;
+  // Modal stylisé : choix de la taille du lot.
+  const batchSize = await showEnrichModal(aEnrichir);
+  if (!batchSize) return;  // annulation
 
   const prenom   = (document.getElementById('input-prenom')?.value || '').trim();
   const activite = (document.getElementById('input-activite')?.value || '').trim();
   const style    = (document.getElementById('input-style')?.value
                     || document.getElementById('ob-style')?.value || 'A');
 
-  showOverlay('Détection des signaux en cours… (jusqu’à 1 minute)');
+  const timeHint = batchSize === 20 ? '~30 s' : batchSize === 40 ? '~1 min' : '~1 min 30 s';
+  showOverlay(`Détection des signaux sur ${batchSize} contacts… (${timeHint})`);
   try {
     const res = await fetch(API_BASE + '/prospects/order/' + payload.order_id + '/enrich', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
-      body: JSON.stringify({ prenom, activite, style }),
+      body: JSON.stringify({ prenom, activite, style, batch_size: batchSize }),
     });
     if (res.status === 401) { hideOverlay(); clearSession(); showLoginScreen(); return; }
     const data = await res.json();
