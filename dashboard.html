@@ -3810,6 +3810,7 @@ async function loadProspects() {
           linkedin: p.linkedin || ('https://linkedin.com/search/results/people/?keywords=' + encodeURIComponent(p.contact + ' ' + p.company)),
           seq: 'Étape 1/4',
           status: p.status || 'detected',
+          origin: p.origin || 'genere',  // crucial pour le toggle de vue (Générés vs Mes imports)
           msgs: p.msgs || { initial: null, relance1: null, relance2: null, relance3: null },
         };
         PROSPECTS.push(prospect);
@@ -4543,6 +4544,7 @@ async function importCSV(event) {
         signal_source: dbP.signal_source || 'Import CSV',
         score: dbP.score || 'warm', linkedin: dbP.linkedin || '',
         status: dbP.status || 'detected',
+        origin: dbP.origin || 'import',  // fix toggle vue (import par défaut puisqu'on est dans importCSV)
         msgs: (dbP.msgs && Object.keys(dbP.msgs).length)
           ? dbP.msgs
           : { initial: { objet: '', corps: '' }, relance1: null, relance2: null, relance3: null },
