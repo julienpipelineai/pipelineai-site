@@ -40,6 +40,55 @@
 }
 </script>
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Comment PipelineAI trouve-t-il les leads ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "PipelineAI s'appuie sur les données publiques officielles françaises (Sirene, France Travail, BODACC, BOAMP) pour repérer les PME qui viennent de bouger : recrutement, ouverture d'établissement, création, marché public remporté. Pour chacune, il identifie le dirigeant et rédige un message personnalisé. Aucune donnée inventée, tout est traçable."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Les emails sont-ils réels et vérifiés ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui. On identifie le dirigeant réel via le registre officiel, puis on vérifie son email professionnel avec Dropcontact (validation SMTP). Aucun email inventé : si aucun email vérifié n'existe, le lead reste exploitable (vous avez le décideur, le signal et son profil). Chaque plan inclut un quota de vérifications, extensible par packs."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Puis-je modifier les messages générés ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui — chaque message est éditable directement dans le dashboard. Vous pouvez modifier l'objet et le corps, les changements sont sauvegardés automatiquement. Vous pouvez aussi changer le style (direct, curieux, bienveillant, provocateur) en un clic."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Que se passe-t-il si les prospects ne sont pas qualifiés ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Si les prospects générés ne correspondent pas à vos critères, nous vous remboursons intégralement sur simple demande à julien@pipelineai.fr dans les 7 jours suivant la livraison."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "PipelineAI fonctionne pour quel type d'activité ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "PipelineAI est optimisé pour la prospection B2B — agences, consultants, prestataires, SaaS, formateurs, experts-comptables, courtiers. Si vous vendez à des PME ou TPE françaises, PipelineAI est fait pour vous."
+      }
+    }
+  ]
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -49,7 +98,79 @@
 </head>
 
 <body>
-  <div id="app"></div>
+  <div id="app">
+    <!-- Contenu statique pour les moteurs de recherche (remplacé par React au chargement).
+         Ne pas supprimer : c'est ce que Googlebot indexe avant l'exécution du JavaScript. -->
+    <div style="max-width:880px;margin:0 auto;padding:48px 22px;background:#0A0E1A;color:#E6E9F2;font-family:'Plus Jakarta Sans',system-ui,sans-serif;line-height:1.6">
+      <header>
+        <p style="font-size:13px;color:#8B93A7;margin:0 0 10px"><b>Sirene</b> · <b>France Travail</b> · <b>BODACC</b> — données publiques officielles</p>
+        <h1 style="font-size:34px;line-height:1.15;margin:0 0 14px">Vos prospects B2B qualifiés, messages IA inclus.</h1>
+        <p style="font-size:17px;color:#B7BECE;margin:0 0 18px">PipelineAI détecte les PME françaises qui bougent — recrutements, créations, marchés publics — identifie le décideur avec son email vérifié, et rédige le premier message à votre place. Vous n'avez plus qu'à appuyer sur envoyer. Testez 15 leads pour 9,90 €, sans engagement.</p>
+        <p><a href="#offer" style="color:#8B5CF6;font-weight:600">Démarrer ma prospection — 9,90 €</a></p>
+      </header>
+
+      <section>
+        <h2 style="font-size:24px;margin:34px 0 10px">La prospection manuelle est un gouffre.</h2>
+        <p style="color:#B7BECE">Un commercial passe en moyenne 2 h/semaine à prospecter — pour 3 % de taux de réponse. Sans signal d'intention, vous prospectez à l'aveugle, et 80 % des ventes se font après 5 contacts que la majorité abandonne au 2e.</p>
+        <h2 style="font-size:24px;margin:30px 0 10px">Des leads chauds, déjà préparés.</h2>
+        <p style="color:#B7BECE">À chaque lead : un signal d'achat réel, le décideur avec son email vérifié, et un message ciblé. Vous n'avez plus qu'à envoyer.</p>
+      </section>
+
+      <section>
+        <h2 style="font-size:24px;margin:34px 0 12px">Tout ce qu'il faut pour prospecter intelligemment</h2>
+        <ul>
+          <li><b>Signaux de mouvement</b> — On détecte les PME qui viennent de bouger : recrutement, ouverture, marché public. Pas une liste figée.</li>
+          <li><b>Sources officielles</b> — Sirene, France Travail, BODACC, BOAMP. Fiable, RGPD-friendly, zéro scraping.</li>
+          <li><b>Le bon décideur</b> — Dirigeant réel issu du registre, email vérifié par Dropcontact. Fini les contact@ qui rebondissent.</li>
+          <li><b>Le message déjà écrit</b> — IA hyperpersonnalisée sur le signal, en 4 styles : direct, curieux, bienveillant, provocateur.</li>
+          <li><b>Relances séquencées</b> — J+5, J+12, J+20 avec un angle différent à chaque fois. Le suivi qui fait signer, sans y penser.</li>
+          <li><b>Tout-en-un, moins cher</b> — Remplace une base de données (~150 €) + un outil d'emailing (~80 €) + votre temps. Un seul abonnement.</li>
+        </ul>
+        <p style="color:#B7BECE"><b>Victor, votre coach IA</b> (inclus dans chaque plan) vous guide : qui relancer en priorité, comment améliorer un message, et les bonnes pratiques pour décrocher des réponses.</p>
+      </section>
+
+      <section>
+        <h2 style="font-size:24px;margin:34px 0 12px">Comment ça marche</h2>
+        <ol>
+          <li><b>Configurez votre profil</b> — activité, services, secteur cible, taille d'entreprise et zone géographique jusqu'à la ville. 2 minutes.</li>
+          <li><b>PipelineAI génère vos leads</b> — croisement des sources officielles, identification du dirigeant et rédaction du message, automatique.</li>
+          <li><b>Envoyez et convertissez</b> — copiez le message, envoyez, suivez dans le pipeline. Les relances J+5, J+12, J+20 sont prêtes à l'emploi.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2 style="font-size:24px;margin:34px 0 12px">Tarifs</h2>
+        <p style="color:#B7BECE">Commencez par l'offre découverte à 9,90 €. Passez à l'abonnement quand vous êtes prêt.</p>
+        <ul>
+          <li><b>Découverte — 9,90 € (paiement unique)</b> : 15 leads qualifiés (signal + décideur), 7 emails vérifiés, messages IA 4 styles, relances J+5/J+12/J+20, export CSV + PDF.</li>
+          <li><b>Starter — 29 €/mois</b> : 50 leads/mois, 20 emails vérifiés, messages IA + relances, Victor coach IA.</li>
+          <li><b>Pro — 69 €/mois</b> : 150 leads/mois, 45 emails vérifiés, import CSV/LinkedIn, export HubSpot natif.</li>
+          <li><b>Business — 109 €/mois</b> : 300 leads/mois, 63 emails vérifiés, 3 accès utilisateurs, analytics équipe.</li>
+          <li><b>Business Pro — 259 €/mois</b> : 700 leads/mois, 150 emails vérifiés, 5 accès utilisateurs, analytics avancées.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 style="font-size:24px;margin:34px 0 12px">Questions fréquentes</h2>
+        <h3 style="font-size:17px;margin:18px 0 4px">Comment PipelineAI trouve-t-il les leads ?</h3>
+        <p style="color:#B7BECE">PipelineAI s'appuie sur les données publiques officielles françaises (Sirene, France Travail, BODACC, BOAMP) pour repérer les PME qui viennent de bouger : recrutement, ouverture d'établissement, création, marché public remporté. Pour chacune, il identifie le dirigeant et rédige un message personnalisé. Aucune donnée inventée, tout est traçable.</p>
+        <h3 style="font-size:17px;margin:18px 0 4px">Les emails sont-ils réels et vérifiés ?</h3>
+        <p style="color:#B7BECE">Oui. On identifie le dirigeant réel via le registre officiel, puis on vérifie son email professionnel avec Dropcontact (validation SMTP). Aucun email inventé : si aucun email vérifié n'existe, le lead reste exploitable (vous avez le décideur, le signal et son profil).</p>
+        <h3 style="font-size:17px;margin:18px 0 4px">Puis-je modifier les messages générés ?</h3>
+        <p style="color:#B7BECE">Oui — chaque message est éditable directement dans le dashboard (objet et corps), avec sauvegarde automatique. Vous pouvez aussi changer le style (direct, curieux, bienveillant, provocateur) en un clic.</p>
+        <h3 style="font-size:17px;margin:18px 0 4px">Que se passe-t-il si les prospects ne sont pas qualifiés ?</h3>
+        <p style="color:#B7BECE">Si les prospects générés ne correspondent pas à vos critères, nous vous remboursons intégralement sur simple demande à julien@pipelineai.fr dans les 7 jours suivant la livraison.</p>
+        <h3 style="font-size:17px;margin:18px 0 4px">PipelineAI fonctionne pour quel type d'activité ?</h3>
+        <p style="color:#B7BECE">PipelineAI est optimisé pour la prospection B2B — agences, consultants, prestataires, SaaS, formateurs, experts-comptables, courtiers. Si vous vendez à des PME ou TPE françaises, PipelineAI est fait pour vous.</p>
+      </section>
+
+      <footer style="margin-top:40px;padding-top:18px;border-top:1px solid #1E2435;font-size:13px;color:#8B93A7">
+        © 2026 PipelineAI · Julien Cambin · Angers · La prospection B2B clé en main.
+        <a href="/mentions.html" style="color:#8B93A7;margin-left:8px">Mentions légales &amp; CGV</a> ·
+        <a href="/blog/" style="color:#8B93A7">Blog</a>
+      </footer>
+    </div>
+  </div>
 
   <!-- Backend endpoints -->
   <script>
