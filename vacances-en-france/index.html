@@ -74,6 +74,8 @@ body{
 .btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(58,42,30,.12)}
 .btn-primary{background:var(--grad-coral);border:none;color:#fff;box-shadow:0 6px 16px rgba(255,107,107,.4)}
 .btn-ghost{background:rgba(255,255,255,.65)}
+.btn.folder-on{background:rgba(12,166,120,.16);border-color:var(--palm);color:var(--palm)}
+.btn.folder-warn{background:rgba(245,159,0,.18);border-color:var(--sun-deep);color:var(--sun-deep)}
 
 /* ---------- Layout ---------- */
 .main{display:flex;flex:1;min-height:0;position:relative}
@@ -277,6 +279,7 @@ body{
 
   <div class="spacer"></div>
   <div class="tb-actions">
+    <button class="btn btn-ghost" id="btn-folder" title="Stocker les photos dans un dossier de ton PC (stockage illimité)">📁 <span class="lbl">Dossier photos</span></button>
     <button class="btn btn-ghost" id="btn-toggle" title="Afficher/masquer la liste">☰ <span class="lbl">Liste</span></button>
     <button class="btn btn-ghost" id="btn-export" title="Exporter en JSON">⬇ <span class="lbl">Export</span></button>
     <button class="btn btn-ghost" id="btn-import" title="Importer un JSON">⬆ <span class="lbl">Import</span></button>
@@ -375,16 +378,121 @@ body{
   let pending = null;        // {lat,lng}
   let editingId = null;
   let selType = "idee";
-  let pendingPhotos = [];     // data URLs en cours d'édition
+  let pendingPhotos = [];     // objets photo en cours d'édition
+
+  // --- Stockage photos dans un dossier du PC (File System Access API) ---
+  let dirHandle = null;            // handle du dossier choisi par l'utilisateur
+  const fileURLCache = {};         // nom de fichier -> objectURL (pour affichage)
 
   function s(){ return Math.random().toString(36).slice(2,10); }
+
+  // Normalise une photo : ancienne forme (string data URL) -> {type:"data",url}
+  function normPhoto(p){
+    if(typeof p === "string") return {type:"data", url:p};
+    if(p && p.type) return p;
+    return {type:"data", url:""};
+  }
+  function phURL(p){ return p.type==="file" ? (fileURLCache[p.name]||"") : (p.url||""); }
+
   function load(){
-    try{ const r = localStorage.getItem(STORE); if(r){ const a=JSON.parse(r); a.forEach(x=>{ if(!x.photos)x.photos=[]; if(!x.id)x.id=s(); }); return a; } }catch(e){}
+    try{ const r = localStorage.getItem(STORE); if(r){ const a=JSON.parse(r);
+      a.forEach(x=>{ if(!x.id)x.id=s(); x.photos = (x.photos||[]).map(normPhoto); }); return a; } }catch(e){}
     return SEED.slice();
   }
   function save(){
     try{ localStorage.setItem(STORE, JSON.stringify(data)); }
-    catch(e){ alert("⚠️ Stockage plein : tes photos prennent trop de place dans le navigateur. Pense à exporter en JSON, ou réduis le nombre de photos."); }
+    catch(e){ alert("⚠️ Stockage navigateur plein. Connecte un « 📁 Dossier photos » (stockage illimité) ou exporte en JSON."); }
+  }
+
+  // ---------- IndexedDB : mémorise le dossier choisi entre les visites ----------
+  function idb(mode, fn){
+    return new Promise((res,rej)=>{
+      const r = indexedDB.open("vf-fs", 1);
+      r.onupgradeneeded = ()=>r.result.createObjectStore("kv");
+      r.onerror = ()=>rej(r.error);
+      r.onsuccess = ()=>{
+        const tx = r.result.transaction("kv", mode);
+        const st = tx.objectStore("kv");
+        fn(st, res, rej);
+      };
+    });
+  }
+  function idbGet(k){ return idb("readonly",(st,res)=>{ const g=st.get(k); g.onsuccess=()=>res(g.result); g.onerror=()=>res(null); }); }
+  function idbSet(k,v){ return idb("readwrite",(st,res)=>{ st.put(v,k); res(); }); }
+
+  // ---------- Connexion / restauration du dossier ----------
+  const folderBtn = document.getElementById("btn-folder");
+  const folderLbl = folderBtn.querySelector(".lbl");
+
+  function updateFolderUI(state){
+    folderBtn.classList.remove("folder-on","folder-warn");
+    if(state==="on"){ folderBtn.classList.add("folder-on"); folderLbl.textContent="Dossier ✓"; folderBtn.title="Photos stockées dans ton dossier (illimité). Clique pour changer."; }
+    else if(state==="warn"){ folderBtn.classList.add("folder-warn"); folderLbl.textContent="Reconnecter"; folderBtn.title="Clique pour réautoriser l'accès à ton dossier photos."; }
+    else { folderLbl.textContent="Dossier photos"; folderBtn.title="Stocker les photos dans un dossier de ton PC (stockage illimité)"; }
+  }
+
+  async function connectFolder(){
+    if(!window.showDirectoryPicker){
+      alert("Ton navigateur ne gère pas le stockage en dossier.\n\nUtilise Chrome, Edge ou Brave sur ordinateur pour cette fonction.\nSur les autres navigateurs, les photos restent dans le navigateur (mémoire plus limitée).");
+      return;
+    }
+    try{
+      const h = await window.showDirectoryPicker({ id:"vacances-photos", mode:"readwrite" });
+      dirHandle = h;
+      await idbSet("dirHandle", h);
+      updateFolderUI("on");
+      await preloadAndRender();
+      alert("✅ Dossier connecté ! Tes prochaines photos y seront enregistrées en pleine qualité. Stockage limité seulement par ton disque dur.");
+    }catch(e){ /* annulé par l'utilisateur */ }
+  }
+
+  async function restoreFolder(){
+    if(!window.showDirectoryPicker) return;
+    try{
+      const h = await idbGet("dirHandle");
+      if(!h) return;
+      const perm = await h.queryPermission({mode:"readwrite"});
+      if(perm==="granted"){ dirHandle=h; updateFolderUI("on"); await preloadAndRender(); }
+      else { dirHandle=h; updateFolderUI("warn"); }   // besoin d'un clic pour réautoriser
+    }catch(e){}
+  }
+
+  // clic bouton : si en attente de réautorisation -> demande la permission, sinon ouvre le sélecteur
+  folderBtn.addEventListener("click", async ()=>{
+    if(dirHandle && folderBtn.classList.contains("folder-warn")){
+      try{
+        const perm = await dirHandle.requestPermission({mode:"readwrite"});
+        if(perm==="granted"){ updateFolderUI("on"); await preloadAndRender(); return; }
+      }catch(e){}
+    }
+    connectFolder();
+  });
+
+  // Écrit une image (blob) dans le dossier et renvoie son nom de fichier
+  async function writePhotoFile(blob){
+    const name = "photo-"+Date.now()+"-"+s()+".jpg";
+    const fh = await dirHandle.getFileHandle(name, {create:true});
+    const w = await fh.createWritable();
+    await w.write(blob); await w.close();
+    // pré-cache l'URL pour affichage immédiat
+    fileURLCache[name] = URL.createObjectURL(blob);
+    return name;
+  }
+
+  // Charge les objectURL de toutes les photos-fichiers manquantes, puis (re)dessine
+  async function preloadAndRender(){
+    if(dirHandle){
+      const names = [];
+      data.forEach(d=>d.photos.forEach(p=>{ if(p.type==="file" && !fileURLCache[p.name]) names.push(p.name); }));
+      await Promise.all([...new Set(names)].map(async name=>{
+        try{
+          const fh = await dirHandle.getFileHandle(name);
+          const file = await fh.getFile();
+          fileURLCache[name] = URL.createObjectURL(file);
+        }catch(e){ /* fichier introuvable (déplacé/supprimé) */ }
+      }));
+    }
+    render();
   }
 
   // ---------- Carte type Google Maps ----------
@@ -426,7 +534,7 @@ body{
       list.innerHTML = items.map(d=>{
         const ph = d.photos&&d.photos.length ? (
           '<div class="thumbs">'+
-            d.photos.slice(0,4).map(p=>'<img src="'+p+'" alt="">').join("")+
+            d.photos.slice(0,4).map(p=>{const u=phURL(p);return u?'<img src="'+u+'" alt="">':'';}).join("")+
             (d.photos.length>4?'<div class="more-ph">+'+(d.photos.length-4)+'</div>':'')+
           '</div>') : "";
         return '<div class="card '+d.type+'" data-id="'+d.id+'">'+
@@ -449,9 +557,10 @@ body{
     const badgeColor = d.type==="visite"?"background:rgba(12,166,120,.16);color:#0CA678":
                        d.type==="coup"?"background:rgba(255,107,107,.16);color:#F4503E":
                        "background:rgba(245,159,0,.18);color:#F59F00";
-    const cover = d.photos&&d.photos.length ? '<img class="pop-cover" src="'+d.photos[0]+'" data-zoom="'+d.photos[0]+'" alt="">' : "";
+    const cover0 = d.photos&&d.photos.length ? phURL(d.photos[0]) : "";
+    const cover = cover0 ? '<img class="pop-cover" src="'+cover0+'" data-zoom="'+cover0+'" alt="">' : "";
     const strip = d.photos&&d.photos.length>1 ? '<div class="pop-strip">'+
-        d.photos.slice(1,5).map(p=>'<img src="'+p+'" data-zoom="'+p+'" alt="">').join("")+'</div>' : "";
+        d.photos.slice(1,5).map(p=>{const u=phURL(p);return u?'<img src="'+u+'" data-zoom="'+u+'" alt="">':'';}).join("")+'</div>' : "";
     return '<div class="pop">'+ cover +'<div class="pop-body">'+
       '<div class="pop-name">'+esc(d.name)+'</div>'+
       (d.region?'<div class="pop-region">📍 '+esc(d.region)+'</div>':'')+
@@ -542,9 +651,10 @@ body{
   // ---------- Photos ----------
   function renderPhotoGrid(){
     const g = document.getElementById("photo-grid");
-    g.innerHTML = pendingPhotos.map((p,i)=>
-      '<div class="ph"><img src="'+p+'" data-zoom="'+p+'" alt=""><button class="rm" data-rm="'+i+'">✕</button></div>'
-    ).join("");
+    g.innerHTML = pendingPhotos.map((p,i)=>{
+      const u = phURL(p);
+      return '<div class="ph"><img src="'+u+'" data-zoom="'+u+'" alt=""><button class="rm" data-rm="'+i+'">✕</button></div>';
+    }).join("");
   }
   document.getElementById("photo-grid").addEventListener("click", e=>{
     const rm = e.target.closest("[data-rm]");
@@ -563,11 +673,30 @@ body{
   dz.addEventListener("drop", e=>{ if(e.dataTransfer.files) handleFiles(e.dataTransfer.files); });
 
   function handleFiles(files){
-    Array.from(files).filter(f=>f.type.startsWith("image/")).forEach(f=>{
-      resizeImage(f, 1280, 0.72).then(durl=>{ pendingPhotos.push(durl); renderPhotoGrid(); });
+    const imgs = Array.from(files).filter(f=>f.type.startsWith("image/"));
+    // Dossier connecté : grande qualité + fichiers réels. Sinon : compressé pour le navigateur.
+    const maxDim = dirHandle ? 2200 : 1280;
+    const quality = dirHandle ? 0.85 : 0.72;
+    imgs.forEach(f=>{
+      resizeImage(f, maxDim, quality).then(async canvas=>{
+        if(dirHandle){
+          const blob = await new Promise(r=>canvas.toBlob(r, "image/jpeg", quality));
+          try{
+            const name = await writePhotoFile(blob);
+            pendingPhotos.push({type:"file", name});
+          }catch(e){
+            alert("Impossible d'écrire dans le dossier. La photo est gardée dans le navigateur.");
+            pendingPhotos.push({type:"data", url:canvas.toDataURL("image/jpeg", 0.72)});
+          }
+        } else {
+          pendingPhotos.push({type:"data", url:canvas.toDataURL("image/jpeg", quality)});
+        }
+        renderPhotoGrid();
+      });
     });
   }
-  function resizeImage(file, maxDim, quality){
+  // renvoie un <canvas> redimensionné (on en tire ensuite un blob ou un dataURL)
+  function resizeImage(file, maxDim){
     return new Promise(res=>{
       const fr = new FileReader();
       fr.onload = ()=>{
@@ -578,7 +707,7 @@ body{
           else { if(height>maxDim){ width=Math.round(width*maxDim/height); height=maxDim; } }
           const c = document.createElement("canvas"); c.width=width; c.height=height;
           c.getContext("2d").drawImage(img,0,0,width,height);
-          res(c.toDataURL("image/jpeg", quality));
+          res(c);
         };
         img.src = fr.result;
       };
@@ -646,10 +775,10 @@ body{
       try{
         const arr = JSON.parse(r.result);
         if(!Array.isArray(arr)) throw 0;
-        arr.forEach(x=>{ if(!x.id)x.id=s(); if(!x.photos)x.photos=[]; });
+        arr.forEach(x=>{ if(!x.id)x.id=s(); x.photos=(x.photos||[]).map(normPhoto); });
         if(confirm("Remplacer la liste actuelle par les "+arr.length+" lieux importés ?\n(Annuler = fusionner)")){ data = arr; }
         else { data = data.concat(arr); }
-        save(); render();
+        save(); preloadAndRender();
       }catch(e){ alert("Fichier JSON invalide."); }
     };
     r.readAsText(f); this.value = "";
@@ -659,6 +788,7 @@ body{
   window.__setSide = setSide;
 
   render();
+  restoreFolder();   // reconnecte le dossier photos s'il a déjà été autorisé
 })();
 </script>
 </body>
